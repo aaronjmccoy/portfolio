@@ -13,6 +13,7 @@
  * mapping is exact. Applies in dev, build, SSR and Vitest alike.
  */
 import { dirname, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import MagicString from 'magic-string';
 import type { Plugin } from 'vite';
 
@@ -58,12 +59,15 @@ export function transformRelayTags(
 
 export function relay(opts: RelayPluginOptions): Plugin {
   const artifacts = opts.artifactDirectory.replaceAll('\\', '/');
+  // This module mentions the tag in its own comments and regex; when a test
+  // imports it through Vite, it must not be rewritten.
+  const self = fileURLToPath(import.meta.url).replaceAll('\\', '/');
   return {
     name: 'portfolio:relay',
     enforce: 'pre',
     transform(code, id) {
       const file = id.split('?')[0] ?? id;
-      if (!SOURCE.test(file) || file.includes('/node_modules/') || file.startsWith(artifacts)) return;
+      if (!SOURCE.test(file) || file.includes('/node_modules/') || file.startsWith(artifacts) || file === self) return;
       return transformRelayTags(code, file, opts);
     },
   };

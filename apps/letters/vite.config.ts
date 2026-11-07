@@ -11,5 +11,7 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['../../vitest.setup.ts'],
     include: ['src/**/*.test.{ts,tsx}', 'server/**/*.test.ts', 'scripts/**/*.test.ts'],
+    // Course exercises (docs/learn) run through vitest.learn.config.ts, never here.
+    exclude: ['**/node_modules/**', '**/dist/**', 'src/learn/**'],
   },
 });

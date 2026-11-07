@@ -12,6 +12,7 @@
     "start": "node server/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "learn": "vitest run --config vitest.learn.config.ts",
     "e2e": "playwright test"
   },
   "dependencies": {

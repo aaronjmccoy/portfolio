@@ -52,6 +52,12 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   `/`, `/letters`, `/letter/440` 200 with SSR titles, `/letter/nope` 404. `portfolio.aaronjmccoy.com` A record
   added, DNS-only.
 
+- 2026-11-07: Course for the operator: `docs/learn/` (ten lessons, one per resume claim: index, schema, Relay spec,
+  Relay client, SSR, images, a11y e2e, UI library, shipping, interview) with exercises in `apps/letters/src/learn`
+  run by `pnpm learn` (own Vitest config, never in CI). Two tooling facts surfaced: the Relay Vite plugin must skip
+  its own source (it mentions the tag), and `graphql` must be aliased to one build under Vitest or Pothos and
+  the test hold schemas from different realms.
+
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
