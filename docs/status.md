@@ -38,12 +38,20 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   (`pnpm --filter @portfolio/ui build-storybook` → `storybook-static/`, builds under Vite 8). Testing Library
   cleanup is now registered in `vitest.setup.ts` (Vitest globals are off, so it was not automatic).
 
+- 2026-11-07: Letters deployment prep: `apps/letters/Dockerfile` (multi-stage; the runtime stage keeps the pnpm
+  workspace layout because Node will not strip types under `node_modules`, which rules out `pnpm deploy`),
+  `apps/letters/deploy/compose.yaml` + runbook (loopback app port behind the webhost's Caddy as with the
+  bookshop; `/scans/` and `/img/` still served by Caddy; metrics fenced to VM 107 in DOCKER-USER), CI job
+  `image-letters` that boots the image and renders a page, then publishes `ghcr.io/aaronjmccoy/portfolio-letters`
+  on `main`. Reading VM 104's Caddyfile from here was blocked by the permission classifier, so the Caddy block in
+  the runbook is a template to merge, not a verified diff.
+
 ## Next
 - Letters: run `derive-images` on VM 104 against the real scans (inside the Docker image, output to a bind-mounted data dir); first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
 - UI: adopt the primitives in the letters app (Button, LiveRegion for page changes); serve Storybook at `portfolio.aaronjmccoy.com/ui/`.
 - Playwright + axe e2e for shop and portfolio (letters done); Lighthouse CI budgets.
-- Deployment: Dockerfiles, Compose on VM 104, Caddy blocks, Pi-hole records.
+- Deployment: run the letters runbook on VM 104 once the RAM is raised (operator); shop Dockerfile later.
 
 ## Operator steps outstanding
 - Raise VM 104 to 4 GB RAM before the Node services deploy.

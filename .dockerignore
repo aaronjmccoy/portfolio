@@ -1,0 +1,11 @@
+.git
+.github
+**/node_modules
+**/dist
+**/storybook-static
+**/playwright-report
+**/test-results
+**/coverage
+**/.env
+**/.env.*
+docs
