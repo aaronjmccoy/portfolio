@@ -570,10 +570,11 @@
     color: var(--color-muted);
   }
 
-  /* One column: the photo sits under the heading at the text's measure. */
+  /* One column: the photo sits centred under the heading. */
   .why__figure {
     /* No wider than the 929 px original, so it is never upscaled. */
     max-width: min(var(--measure), 58rem);
+    margin-inline: auto;
     margin-block-end: var(--space-5);
   }
 
