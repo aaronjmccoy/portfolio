@@ -1,18 +1,33 @@
-/* German War Letters — reading-first theme over @portfolio/ui tokens. */
+/* German War Letters — reading-first theme over @portfolio/ui tokens.
+ * The palette is the original germanwarletters.com's: a navy banner
+ * (#002c48) with light-blue headings (#9fc5e9), and parchment panels
+ * (#fde7c0). The tints around them are additions. */
 @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Figtree:wght@400;600;700&display=swap');
 
 @layer app {
   :root {
     --font-body: 'Source Serif 4', Georgia, 'Times New Roman', serif;
     --font-ui: 'Figtree', system-ui, sans-serif;
-    --color-bg: #f7f3ea;
-    --color-surface: #fffdf8;
-    --color-ink: #1d1a16;
-    --color-muted: #5a544b;
-    --color-rule: #d9d1c2;
-    --color-accent: #5b3a1e;
+    /* The original three */
+    --gwl-navy: #002c48;
+    --gwl-sky: #9fc5e9;
+    --gwl-parchment: #fde7c0;
+    /* Tints and shades around them */
+    --gwl-navy-deep: #001d30;
+    --gwl-sky-soft: #cfe2f4;
+    --gwl-on-navy-muted: #c9d8e6;
+    --gwl-parchment-light: #fffaf0;
+    --gwl-parchment-rule: #e8d3a6;
+    --gwl-link: #0b4a75;
+
+    --color-bg: var(--gwl-parchment-light);
+    --color-surface: #ffffff;
+    --color-ink: #1b1b1b;
+    --color-muted: #594f3f;
+    --color-rule: var(--gwl-parchment-rule);
+    --color-accent: var(--gwl-navy);
     --color-accent-ink: #ffffff;
-    --focus: #5b3a1e;
+    --focus: var(--gwl-link);
     --measure: 68ch;
   }
 
@@ -21,8 +36,30 @@
     line-height: var(--lh-reading);
   }
 
+  /* A full-width band behind a centred block: the box keeps the page's
+     measure while its background runs edge to edge. */
+  .band {
+    box-shadow: 0 0 0 100vmax var(--band-bg);
+    clip-path: inset(0 -100vmax);
+    background: var(--band-bg);
+  }
+
+  .band--navy {
+    --band-bg: var(--gwl-navy);
+    --focus: var(--gwl-sky);
+    color: #ffffff;
+  }
+
+  .band--navy a {
+    color: var(--gwl-sky);
+  }
+
+  .band--parchment {
+    --band-bg: var(--gwl-parchment);
+  }
+
   a {
-    color: var(--color-accent);
+    color: var(--gwl-link);
     text-decoration-thickness: 0.06em;
     text-underline-offset: 0.12em;
   }
@@ -46,12 +83,17 @@
   }
 
   .site-header {
+    --band-bg: var(--gwl-navy);
+    box-shadow: 0 0 0 100vmax var(--band-bg);
+    clip-path: inset(0 -100vmax);
+    background: var(--band-bg);
+    --focus: var(--gwl-sky);
+    color: #ffffff;
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: var(--space-4);
-    padding-block: var(--space-5) var(--space-4);
-    border-bottom: 1px solid var(--color-rule);
+    padding-block: var(--space-4);
     font-family: var(--font-ui);
   }
 
@@ -73,7 +115,7 @@
 
   .site-header__dates {
     margin-inline-start: var(--space-2);
-    color: var(--color-muted);
+    color: var(--gwl-sky);
     font-weight: 400;
     letter-spacing: 0;
     text-transform: none;
@@ -93,22 +135,27 @@
     min-height: 2.75rem;
     padding-inline: var(--space-3);
     border-bottom: 3px solid transparent;
-    color: var(--color-ink);
+    color: var(--gwl-sky-soft);
     font-weight: 600;
     text-decoration: none;
   }
 
   .site-nav__link:hover {
-    border-bottom-color: var(--color-rule);
+    border-bottom-color: var(--gwl-on-navy-muted);
+    color: #ffffff;
   }
 
   .site-nav__link[aria-current] {
-    border-bottom-color: var(--color-accent);
-    color: var(--color-accent);
+    border-bottom-color: var(--gwl-sky);
+    color: #ffffff;
   }
 
   .site-main {
     padding-block: var(--space-6) var(--space-8);
+  }
+
+  .site-main:has(> .home) {
+    padding-block-start: 0;
   }
 
   .site-main:focus-visible {
@@ -117,7 +164,7 @@
 
   .site-footer {
     padding-block: var(--space-5);
-    border-top: 1px solid var(--color-rule);
+    border-top: 3px solid var(--gwl-navy);
     color: var(--color-muted);
     font-family: var(--font-ui);
     font-size: var(--fs-xs);
@@ -343,8 +390,8 @@
   .transcript__none {
     max-width: var(--measure);
     padding: var(--space-4);
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-rule);
+    background: var(--gwl-parchment);
+    border-left: 4px solid var(--gwl-navy);
   }
 
   .letter__nav {
@@ -362,8 +409,11 @@
     display: grid;
     gap: var(--space-6);
     align-items: center;
-    padding-block-end: var(--space-7);
-    border-bottom: 1px solid var(--color-rule);
+    padding-block: var(--space-7);
+  }
+
+  .hero__title {
+    color: var(--gwl-sky);
   }
 
   @media (min-width: 64rem) {
@@ -380,7 +430,7 @@
   .hero__subtitle {
     display: block;
     margin-block-start: var(--space-2);
-    color: var(--color-muted);
+    color: #ffffff;
     font-size: 0.6em;
     font-weight: 400;
   }
@@ -433,9 +483,9 @@
   .dedication {
     margin-block-start: var(--space-7);
     padding: var(--space-5) var(--space-6);
-    background: var(--color-surface);
-    border: 1px solid var(--color-rule);
-    border-left: 3px solid var(--color-accent);
+    background: var(--gwl-parchment);
+    border: 1px solid var(--gwl-parchment-rule);
+    border-left: 4px solid var(--gwl-navy);
   }
 
   .dedication > p {
@@ -487,6 +537,80 @@
     aspect-ratio: 3 / 2;
   }
 
+  .documents {
+    margin-block-start: var(--space-7);
+    padding-block: var(--space-6);
+  }
+
+  .home__section h2,
+  .memorial h2 {
+    color: var(--gwl-navy);
+  }
+
+  /* ── in memory ─────────────────────────────────────────────────────── */
+  .memorial {
+    margin-block-start: var(--space-8);
+    margin-block-end: calc(-1 * var(--space-8));
+    padding-block: var(--space-7);
+    display: grid;
+    gap: var(--space-6);
+    align-items: start;
+  }
+
+  @media (min-width: 48rem) {
+    .memorial {
+      grid-template-columns: 16rem minmax(0, 1fr);
+    }
+  }
+
+  .memorial h2 {
+    color: var(--gwl-sky);
+    font-size: var(--fs-lg);
+    font-weight: 600;
+    line-height: var(--lh-tight);
+    margin: 0 0 var(--space-4);
+  }
+
+  .memorial__eyebrow {
+    display: block;
+    font-family: var(--font-ui);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gwl-on-navy-muted);
+  }
+
+  .memorial__figure {
+    margin: 0;
+  }
+
+  .memorial__figure img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 4px solid var(--gwl-parchment);
+  }
+
+  .memorial__figure figcaption {
+    margin-block-start: var(--space-2);
+    font-family: var(--font-ui);
+    font-size: var(--fs-xs);
+    color: var(--gwl-on-navy-muted);
+  }
+
+  .memorial p {
+    max-width: var(--measure);
+  }
+
+  .memorial blockquote {
+    margin: var(--space-4) 0;
+    padding-inline-start: var(--space-4);
+    border-left: 3px solid var(--gwl-sky);
+    max-width: var(--measure);
+    font-style: italic;
+  }
+
   .gallery__caption p {
     margin: 0;
     font-family: var(--font-ui);
@@ -494,32 +618,18 @@
     color: var(--color-muted);
   }
 
-  .why::after {
-    content: '';
-    display: block;
-    clear: both;
-  }
-
-  @media (min-width: 64rem) {
-    .why__figure {
-      float: right;
-      width: 26rem;
-      margin: 0 0 var(--space-4) var(--space-6);
-    }
-  }
-
-  @media (max-width: 63.99rem) {
-    .why__figure {
-      margin-block-end: var(--space-4);
-    }
+  /* One column: the photo sits under the heading at the text's measure. */
+  .why__figure {
+    max-width: var(--measure);
+    margin-block-end: var(--space-5);
   }
 
   .home__callout {
     max-width: var(--measure);
     margin-block: var(--space-5);
     padding: var(--space-4);
-    background: var(--color-surface);
-    border-left: 3px solid var(--color-accent);
+    background: var(--gwl-parchment);
+    border-left: 4px solid var(--gwl-navy);
     font-family: var(--font-ui);
   }
 

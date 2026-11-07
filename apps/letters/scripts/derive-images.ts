@@ -6,7 +6,7 @@
  *   <out>/img/manifest.json          { "<page id>": { width, height } }
  *
  * With --photos, it does the same for the old site's landing-page photos
- * (a flat folder of JPEG/PNG), named after the file: `<out>/photos/<name>-<width>.webp`.
+ * (a flat folder of JPEG/PNG/WebP), named after the file: `<out>/photos/<name>-<width>.webp`.
  * Their sizes are fixed in src/photos.ts, so no manifest is written for them.
  *
  * Runs on the host that has the archive (VM 104), where the originals stay
@@ -113,7 +113,7 @@ export type PhotoOptions = Pick<DeriveOptions, 'out' | 'dryRun' | 'force' | 'log
 /** Renditions of the landing-page photos. Returns how many files were (or would be) written. */
 export async function derivePhotos(opts: PhotoOptions): Promise<{ photos: number; written: number; failed: { page: string; error: string }[] }> {
   const log = opts.log ?? (() => {});
-  const files = (await readdir(opts.photos)).filter((f) => /\.(jpe?g|png)$/i.test(f)).sort();
+  const files = (await readdir(opts.photos)).filter((f) => /\.(jpe?g|png|webp)$/i.test(f)).sort();
   const outDir = join(opts.out, 'photos');
   if (!opts.dryRun) await mkdir(outDir, { recursive: true });
   const result = { photos: files.length, written: 0, failed: [] as { page: string; error: string }[] };

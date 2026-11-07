@@ -21,7 +21,9 @@ export function App({ environment }: AppProps) {
       </header>
       <Main />
       <footer className="site-footer">
-        <p>The letters, the translations and the commentary are the author's. The site is maintained in his memory.</p>
+        <p>
+          <cite>Memories of a Lost Generation: German War Letters, 1939–1945</cite> by Dr. Steve Nicklas. This site is maintained in his memory.
+        </p>
       </footer>
     </RelayEnvironmentProvider>
   );

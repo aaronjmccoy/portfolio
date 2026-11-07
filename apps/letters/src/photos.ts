@@ -67,4 +67,11 @@ export const photos = {
   hellmut: p('image13', 972, 655, "Hellmut's artwork", 'Hellmut’s drawing of a German military base, from a letter to his father'),
   radioNotice: p('image31', 1527, 1118, 'Notice for Mr. Theofil', 'Typed notice to Mr. Theofil about radio receiver regulations'),
   gestapo: p('image32', 1225, 1750, 'A Gestapo arrest warrant dated March 3, 1942', 'Gestapo arrest warrant dated 3 March 1942, with the Secret State Police rubber stamp'),
+  steve: p(
+    'steve-nicklas',
+    1254,
+    1254,
+    'Dr. Steve Nicklas',
+    'Steve Nicklas in a blue cap and tinted glasses, standing in grassland with badlands behind him',
+  ),
 } satisfies Record<string, Photo>;
