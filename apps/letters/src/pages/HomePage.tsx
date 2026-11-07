@@ -15,9 +15,6 @@ export function HomePage() {
       <Title text="" />
       <header className="hero band band--navy">
         <div className="hero__text">
-          <h1 className="hero__title">
-            Memories of a Lost Generation: <span className="hero__subtitle">German War Letters, 1939–1945</span>
-          </h1>
           <p className="hero__tagline">
             The book tells the story of a generation of German men, women and children who were forced by an evil government to go to war
             and once in that war, they had to fight to the end to try to save their families from the vengeance of both Adolf Hitler and

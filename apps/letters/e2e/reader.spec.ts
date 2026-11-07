@@ -24,6 +24,9 @@ test("home page keeps the book's landing content and is accessible", async ({ pa
   expect(res?.status()).toBe(200);
   await expect(page).toHaveTitle('German War Letters, 1939–1945');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Memories of a Lost Generation/);
+  await expect(page.getByRole('banner').getByText('German War Letters, 1939–1945', { exact: true })).toBeVisible();
+  await expect(page.getByRole('main').getByText('German War Letters, 1939–1945', { exact: true })).toHaveCount(0);
+  await expect(page.getByRole('contentinfo').getByRole('link', { name: 'support@koifrog.com' })).toHaveAttribute('href', 'mailto:support@koifrog.com');
   for (const name of [
     'The soldiers speak for themselves',
     'Excerpt from the Dedication',

@@ -14,9 +14,7 @@ export function App({ environment }: AppProps) {
     <RelayEnvironmentProvider environment={environment}>
       <SkipLink />
       <header className="site-header">
-        <p className="site-header__name">
-          <Link to="/">German War Letters</Link> <span className="site-header__dates">1939–1945</span>
-        </p>
+        <Brand />
         <SiteNav />
       </header>
       <Main />
@@ -24,8 +22,28 @@ export function App({ environment }: AppProps) {
         <p>
           <cite>Memories of a Lost Generation: German War Letters, 1939–1945</cite> by Dr. Steve Nicklas. This site is maintained in his memory.
         </p>
+        <p>
+          Contact: <a href="mailto:support@koifrog.com">support@koifrog.com</a>
+        </p>
       </footer>
     </RelayEnvironmentProvider>
+  );
+}
+
+/**
+ * The book's title, on every page. On the home page it is the page's <h1>;
+ * elsewhere each page has its own, so here it is a plain paragraph.
+ */
+function Brand() {
+  const { pathname } = useLocation();
+  const Tag = pathname === '/' ? 'h1' : 'p';
+  return (
+    <Tag className="site-brand">
+      <Link to="/" className="site-brand__link">
+        <span className="site-brand__title">Memories of a Lost Generation:</span>{' '}
+        <span className="site-brand__subtitle">German War Letters, 1939–1945</span>
+      </Link>
+    </Tag>
   );
 }
 
