@@ -7,9 +7,15 @@
  */
 import SchemaBuilder from '@pothos/core';
 import RelayPlugin, { resolveArrayConnection } from '@pothos/plugin-relay';
+import { IMAGE_EXT, WIDTHS, derivedName } from './archive-index.ts';
 import type { ArchiveIndex, Letter, Page, Section, Transcription } from './archive-index.ts';
+import type { Dimensions } from './dimensions.ts';
 
-export type Context = { index: ArchiveIndex };
+export type Context = {
+  index: ArchiveIndex;
+  /** Pixel sizes of the originals, from the derive-images manifest; empty until it has run */
+  dimensions?: ReadonlyMap<string, Dimensions>;
+};
 
 const builder = new SchemaBuilder<{
   Context: Context;
@@ -91,21 +97,26 @@ builder.node(PageRef, {
       type: ImageRef,
       nullable: true,
       description: 'Derived responsive sizes; null for non-image companions',
-      resolve: (p) => (['jpg', 'jpeg', 'png'].includes(p.ext) ? { page: p } : null),
+      resolve: (p) => (IMAGE_EXT.has(p.ext) ? { page: p } : null),
     }),
   }),
 });
 
 type DerivedImage = { page: Page };
 const ImageRef = builder.objectRef<DerivedImage>('Image');
-const WIDTHS = [320, 800, 1600] as const;
 builder.objectType(ImageRef, {
   fields: (t) => ({
     srcset: t.string({
-      resolve: ({ page }) => WIDTHS.map((w) => `/img/${encodeURIComponent(page.id)}-${w}.webp ${w}w`).join(', '),
+      resolve: ({ page }) => WIDTHS.map((w) => `/img/${derivedName(page)}-${w}.webp ${w}w`).join(', '),
     }),
-    src: t.string({ resolve: ({ page }) => `/img/${encodeURIComponent(page.id)}-800.webp` }),
+    src: t.string({ resolve: ({ page }) => `/img/${derivedName(page)}-800.webp` }),
     widths: t.intList({ resolve: () => [...WIDTHS] }),
+    width: t.int({
+      nullable: true,
+      description: 'Pixel width of the original scan, for the aspect ratio; null until images are derived',
+      resolve: ({ page }, _a, { dimensions }) => dimensions?.get(page.id)?.width ?? null,
+    }),
+    height: t.int({ nullable: true, resolve: ({ page }, _a, { dimensions }) => dimensions?.get(page.id)?.height ?? null }),
   }),
 });
 

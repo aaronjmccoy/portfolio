@@ -20,8 +20,14 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   Vitest. Artifacts are committed because CI typechecks before it builds. SSR status now comes from the
   preloaded store (`/letter/nope` → 404). Green: typecheck, lint, 22 tests, 4 builds, smoke.
 
+- 2026-11-07: Letters image pipeline and transcriptions. `scripts/derive-images.ts` (sharp → WebP 320/800/1600 +
+  `img/manifest.json` of original sizes; idempotent, `--dry-run`, `--force`, pooled) with a real-sharp test;
+  `server/transcriptions.ts` loads `transcriptions/<letterKey>.md` (front matter `source: ocr` optional);
+  `Image.width/height` in the schema and on `<img>` so scans reserve space (`aspect-ratio: auto 3 / 4` fallback).
+  Derived filenames fold the page id to `[A-Za-z0-9._-]` so Caddy and Hono agree on them. Pushed; CI green.
+
 ## Next
-- Letters: image derivation script (sharp → WebP 320/800/1600), transcription loader (Markdown by letter key), Relay routes and the reader UI.
+- Letters: run `derive-images` on VM 104 against the real scans (inside the Docker image, output to a bind-mounted data dir); first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
 - UI: Dialog/Drawer, Disclosure, VariantPicker, Image, LiveRegion, Button, Price; Storybook with the a11y addon.
 - Playwright + axe e2e per app; Lighthouse CI budgets.

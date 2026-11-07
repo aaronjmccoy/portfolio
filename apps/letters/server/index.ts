@@ -6,6 +6,8 @@ import type { Plugin } from 'graphql-yoga';
 import { serveStatic, startSsrServer } from '@portfolio/ssr';
 import { createMetrics, startMetricsServer } from '@portfolio/ssr/metrics';
 import { buildArchiveIndex } from './archive-index.ts';
+import { loadDimensions } from './dimensions.ts';
+import { loadTranscriptions } from './transcriptions.ts';
 import { schema } from './schema.ts';
 import type { Context } from './schema.ts';
 
@@ -24,8 +26,12 @@ async function listArchive(): Promise<string[]> {
   return listing.split(/\r?\n/).filter(Boolean);
 }
 
-const index = buildArchiveIndex(await listArchive());
-console.log(`letters: ${index.sections.length} sections, ${index.letters.length} letters indexed`);
+const transcriptions = await loadTranscriptions(resolve(root, 'transcriptions'));
+const index = buildArchiveIndex(await listArchive(), transcriptions);
+const dimensions = await loadDimensions(process.env['LETTERS_DATA_DIR']);
+console.log(
+  `letters: ${index.sections.length} sections, ${index.letters.length} letters, ${transcriptions.size} transcriptions, ${dimensions.size} derived images`,
+);
 
 const graphqlRequests = metrics.counter('graphql_requests_total', 'GraphQL requests by operation', ['operation']);
 const countOperations: Plugin<Context> = {
@@ -35,7 +41,7 @@ const countOperations: Plugin<Context> = {
 };
 const yoga = createYoga<Context>({
   schema,
-  context: () => ({ index }),
+  context: () => ({ index, dimensions }),
   graphqlEndpoint: '/graphql',
   graphiql: process.env['NODE_ENV'] !== 'production',
   landingPage: false,
@@ -48,7 +54,7 @@ await startSsrServer({
   name: 'letters',
   port: Number(process.env['PORT'] ?? 3001),
   httpRequests: metrics.httpRequests,
-  renderContext: () => ({ index }),
+  renderContext: () => ({ index, dimensions }),
   configure(app) {
     app.on(['GET', 'POST', 'OPTIONS'], '/graphql', (c) => yoga.fetch(c.req.raw, {}));
     // In production Caddy serves these directly; locally the Node server does.

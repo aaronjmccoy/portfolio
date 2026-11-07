@@ -27,6 +27,8 @@ export const LetterPageQuery = graphql`
         image {
           src
           srcset
+          width
+          height
         }
       }
       companions {
@@ -118,6 +120,8 @@ export function LetterPage() {
                     className="scan__img"
                     src={page.image.src}
                     srcSet={page.image.srcset}
+                    width={page.image.width ?? undefined}
+                    height={page.image.height ?? undefined}
                     sizes="(min-width: 64rem) 50vw, 100vw"
                     alt={`${name}, page ${current + 1} of ${pages.length}${letter.transcription ? '; transcription alongside' : '; not yet transcribed'}`}
                     decoding="async"
@@ -147,7 +151,20 @@ export function LetterPage() {
                       aria-label={`Page ${i + 1}`}
                       onClick={() => setCurrent(i)}
                     >
-                      {p.image ? <img src={p.image.src} srcSet={p.image.srcset} sizes="4rem" alt="" loading="lazy" decoding="async" /> : i + 1}
+                      {p.image ? (
+                        <img
+                          src={p.image.src}
+                          srcSet={p.image.srcset}
+                          width={p.image.width ?? undefined}
+                          height={p.image.height ?? undefined}
+                          sizes="4rem"
+                          alt=""
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      ) : (
+                        i + 1
+                      )}
                     </button>
                   </li>
                 ))}

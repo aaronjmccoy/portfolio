@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<271b27a09dc6c7bb75d49fb0747755a6>>
+ * @generated SignedSource<<e12cc5a1ed5f954420560ba9244cb781>>
  * @lightSyntaxTransform
  */
 
@@ -31,8 +31,10 @@ export type LetterPageQuery$data = {
     readonly pages: ReadonlyArray<{
       readonly id: string;
       readonly image: {
+        readonly height: number | null | undefined;
         readonly src: string;
         readonly srcset: string;
+        readonly width: number | null | undefined;
       } | null | undefined;
       readonly order: number;
       readonly original: string;
@@ -176,6 +178,20 @@ v11 = {
           "args": null,
           "kind": "ScalarField",
           "name": "srcset",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "width",
+          "storageKey": null
+        },
+        {
+          "alias": null,
+          "args": null,
+          "kind": "ScalarField",
+          "name": "height",
           "storageKey": null
         }
       ],
@@ -368,16 +384,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "377b9fab15ed85a16a231a3c09dd68fc",
+    "cacheID": "f63506f0c3165aa934dd281d0045959b",
     "id": null,
     "metadata": {},
     "name": "LetterPageQuery",
     "operationKind": "query",
-    "text": "query LetterPageQuery(\n  $key: String!\n) {\n  letter(key: $key) {\n    id\n    key\n    number\n    variant\n    group\n    section {\n      key\n      chapter\n      title\n      id\n    }\n    pages {\n      id\n      page\n      order\n      original\n      image {\n        src\n        srcset\n      }\n    }\n    companions {\n      id\n      page\n      ext\n      original\n    }\n    transcription {\n      markdown\n      source\n    }\n    previous {\n      key\n      number\n      variant\n      id\n    }\n    next {\n      key\n      number\n      variant\n      id\n    }\n  }\n}\n"
+    "text": "query LetterPageQuery(\n  $key: String!\n) {\n  letter(key: $key) {\n    id\n    key\n    number\n    variant\n    group\n    section {\n      key\n      chapter\n      title\n      id\n    }\n    pages {\n      id\n      page\n      order\n      original\n      image {\n        src\n        srcset\n        width\n        height\n      }\n    }\n    companions {\n      id\n      page\n      ext\n      original\n    }\n    transcription {\n      markdown\n      source\n    }\n    previous {\n      key\n      number\n      variant\n      id\n    }\n    next {\n      key\n      number\n      variant\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "1271c0a69dd1867ade44060e5cb97663";
+(node as any).hash = "688ef31c97af65dcd171727fd2fb6f21";
 
 export default node;

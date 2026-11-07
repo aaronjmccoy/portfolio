@@ -50,7 +50,20 @@ export type ArchiveIndex = {
   letters: Letter[]; // in reading order: section order, then number, then variant
 };
 
-const IMAGE_EXT = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tif', 'tiff']);
+/** Scan formats sharp can read and the UI shows as pages; anything else is a companion file. */
+export const IMAGE_EXT: ReadonlySet<string> = new Set(['jpg', 'jpeg', 'png', 'webp', 'gif', 'tif', 'tiff']);
+
+/** Derived rendition widths, in CSS pixels, for `srcset`. */
+export const WIDTHS = [320, 800, 1600] as const;
+
+/**
+ * Basename of a page's derived renditions: `<name>-<width>.webp`. Built from
+ * the page id with every unsafe character folded to "-", so the files need no
+ * URL encoding and survive Caddy's and Hono's differing path decoding.
+ */
+export function derivedName(page: Pick<Page, 'id'>): string {
+  return page.id.replace(/[^A-Za-z0-9._-]+/g, '-');
+}
 
 export function sectionKeyFor(e: Pick<ArchiveEntry, 'chapter' | 'section'>): string {
   return e.chapter === undefined ? e.section.toLowerCase().replace(/\s+/g, '-') : `ch${e.chapter}`;

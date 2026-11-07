@@ -222,7 +222,7 @@
   .scan__img {
     width: 100%;
     height: auto;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: auto 3 / 4;
     object-fit: contain;
     background: #e9e2d3;
   }
