@@ -21,7 +21,9 @@ Operator steps throughout: aaron's key is not authorised on VM 104, so commands 
    mkdir -p /srv/letters-data && chown 1000:1000 /srv/letters-data
    ```
    The first run on 2026-11-07 wrote 5,511 renditions of 1,837 scans, 412 MB, in 11 minutes.
-   The landing-page photos add about 2 MB under `photos/`.
+   The landing-page photos add about 2 MB under `photos/`. **That was a one-time job**: the
+   renditions are assets now, kept in `/srv/letters-data` and covered by the nightly VM backup,
+   and nothing in deploy, update or CI regenerates them.
 4. **Compose file.** Copy `compose.yaml` to `/opt/letters/compose.yaml`. No `.env` is needed; the
    reader has no secrets.
 
@@ -30,7 +32,7 @@ Operator steps throughout: aaron's key is not authorised on VM 104, so commands 
 ```sh
 cd /opt/letters
 docker compose pull
-# One-off: derive the responsive images (sharp, two cores: about 11 minutes). Idempotent.
+# FIRST DEPLOY ONLY (done 2026-11-07): derive the responsive images (sharp, two cores: about 11 minutes).
 # The compose file sets LETTERS_SCANS_DIR, LETTERS_PHOTOS_DIR and LETTERS_DATA_DIR, so no flags are needed.
 docker compose run --rm letters node scripts/derive-images.ts --concurrency 2 --quiet
 docker compose up -d
@@ -131,11 +133,14 @@ plus the Node defaults under `letters_`.
   `http://192.168.88.5:9465/metrics` times out from anything but VM 107.
 - Co-tenants still answer: `netarch.titanalpha.net`, `books.aaronjmccoy.com`, `mallerart.com`.
 - `free -m` on the VM shows at least 500 MiB available with the reader warm.
-- VM 104 is in `backup-nightly` already; `/srv/letters-data` is derivable, so it needs no separate
-  backup, but `/opt/letters/compose.yaml` and the Caddyfile are now part of what the backup protects.
+- VM 104 is in `backup-nightly` already, which now protects `/srv/letters-data` (the renditions),
+  `/opt/letters/compose.yaml` and the Caddyfile. If the data directory is ever lost, restore it from
+  the backup rather than re-deriving.
 
 ## Update
 
-`docker compose pull && docker compose up -d`, then re-pin the digest. Re-run `derive-images` when scans
-are added or after a release that adds image kinds (the 2026-11 home page added `photos/`); it skips
-renditions that are newer than their source, so a re-run over the existing scans takes seconds.
+`docker compose pull && docker compose up -d`, then re-pin the digest. That is the whole update; the
+renditions are not touched. The only reason to run `derive-images` again is new scans in the archive (or a
+release that adds an image kind, as the 2026-11 home page added `photos/`): it writes renditions only for
+files that have none, whatever the timestamps say, so that run takes seconds and the existing renditions
+stay as they are. `--force` is the one way to rebuild them, and nothing should need it.

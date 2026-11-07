@@ -10,9 +10,10 @@
  * Their sizes are fixed in src/photos.ts, so no manifest is written for them.
  *
  * Runs on the host that has the archive (VM 104), where the originals stay
- * untouched and keep being served by Caddy under /scans/. Idempotent: an
- * output newer than its source is left alone, so re-runs only pick up new
- * scans. Smaller originals are never upscaled.
+ * untouched and keep being served by Caddy under /scans/. The renditions are
+ * assets once written: a rendition that exists is never rebuilt (whatever the
+ * timestamps say), so a re-run only writes renditions for scans added since,
+ * and only --force rebuilds everything. Smaller originals are never upscaled.
  *
  *   node scripts/derive-images.ts --scans /srv/www/germanwarletters.com/public --out /srv/letters-data
  *   node scripts/derive-images.ts --scans /archive --photos /photos --out /data
@@ -69,11 +70,10 @@ export async function deriveImages(opts: DeriveOptions): Promise<DeriveResult> {
   await pool(pages, opts.concurrency ?? Math.max(1, availableParallelism() - 1), async (page) => {
     const src = join(opts.scans, page.file);
     try {
-      const sourceTime = (await stat(src)).mtimeMs;
       const targets: { w: number; path: string }[] = [];
       for (const w of WIDTHS) {
         const path = join(imgDir, `${derivedName(page)}-${w}.webp`);
-        if (opts.force || !(await isNewerThan(path, sourceTime))) targets.push({ w, path });
+        if (opts.force || !(await exists(path))) targets.push({ w, path });
       }
       if (targets.length === 0 && manifest[page.id]) {
         result.skipped++;
@@ -121,11 +121,10 @@ export async function derivePhotos(opts: PhotoOptions): Promise<{ photos: number
     const name = file.replace(/\.[^.]+$/, '');
     const src = join(opts.photos, file);
     try {
-      const sourceTime = (await stat(src)).mtimeMs;
       const targets: { w: number; path: string }[] = [];
       for (const w of WIDTHS) {
         const path = join(outDir, `${name}-${w}.webp`);
-        if (opts.force || !(await isNewerThan(path, sourceTime))) targets.push({ w, path });
+        if (opts.force || !(await exists(path))) targets.push({ w, path });
       }
       if (opts.dryRun) {
         result.written += targets.length;
@@ -154,9 +153,10 @@ async function readManifest(path: string): Promise<Manifest> {
   }
 }
 
-async function isNewerThan(path: string, timeMs: number): Promise<boolean> {
+async function exists(path: string): Promise<boolean> {
   try {
-    return (await stat(path)).mtimeMs >= timeMs;
+    await stat(path);
+    return true;
   } catch {
     return false;
   }

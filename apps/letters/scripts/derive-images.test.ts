@@ -1,5 +1,5 @@
 // @vitest-environment node
-import { mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readdir, rm, utimes, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
@@ -55,16 +55,27 @@ describe('deriveImages', () => {
     });
   }, 30_000);
 
-  it('is idempotent: a second run writes nothing', async () => {
+  it('treats existing renditions as assets: a second run writes nothing even when a source is touched', async () => {
+    const touched = join(scans, `${LETTER}A.png`);
+    const later = new Date(Date.now() + 60_000);
+    await utimes(touched, later, later);
     const r = await deriveImages({ scans, out });
     expect(r.written).toBe(0);
     expect(r.skipped).toBe(3);
   });
 
+  it('writes renditions only for scans added since', async () => {
+    await sharp({ create: { width: 500, height: 700, channels: 3, background: '#777' } }).png().toFile(join(scans, `${LETTER}C.png`));
+    const r = await deriveImages({ scans, out });
+    expect(r.written).toBe(3);
+    expect(r.skipped).toBe(3);
+    expect(r.manifest['1/C']).toEqual({ width: 500, height: 700 });
+  }, 30_000);
+
   it('dry run with --force reports the work without doing it', async () => {
     const before = (await readdir(join(out, 'img'))).length;
     const r = await deriveImages({ scans, out, dryRun: true, force: true });
-    expect(r.written).toBe(9);
+    expect(r.written).toBe(12);
     expect((await readdir(join(out, 'img'))).length).toBe(before);
   });
 });
