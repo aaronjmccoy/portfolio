@@ -28,7 +28,8 @@
     --color-accent: var(--gwl-navy);
     --color-accent-ink: #ffffff;
     --focus: var(--gwl-link);
-    --measure: 68ch;
+    /* Width of single-column blocks: a little narrower than the galleries (--page-max, 90rem). */
+    --measure: 78rem;
   }
 
   body {
@@ -571,7 +572,8 @@
 
   /* One column: the photo sits under the heading at the text's measure. */
   .why__figure {
-    max-width: var(--measure);
+    /* No wider than the 929 px original, so it is never upscaled. */
+    max-width: min(var(--measure), 58rem);
     margin-block-end: var(--space-5);
   }
 

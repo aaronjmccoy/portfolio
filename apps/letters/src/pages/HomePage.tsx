@@ -73,7 +73,7 @@ export function HomePage() {
 
       <section className="home__section why" aria-labelledby="why">
         <h2 id="why">Why use Letters to Tell the Story of the War?</h2>
-        <Figure photo={photos.why} className="why__figure" sizes="(min-width: 48rem) 42rem, 92vw" />
+        <Figure photo={photos.why} className="why__figure" sizes="(min-width: 64rem) 58rem, 92vw" />
         <p>
           Certainly much has been published on the subject of the Third Reich, almost always based on the analysis of official histories,
           documents, interviews and recently, secret recordings of German prisoners of war made during the conflict. Documents and official
