@@ -20,7 +20,8 @@ Operator steps throughout: aaron's key is not authorised on VM 104, so commands 
    ```sh
    mkdir -p /srv/letters-data && chown 1000:1000 /srv/letters-data
    ```
-   Budget about 1.5 GB: three WebP renditions per scan, 1,836 scans.
+   The first run on 2026-11-07 wrote 5,511 renditions of 1,837 scans, 412 MB, in 11 minutes.
+   The landing-page photos add about 2 MB under `photos/`.
 4. **Compose file.** Copy `compose.yaml` to `/opt/letters/compose.yaml`. No `.env` is needed; the
    reader has no secrets.
 
@@ -29,8 +30,9 @@ Operator steps throughout: aaron's key is not authorised on VM 104, so commands 
 ```sh
 cd /opt/letters
 docker compose pull
-# One-off: derive the responsive images (sharp, two cores: expect 20–40 minutes). Idempotent.
-docker compose run --rm letters node scripts/derive-images.ts --scans /archive --out /data --concurrency 2 --quiet
+# One-off: derive the responsive images (sharp, two cores: about 11 minutes). Idempotent.
+# The compose file sets LETTERS_SCANS_DIR, LETTERS_PHOTOS_DIR and LETTERS_DATA_DIR, so no flags are needed.
+docker compose run --rm letters node scripts/derive-images.ts --concurrency 2 --quiet
 docker compose up -d
 docker compose logs --tail 5 letters      # "letters: 12 sections, 456 letters, N transcriptions, 1836 derived images"
 curl -s http://127.0.0.1:3001/healthz     # ok
@@ -45,20 +47,21 @@ pull a surprise.
 Back up first: `cp /etc/caddy/Caddyfile /etc/caddy/Caddyfile.before-letters`.
 
 Replace the site block's `file_server` with this, keeping the hostnames the existing block declares.
-The scans are still files on disk, served by Caddy under `/scans/`; the derived images under `/img/`;
-everything else goes to the container. The global `trusted_proxies` block from the bookshop deploy
+The scans are still files on disk, served by Caddy under `/scans/`; the derived scan images under `/img/`
+and the landing page's photos under `/photos/`; everything else goes to the container. The global `trusted_proxies` block from the bookshop deploy
 already covers the edge, so `{client_ip}` is the real visitor.
 
 ```caddyfile
 http://germanwarletters.com, http://www.germanwarletters.com {
+	encode zstd gzip
 	@scans path /scans/*
 	handle @scans {
-		root * /srv/www/germanwarletters.com/public
+		root * /srv/www/germanwarletters.com/public/german-war-letters
 		uri strip_prefix /scans
 		file_server
 		header Cache-Control "public, max-age=31536000, immutable"
 	}
-	@img path /img/*
+	@img path /img/* /photos/*
 	handle @img {
 		root * /srv/letters-data
 		file_server
@@ -95,8 +98,11 @@ ones that bit the Nextcloud deploy):
 
 ```sh
 iptables -I DOCKER-USER -p tcp -m conntrack --ctorigdstport 9465 --ctdir ORIGINAL ! -s 192.168.88.8 -j DROP
-netfilter-persistent save
 ```
+
+Don't persist it with `netfilter-persistent`: installing `iptables-persistent` removes ufw. On VM 104 the
+rule lives in `/etc/systemd/system/letters-metrics-fence.service`, a oneshot bound to `docker.service`
+that checks for the rule (`iptables -C`) before inserting it, and deletes it on stop.
 
 On VM 107, add a scrape job to Prometheus (`/opt/monitoring`):
 
@@ -118,9 +124,9 @@ plus the Node defaults under `letters_`.
 
 ## Verify
 
-- Through the edge from outside the LAN: `/`, `/chapter/ch3`, `/letter/440` return 200 with the
-  server-rendered title; `/letter/nope` returns 404; `/scans/...` and `/img/...` return 200 with
-  the immutable cache header.
+- Through the edge from outside the LAN: `/`, `/letters`, `/chapter/ch3`, `/letter/440` return 200 with the
+  server-rendered title; `/letter/nope` returns 404; `/scans/...`, `/img/...` and `/photos/letters-800.webp`
+  return 200 with the immutable cache header.
 - `curl http://192.168.88.5:3001/healthz` from the workstation fails (loopback only) and
   `http://192.168.88.5:9465/metrics` times out from anything but VM 107.
 - Co-tenants still answer: `netarch.titanalpha.net`, `books.aaronjmccoy.com`, `mallerart.com`.
@@ -130,5 +136,6 @@ plus the Node defaults under `letters_`.
 
 ## Update
 
-`docker compose pull && docker compose up -d`, then re-pin the digest. Re-run `derive-images` only
-when scans are added; it skips renditions that are newer than their source.
+`docker compose pull && docker compose up -d`, then re-pin the digest. Re-run `derive-images` when scans
+are added or after a release that adds image kinds (the 2026-11 home page added `photos/`); it skips
+renditions that are newer than their source, so a re-run over the existing scans takes seconds.

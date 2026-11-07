@@ -5,13 +5,18 @@
  *   <out>/img/<derivedName>-<width>.webp
  *   <out>/img/manifest.json          { "<page id>": { width, height } }
  *
+ * With --photos, it does the same for the old site's landing-page photos
+ * (a flat folder of JPEG/PNG), named after the file: `<out>/photos/<name>-<width>.webp`.
+ * Their sizes are fixed in src/photos.ts, so no manifest is written for them.
+ *
  * Runs on the host that has the archive (VM 104), where the originals stay
  * untouched and keep being served by Caddy under /scans/. Idempotent: an
  * output newer than its source is left alone, so re-runs only pick up new
  * scans. Smaller originals are never upscaled.
  *
  *   node scripts/derive-images.ts --scans /srv/www/germanwarletters.com/public --out /srv/letters-data
- *   node scripts/derive-images.ts --dry-run          (LETTERS_SCANS_DIR / LETTERS_DATA_DIR from the env)
+ *   node scripts/derive-images.ts --scans /archive --photos /photos --out /data
+ *   node scripts/derive-images.ts --dry-run          (LETTERS_SCANS_DIR / LETTERS_PHOTOS_DIR / LETTERS_DATA_DIR from the env)
  */
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises';
 import { availableParallelism } from 'node:os';
@@ -103,6 +108,43 @@ export async function deriveImages(opts: DeriveOptions): Promise<DeriveResult> {
   return result;
 }
 
+export type PhotoOptions = Pick<DeriveOptions, 'out' | 'dryRun' | 'force' | 'log'> & { photos: string };
+
+/** Renditions of the landing-page photos. Returns how many files were (or would be) written. */
+export async function derivePhotos(opts: PhotoOptions): Promise<{ photos: number; written: number; failed: { page: string; error: string }[] }> {
+  const log = opts.log ?? (() => {});
+  const files = (await readdir(opts.photos)).filter((f) => /\.(jpe?g|png)$/i.test(f)).sort();
+  const outDir = join(opts.out, 'photos');
+  if (!opts.dryRun) await mkdir(outDir, { recursive: true });
+  const result = { photos: files.length, written: 0, failed: [] as { page: string; error: string }[] };
+  for (const file of files) {
+    const name = file.replace(/\.[^.]+$/, '');
+    const src = join(opts.photos, file);
+    try {
+      const sourceTime = (await stat(src)).mtimeMs;
+      const targets: { w: number; path: string }[] = [];
+      for (const w of WIDTHS) {
+        const path = join(outDir, `${name}-${w}.webp`);
+        if (opts.force || !(await isNewerThan(path, sourceTime))) targets.push({ w, path });
+      }
+      if (opts.dryRun) {
+        result.written += targets.length;
+        continue;
+      }
+      const image = sharp(src, { failOn: 'none' }).rotate();
+      for (const t of targets) {
+        await image.clone().resize({ width: t.w, withoutEnlargement: true }).webp({ quality: 80, effort: 4 }).toFile(t.path);
+        result.written++;
+      }
+      if (targets.length) log(`photo ${name}: ${targets.length} rendition(s)`);
+    } catch (err) {
+      result.failed.push({ page: file, error: (err as Error).message });
+      log(`FAIL photo ${file}: ${(err as Error).message}`);
+    }
+  }
+  return result;
+}
+
 async function readManifest(path: string): Promise<Manifest> {
   try {
     return JSON.parse(await readFile(path, 'utf8')) as Manifest;
@@ -132,6 +174,7 @@ async function main(): Promise<void> {
   const { values } = parseArgs({
     options: {
       scans: { type: 'string', default: process.env['LETTERS_SCANS_DIR'] },
+      photos: { type: 'string', default: process.env['LETTERS_PHOTOS_DIR'] },
       out: { type: 'string', default: process.env['LETTERS_DATA_DIR'] },
       'dry-run': { type: 'boolean', default: false },
       force: { type: 'boolean', default: false },
@@ -140,7 +183,7 @@ async function main(): Promise<void> {
     },
   });
   if (!values.scans || !values.out) {
-    console.error('usage: derive-images --scans <archive dir> --out <data dir> [--dry-run] [--force] [--concurrency N]');
+    console.error('usage: derive-images --scans <archive dir> --out <data dir> [--photos <photo dir>] [--dry-run] [--force] [--concurrency N]');
     process.exit(2);
   }
   const started = Date.now();
@@ -157,7 +200,19 @@ async function main(): Promise<void> {
   console.log(
     `${values['dry-run'] ? 'dry run: ' : ''}${result.pages} image pages, ${result.written} renditions ${verb}, ${result.skipped} up to date, ${result.failed.length} failed, ${secs}s`,
   );
-  if (result.failed.length) process.exit(1);
+  let failed = result.failed.length;
+  if (values.photos) {
+    const photos = await derivePhotos({
+      photos: resolve(values.photos),
+      out: resolve(values.out),
+      dryRun: values['dry-run'],
+      force: values.force,
+      ...(values.quiet ? {} : { log: (line: string) => console.log(line) }),
+    });
+    console.log(`${photos.photos} photos, ${photos.written} renditions ${verb}, ${photos.failed.length} failed`);
+    failed += photos.failed.length;
+  }
+  if (failed) process.exit(1);
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) await main();

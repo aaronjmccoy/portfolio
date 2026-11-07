@@ -62,6 +62,7 @@ await startSsrServer({
     const derived = process.env['LETTERS_DATA_DIR'];
     if (scans) app.use('/scans/*', serveStatic({ root: scans, rewriteRequestPath: (p) => p.replace(/^\/scans/, '') }));
     if (derived) app.use('/img/*', serveStatic({ root: resolve(derived, 'img'), rewriteRequestPath: (p) => p.replace(/^\/img/, '') }));
+    if (derived) app.use('/photos/*', serveStatic({ root: resolve(derived, 'photos'), rewriteRequestPath: (p) => p.replace(/^\/photos/, '') }));
   },
 });
 startMetricsServer(metrics.registry, { port: 9465 });

@@ -12,9 +12,12 @@ services:
     restart: unless-stopped
     environment:
       LETTERS_SCANS_DIR: /archive
+      LETTERS_PHOTOS_DIR: /photos
       LETTERS_DATA_DIR: /data
     volumes:
-      - /srv/www/germanwarletters.com/public:/archive:ro
+      # The scans are one level down from the old site's root, beside its img/ folder.
+      - /srv/www/germanwarletters.com/public/german-war-letters:/archive:ro
+      - /srv/www/germanwarletters.com/public/img:/photos:ro
       - /srv/letters-data:/data
     ports:
       - '127.0.0.1:3001:3001'

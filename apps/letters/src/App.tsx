@@ -15,15 +15,41 @@ export function App({ environment }: AppProps) {
       <SkipLink />
       <header className="site-header">
         <p className="site-header__name">
-          <Link to="/">German War Letters</Link>
+          <Link to="/">German War Letters</Link> <span className="site-header__dates">1939–1945</span>
         </p>
-        <p className="site-header__dates">1939–1945</p>
+        <SiteNav />
       </header>
       <Main />
       <footer className="site-footer">
         <p>The letters, the translations and the commentary are the author's. The site is maintained in his memory.</p>
       </footer>
     </RelayEnvironmentProvider>
+  );
+}
+
+const TABS = [
+  { to: '/', label: 'Home', match: (p: string) => p === '/' },
+  { to: '/letters', label: 'Letters', match: (p: string) => /^\/(letters|chapter|letter)(\/|$)/.test(p) },
+];
+
+/** Two tabs: the book's home page, and the letters reader with its chapters and scans. */
+function SiteNav() {
+  const { pathname } = useLocation();
+  return (
+    <nav aria-label="Site" className="site-nav">
+      <ul className="site-nav__list">
+        {TABS.map((t) => {
+          const here = t.match(pathname);
+          return (
+            <li key={t.to}>
+              <Link to={t.to} className="site-nav__link" aria-current={here ? (pathname === t.to ? 'page' : 'true') : undefined}>
+                {t.label}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
   );
 }
 

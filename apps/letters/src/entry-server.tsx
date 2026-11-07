@@ -10,7 +10,9 @@ import { createEnvironment, serializeRecords } from './relay/environment.ts';
 import { createServerFetch } from './relay/server-network.ts';
 import { matchRoute, preloadRoute } from './routes.tsx';
 
-const DESCRIPTION = "Letters home from German soldiers and their families, 1939–1945, with the scans and the author's commentary.";
+// The book's own tagline, from the original landing page.
+const DESCRIPTION =
+  'The book tells the story of a generation of German men, women and children who were forced by an evil government to go to war and once in that war, they had to fight to the end to try to save their families from the vengeance of both Adolf Hitler and Joseph Stalin.';
 
 export async function render(url: string, options: RenderToPipeableStreamOptions, ctx: unknown): Promise<RenderResult> {
   const environment = createEnvironment(createServerFetch(ctx as Context));
@@ -28,7 +30,11 @@ export async function render(url: string, options: RenderToPipeableStreamOptions
         <App environment={environment} />
       </StaticRouter>
     </StrictMode>,
-    options,
+    // React defers ("outlines") a finished Suspense boundary bigger than
+    // progressiveChunkSize (12.8 kB by default) behind an inline script, which
+    // leaves the long home page blank without JavaScript. Every route's data is
+    // preloaded before rendering, so nothing is gained by chunking: send it whole.
+    { ...options, progressiveChunkSize: Number.POSITIVE_INFINITY },
   );
   return { head, tail: serializeRecords(environment), status, pipe, abort };
 }
@@ -57,7 +63,7 @@ function lookup(environment: ReturnType<typeof createEnvironment>, pathname: str
       return { title: `Letter ${rec['number']}${rec['variant'] ?? ''}`, status: 200 };
     }
   }
-  return { title: pathname === '/' ? 'Contents' : undefined, status: matched ? 200 : 404 };
+  return { title: pathname === '/letters' ? 'Letters' : undefined, status: matched ? 200 : 404 };
 }
 
 function escape(s: string): string {

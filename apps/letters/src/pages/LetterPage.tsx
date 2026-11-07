@@ -100,7 +100,7 @@ export function LetterPage() {
     <article className="letter">
       <Title text={`${name} — ${chapter}`} />
       <nav aria-label="Breadcrumb" className="crumbs">
-        <Link to="/">Contents</Link> › <Link to={`/chapter/${letter.section.key}`}>{chapter}</Link>
+        <Link to="/letters">Letters</Link> › <Link to={`/chapter/${letter.section.key}`}>{chapter}</Link>
       </nav>
       <header className="letter__header">
         <h1 className="letter__title">{name}</h1>

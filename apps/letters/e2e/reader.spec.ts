@@ -19,11 +19,51 @@ async function turnPageWhenHydrated(page: Page): Promise<void> {
   }).toPass({ timeout: 10_000 });
 }
 
-test('contents page is server-rendered and accessible', async ({ page }) => {
+test("home page keeps the book's landing content and is accessible", async ({ page }) => {
   const res = await page.goto('/');
   expect(res?.status()).toBe(200);
-  await expect(page).toHaveTitle(/^Contents/);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/soldiers speak/);
+  await expect(page).toHaveTitle('German War Letters, 1939–1945');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Memories of a Lost Generation/);
+  for (const name of [
+    'The soldiers speak for themselves',
+    'Excerpt from the Dedication',
+    'Maps and Photos',
+    'Documents and Letters',
+    'Why use Letters to Tell the Story of the War?',
+  ]) {
+    await expect(page.getByRole('heading', { level: 2, name })).toBeVisible();
+  }
+  await expect(page.getByRole('list', { name: 'Maps and photos' }).getByRole('link')).toHaveCount(8);
+  await expect(page.getByRole('list', { name: 'Documents and letters' }).getByRole('link')).toHaveCount(4);
+  const nav = page.getByRole('navigation', { name: 'Site' });
+  await expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
+  await expectNoA11yViolations(page);
+});
+
+test('gallery opens a lightbox that pages and closes', async ({ page }) => {
+  await page.goto('/');
+  const first = page.getByRole('list', { name: 'Maps and photos' }).getByRole('link').first();
+  const dialog = page.getByRole('dialog');
+  await expect(async () => {
+    await first.click();
+    await expect(dialog).toBeVisible({ timeout: 300 });
+  }).toPass({ timeout: 10_000 });
+  await expect(dialog.getByRole('heading')).toHaveText('Heinrich on a mail and supply run');
+  await expect(dialog).toContainText('1 of 8');
+  await dialog.getByRole('button', { name: 'Next' }).click();
+  await expect(dialog.getByRole('heading')).toHaveText(/Eastern Wall/);
+  await page.keyboard.press('ArrowLeft');
+  await expect(dialog).toContainText('1 of 8');
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+});
+
+test('letters tab is server-rendered and accessible', async ({ page }) => {
+  const res = await page.goto('/letters');
+  expect(res?.status()).toBe(200);
+  await expect(page).toHaveTitle(/^Letters/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Letter Scans');
+  await expect(page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'Letters' })).toHaveAttribute('aria-current', 'page');
   expect(await page.getByRole('list', { name: 'Chapters' }).getByRole('listitem').count()).toBeGreaterThanOrEqual(10);
   await expect(page.getByRole('link', { name: 'Skip to content' })).toBeAttached();
   await expectNoA11yViolations(page);
@@ -31,6 +71,8 @@ test('contents page is server-rendered and accessible', async ({ page }) => {
 
 test('chapter page paginates and moves focus to main after navigation', async ({ page }) => {
   await page.goto('/');
+  await page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'Letters' }).click();
+  await expect(page).toHaveURL(/\/letters$/);
   await page.getByRole('link', { name: /Chapter 3\b/ }).click();
   await expect(page).toHaveURL(/\/chapter\/ch3$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Chapter 3:/);
@@ -84,7 +126,18 @@ test('letter page is readable without JavaScript', async ({ browser }) => {
   await page.goto('/letter/440');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Letter 440');
   await expect(page.locator('.scan__caption')).toHaveText(/^Page 1 of/);
-  await expect(page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Contents' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Breadcrumb' }).getByRole('link', { name: 'Letters' })).toBeVisible();
+  await expect(page.getByRole('navigation', { name: 'Site' }).getByRole('link', { name: 'Letters' })).toHaveAttribute('aria-current', 'true');
+  await context.close();
+});
+
+test('home page is readable without JavaScript', async ({ browser }) => {
+  const context = await browser.newContext({ javaScriptEnabled: false });
+  const page = await context.newPage();
+  await page.goto('/');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText(/^Memories of a Lost Generation/);
+  await expect(page.getByRole('heading', { level: 2, name: 'Why use Letters to Tell the Story of the War?' })).toBeVisible();
+  await expect(page.getByText('Loading…')).toBeHidden();
   await context.close();
 });
 
@@ -92,6 +145,6 @@ test('unknown letter is a 404 with a way back', async ({ page }) => {
   const res = await page.goto('/letter/nope');
   expect(res?.status()).toBe(404);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('No such letter');
-  await expect(page.getByRole('link', { name: 'Back to the contents' })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'Back to the letters' })).toBeVisible();
   await expectNoA11yViolations(page);
 });

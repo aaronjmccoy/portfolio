@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import sharp from 'sharp';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { deriveImages } from './derive-images.ts';
+import { deriveImages, derivePhotos } from './derive-images.ts';
 
 const LETTER = 'Chapter 1          Test%2FLetter # 1%2F';
 
@@ -66,5 +66,40 @@ describe('deriveImages', () => {
     const r = await deriveImages({ scans, out, dryRun: true, force: true });
     expect(r.written).toBe(9);
     expect((await readdir(join(out, 'img'))).length).toBe(before);
+  });
+});
+
+describe('derivePhotos', () => {
+  let photos: string;
+  let out: string;
+  beforeAll(async () => {
+    const dir = await mkdtemp(join(tmpdir(), 'letters-photos-'));
+    photos = join(dir, 'img');
+    out = join(dir, 'data');
+    await mkdir(photos);
+    const make = (w: number, h: number) => sharp({ create: { width: w, height: h, channels: 3, background: '#777' } });
+    await make(2000, 1400).png().toFile(join(photos, 'letters.png'));
+    await make(824, 545).jpeg().toFile(join(photos, 'image17.jpg'));
+    await writeFile(join(photos, 'notes.txt'), 'not an image');
+  }, 30_000);
+  afterAll(() => rm(dirname(photos), { recursive: true, force: true, maxRetries: 10, retryDelay: 100 }).catch(() => undefined));
+
+  it('writes three renditions per photo, named after the file, never upscaling', async () => {
+    const r = await derivePhotos({ photos, out });
+    expect(r).toEqual({ photos: 2, written: 6, failed: [] });
+    expect((await readdir(join(out, 'photos'))).sort()).toEqual([
+      'image17-1600.webp',
+      'image17-320.webp',
+      'image17-800.webp',
+      'letters-1600.webp',
+      'letters-320.webp',
+      'letters-800.webp',
+    ]);
+    expect((await sharp(join(out, 'photos', 'image17-1600.webp')).metadata()).width).toBe(824);
+    expect((await sharp(join(out, 'photos', 'letters-1600.webp')).metadata()).width).toBe(1600);
+  }, 30_000);
+
+  it('is idempotent', async () => {
+    expect((await derivePhotos({ photos, out })).written).toBe(0);
   });
 });

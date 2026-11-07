@@ -7,7 +7,8 @@ export function NotFound({ what }: { what: string }) {
       <Title text="Not found" />
       <h1>No such {what}</h1>
       <p>
-        Nothing in the archive matches that address. <Link to="/">Back to the contents</Link>.
+        Nothing in the archive matches that address. <Link to="/letters">Back to the letters</Link> or{' '}
+        <Link to="/">the home page</Link>.
       </p>
     </article>
   );

@@ -1,6 +1,7 @@
 import { fetchQuery } from 'react-relay';
 import { matchPath } from 'react-router';
 import type { Environment, GraphQLTaggedNode, OperationType } from 'relay-runtime';
+import { HomePage } from './pages/HomePage.tsx';
 import { SectionsPage, SectionsPageQuery } from './pages/SectionsPage.tsx';
 import { ChapterPage, ChapterPageQuery } from './pages/ChapterPage.tsx';
 import { LetterPage, LetterPageQuery } from './pages/LetterPage.tsx';
@@ -8,8 +9,9 @@ import { LetterPage, LetterPageQuery } from './pages/LetterPage.tsx';
 export type RouteDef = {
   path: string;
   Component: () => React.JSX.Element;
-  query: GraphQLTaggedNode;
-  variables: (params: Record<string, string | undefined>) => OperationType['variables'];
+  /** What the page reads, for the server to preload; static pages have none */
+  query?: GraphQLTaggedNode;
+  variables?: (params: Record<string, string | undefined>) => OperationType['variables'];
 };
 
 /**
@@ -19,7 +21,8 @@ export type RouteDef = {
  * client, where a navigation simply suspends until the data arrives.
  */
 export const routes: RouteDef[] = [
-  { path: '/', Component: SectionsPage, query: SectionsPageQuery, variables: () => ({}) },
+  { path: '/', Component: HomePage },
+  { path: '/letters', Component: SectionsPage, query: SectionsPageQuery, variables: () => ({}) },
   { path: '/chapter/:key', Component: ChapterPage, query: ChapterPageQuery, variables: (p) => ({ key: p['key'] ?? '', first: 50 }) },
   { path: '/letter/:key', Component: LetterPage, query: LetterPageQuery, variables: (p) => ({ key: p['key'] ?? '' }) },
 ];
@@ -35,8 +38,8 @@ export function matchRoute(pathname: string): { route: RouteDef; params: Record<
 /** Fills the environment's store for the matched route. Resolves even on a miss. */
 export async function preloadRoute(environment: Environment, pathname: string): Promise<void> {
   const match = matchRoute(pathname);
-  if (!match) return;
-  await fetchQuery(environment, match.route.query, match.route.variables(match.params)).toPromise();
+  if (!match?.route.query) return;
+  await fetchQuery(environment, match.route.query, match.route.variables?.(match.params) ?? {}).toPromise();
 }
 
 export const fetchPolicy = typeof window === 'undefined' ? ('store-only' as const) : ('store-or-network' as const);

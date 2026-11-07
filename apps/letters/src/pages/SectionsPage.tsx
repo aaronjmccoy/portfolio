@@ -20,11 +20,10 @@ export function SectionsPage() {
   const data = useLazyLoadQuery<QueryType>(SectionsPageQuery, {}, { fetchPolicy });
   return (
     <article className="sections">
-      <Title text="Contents" />
-      <h1 className="sections__title">The soldiers speak for themselves</h1>
+      <Title text="Letters" />
+      <h1 className="sections__title">Letter Scans</h1>
       <p className="sections__lede">
-        Letters home from German soldiers and their families, 1939–1945, with the author's commentary. Each chapter
-        follows one family or one man; the scans are shown beside the transcription wherever one exists.
+        Click a chapter name to see the scans for that chapter.
       </p>
       <ol className="toc" aria-label="Chapters">
         {data.sections.map((s) => (

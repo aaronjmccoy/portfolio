@@ -49,7 +49,7 @@ export function ChapterPage() {
     <article className="chapter">
       <Title text={heading} />
       <nav aria-label="Breadcrumb" className="crumbs">
-        <Link to="/">Contents</Link>
+        <Link to="/letters">Letters</Link>
       </nav>
       <h1 className="chapter__title">{heading}</h1>
       <p className="chapter__count">{data.section.letterCount} letters</p>
