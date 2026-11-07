@@ -1,0 +1,36 @@
+{
+  "name": "@portfolio/letters",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server/dev.ts",
+    "relay": "relay-compiler",
+    "schema:print": "node scripts/print-schema.ts > schema/schema.graphql",
+    "images": "node scripts/derive-images.ts",
+    "build": "pnpm relay && vite build --ssrManifest --outDir dist/client && vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "start": "node server/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@portfolio/ssr": "workspace:*",
+    "@portfolio/ui": "workspace:*",
+    "@pothos/core": "^4.0.0",
+    "@pothos/plugin-relay": "^4.0.0",
+    "graphql": "^16.0.0",
+    "graphql-yoga": "^6.0.1",
+    "hono": "^4.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-relay": "^21.0.1",
+    "relay-runtime": "^21.0.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@types/react-relay": "^18.2.1",
+    "@types/relay-runtime": "^20.1.1",
+    "babel-plugin-relay": "^21.0.1",
+    "relay-compiler": "^21.0.1"
+  }
+}

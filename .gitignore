@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+storybook-static/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+__generated__/*
+!__generated__/.gitkeep
+*.log
+.DS_Store

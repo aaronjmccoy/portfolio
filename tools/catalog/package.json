@@ -1,0 +1,17 @@
+{
+  "name": "@portfolio/catalog",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "catalog": "./src/cli.ts"
+  },
+  "scripts": {
+    "import": "node src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "graphql": "^16.0.0"
+  }
+}

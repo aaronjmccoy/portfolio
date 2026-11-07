@@ -1,0 +1,145 @@
+/* ============================================================================
+   @portfolio/ui — semantic design tokens.
+
+   Every app imports this file first and then overrides the brand values it
+   needs (fonts, colours, type scale) in its own theme file. Components in this
+   package consume ONLY the names declared here, never raw values, so an app
+   can restyle them without touching component CSS.
+
+   Defaults are the Maller Art values measured from design/Mockup.jpg in the
+   original mallerart site. The derivations and deviations are documented
+   there; this file keeps the names and drops the mockup-specific geometry.
+
+   Layer order is declared once, here. Apps add their own layers after
+   `components` so brand overrides win without !important.
+   ========================================================================= */
+
+@layer tokens, base, components, app;
+
+@layer tokens {
+  :root {
+    color-scheme: light;
+
+    /* ── type ──────────────────────────────────────────────────────────── */
+    --font-display: 'Anton', 'Impact', 'Haettenschweiler', 'Arial Narrow', sans-serif;
+    --font-body: 'Figtree', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: ui-monospace, 'Cascadia Mono', 'Consolas', monospace;
+
+    --fs-xs: clamp(0.8125rem, 1.21vw, 1.09rem);
+    --fs-sm: clamp(0.9375rem, 1.5vw, 1.15rem);
+    --fs-md: clamp(1rem, 1.62vw, 1.45rem);
+    --fs-lg: clamp(1.125rem, 3.05vw, 2.75rem);
+    --fs-xl: clamp(2.25rem, 5.11vw, 4.6rem);
+    --fs-display: clamp(3rem, 10.26vw, 9.25rem);
+
+    --lh-tight: 0.92;
+    --lh-display: 0.86;
+    --lh-body: 1.35;
+    --lh-reading: 1.6;
+
+    --wt-regular: 400;
+    --wt-medium: 500;
+    --wt-bold: 700;
+    --wt-black: 800;
+
+    --tracking-display: -0.0115em;
+    --tracking-heading: -0.031em;
+    --tracking-body: 0em;
+    --tracking-caption: -0.013em;
+
+    /* ── colour ────────────────────────────────────────────────────────── */
+    --color-bg: #ffffff;
+    --color-surface: #ffffff;
+    --color-ink: #000000;
+    --color-muted: #555555;            /* 7.46:1 on white, AAA */
+    --color-rule: #e6e6e6;             /* decorative hairlines only */
+    --color-control-border: #8f8f8f;   /* 3:1 minimum for UI boundaries (WCAG 1.4.11) */
+    --color-accent: #000000;
+    --color-accent-ink: #ffffff;
+    --color-danger: #b3261e;
+    --color-success: #1b6e3a;
+    --focus: #000000;
+    --focus-ring: 0 0 0 3px var(--color-bg), 0 0 0 5px var(--focus);
+
+    /* ── space ─────────────────────────────────────────────────────────── */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+
+    --page-max: 90rem;
+    --page-pad: clamp(1.25rem, 5.68vw, 5.125rem);
+    --gutter: clamp(0.75rem, 1.87vw, 1.6875rem);
+    --section-gap: clamp(2rem, 4.37vw, 4rem);
+
+    /* ── controls ──────────────────────────────────────────────────────── */
+    --control-h: clamp(2.75rem, 3.94vw, 3.25rem);  /* floor is the 44px touch target */
+    --control-pad: clamp(0.875rem, 1.4vw, 1.25rem);
+    --radius-sm: 0.25rem;
+    --radius-md: 0.5rem;
+    --radius-pill: 999px;
+
+    /* ── elevation ─────────────────────────────────────────────────────── */
+    --shadow-drawer: 0 0 0 1px rgb(0 0 0 / 0.08), 0 24px 48px rgb(0 0 0 / 0.18);
+
+    /* ── motion ────────────────────────────────────────────────────────── */
+    --transition-fast: 150ms;
+    --transition-slow: 300ms;
+    --ease: cubic-bezier(0.2, 0.6, 0.3, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --transition-fast: 0ms;
+      --transition-slow: 0ms;
+    }
+  }
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    font-family: var(--font-body);
+    font-size: 100%;
+    line-height: var(--lh-body);
+    color: var(--color-ink);
+    background: var(--color-bg);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+  }
+
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  img,
+  picture,
+  video,
+  svg {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+  }
+}
