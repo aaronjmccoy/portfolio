@@ -48,6 +48,7 @@ await startSsrServer({
   name: 'letters',
   port: Number(process.env['PORT'] ?? 3001),
   httpRequests: metrics.httpRequests,
+  renderContext: () => ({ index }),
   configure(app) {
     app.on(['GET', 'POST', 'OPTIONS'], '/graphql', (c) => yoga.fetch(c.req.raw, {}));
     // In production Caddy serves these directly; locally the Node server does.

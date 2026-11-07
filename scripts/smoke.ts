@@ -35,7 +35,13 @@ const checks: Check[] = [
     port: 3901,
     metricsPort: 9901,
     async run(base) {
-      await expectText(await fetch(`${base}/`), '<main id="main"', 'letters /');
+      const home = await expectText(await fetch(`${base}/`), '<main id="main"', 'letters /');
+      if (!home.includes('Chapter 3')) throw new Error('letters /: contents not server-rendered');
+      const letter = await expectText(await fetch(`${base}/letter/440`), '<h1 class="letter__title">Letter 440</h1>', 'letters /letter/440');
+      if (!letter.includes('id="__RELAY_DATA__"')) throw new Error('letters /letter/440: Relay store not embedded');
+      if (!letter.includes('<title>Letter 440')) throw new Error('letters /letter/440: title not derived from the store');
+      const missing = await fetch(`${base}/letter/nope`);
+      if (missing.status !== 404) throw new Error(`letters /letter/nope: expected 404, got ${missing.status}`);
       const res = await fetch(`${base}/graphql`, {
         method: 'POST',
         headers: { 'content-type': 'application/json' },

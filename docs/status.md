@@ -12,6 +12,14 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - 2026-11-06: `tools/catalog`: CLI skeleton with argument parsing and tests.
 - 2026-11-06: GN stack research in `docs/research/gn-stack.md`.
 
+- 2026-11-07: Letters reader written (Relay environments, routes with SSR preload, Sections/Chapter/Letter pages,
+  reader styles, react-router 8) and the SSR contract extended (async render, request context, serialized tail).
+- 2026-11-07: Relay tag transform fixed. `@vitejs/plugin-react` 6 has no `babel` option, so `babel-plugin-relay`
+  was never configured; `packages/ssr/src/vite-relay.ts` (`@portfolio/ssr/vite`) now rewrites each `graphql`
+  tag to an import of its `__generated__` artifact (magic-string, with source maps), in dev, build, SSR and
+  Vitest. Artifacts are committed because CI typechecks before it builds. SSR status now comes from the
+  preloaded store (`/letter/nope` → 404). Green: typecheck, lint, 22 tests, 4 builds, smoke.
+
 ## Next
 - Letters: image derivation script (sharp → WebP 320/800/1600), transcription loader (Markdown by letter key), Relay routes and the reader UI.
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
@@ -24,4 +32,3 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - Shopify Partner dev store for Maller Art; Headless channel token; Admin custom app token.
 - Cloudflare A record for `portfolio.aaronjmccoy.com`.
 - Megan's catalog (titles, prices, photos, editions, shipping).
-- Approve the first push of this repo to GitHub (`aaronjmccoy/portfolio`).

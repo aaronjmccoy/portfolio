@@ -26,12 +26,25 @@ import type { Counter } from '@prometheus-io/client';
 export { serveStatic };
 
 export type RenderResult = {
+  /** Markup for <head>: title, meta, preloads */
   head: string;
+  /** Markup appended after the app, before the template's closing tags (serialized data) */
+  tail?: string;
+  status?: number;
   pipe: (destination: NodeJS.WritableStream) => unknown;
   abort: () => void;
 };
 
-export type RenderFn = (url: string, options: RenderToPipeableStreamOptions) => RenderResult;
+/**
+ * Exported by each app's entry-server. May be async so a route can preload
+ * its data before React starts streaming. `ctx` is whatever the server's
+ * `renderContext` returns for this request (e.g. an in-memory data index).
+ */
+export type RenderFn = (
+  url: string,
+  options: RenderToPipeableStreamOptions,
+  ctx: unknown,
+) => RenderResult | Promise<RenderResult>;
 
 export type SsrOptions = {
   /** App directory containing index.html and dist/ */
@@ -45,6 +58,8 @@ export type SsrOptions = {
   configure?: (app: Hono) => void | Promise<void>;
   /** Counter labelled {route, status}; optional */
   httpRequests?: Counter<'route' | 'status'>;
+  /** Per-request context handed to the app's render function */
+  renderContext?: () => unknown;
   /** Give up streaming after this long */
   abortMs?: number;
 };
@@ -104,30 +119,51 @@ async function streamHtml(c: Context, renderer: Renderer, opts: SsrOptions): Pro
   // React ends whatever it pipes into once rendering completes, so the HTML
   // that follows the app (closing tags, the client script) is appended by this
   // sink's `final` rather than by an onAllReady callback racing the pipe.
+  let tail = '';
   const sink = new Writable({
     write(chunk: Buffer, _enc, cb) {
       body.write(chunk, cb);
     },
     final(cb) {
-      body.end(after ?? '', cb);
+      body.end(tail + (after ?? ''), cb);
     },
   });
   let status = 200;
-  const { head, pipe, abort } = render(url, {
-    onShellReady() {
-      body.write((before ?? '').replace('<!--app-head-->', head));
-      pipe(sink);
-    },
+  // onShellReady can fire synchronously inside render() for a shell with no
+  // suspense, before `result` is assigned, so both sides call flush() and
+  // whichever comes second does the work.
+  let shellReady = false;
+  let flushed = false;
+  let current: RenderResult | undefined = undefined;
+  const flush = () => {
+    if (flushed || !shellReady || !current) return;
+    flushed = true;
+    body.write((before ?? '').replace('<!--app-head-->', current.head));
+    current.pipe(sink);
+  };
+  const result = await render(
+    url,
+    {
+      onShellReady() {
+        shellReady = true;
+        flush();
+      },
     onShellError(err: unknown) {
       status = 500;
       console.error(err);
       body.end('<!doctype html><title>Error</title><p>Something went wrong.</p>');
     },
-    onError(err: unknown) {
-      console.error(err);
+      onError(err: unknown) {
+        console.error(err);
+      },
     },
-  });
-  setTimeout(abort, opts.abortMs ?? 10_000).unref();
+    opts.renderContext?.(),
+  );
+  current = result;
+  tail = result.tail ?? '';
+  if (result.status) status = result.status;
+  flush();
+  setTimeout(result.abort, opts.abortMs ?? 10_000).unref();
   opts.httpRequests?.inc({ route: 'html', status: String(status) });
   return new Response(Readable.toWeb(body) as ReadableStream, {
     status,

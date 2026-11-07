@@ -1,8 +1,10 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import { relay } from '@portfolio/ssr/vite';
 
 export default defineConfig({
-  plugins: [react({ babel: { plugins: ['relay'] } })],
+  plugins: [relay({ artifactDirectory: fileURLToPath(new URL('./src/__generated__', import.meta.url)) }), react()],
   build: { sourcemap: true },
   ssr: { noExternal: ['@portfolio/ui'] },
   test: {

@@ -8,7 +8,7 @@
     "relay": "relay-compiler",
     "schema:print": "node scripts/print-schema.ts > schema/schema.graphql",
     "images": "node scripts/derive-images.ts",
-    "build": "pnpm relay && vite build --ssrManifest --outDir dist/client && vite build --ssr src/entry-server.tsx --outDir dist/server",
+    "build": "pnpm schema:print && pnpm relay && vite build --ssrManifest --outDir dist/client && vite build --ssr src/entry-server.tsx --outDir dist/server",
     "start": "node server/index.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --passWithNoTests"
@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-relay": "^21.0.1",
+    "react-router": "^8.5.1",
     "relay-runtime": "^21.0.1",
     "sharp": "^0.35.5"
   },
