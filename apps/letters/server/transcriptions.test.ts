@@ -11,6 +11,7 @@ describe('parseTranscription', () => {
       letterKey: '440',
       source: 'book',
       markdown: 'Liebe Eltern,\n\nes geht mir gut.',
+      replaces: [],
     });
   });
 
@@ -18,6 +19,11 @@ describe('parseTranscription', () => {
     const t = parseTranscription('441a', '---\r\nsource: ocr\r\n---\r\nText\r\n');
     expect(t.source).toBe('ocr');
     expect(t.markdown).toBe('Text');
+  });
+
+  it('reads the pages a translation replaces', () => {
+    const t = parseTranscription('442', '---\nsource: translation\nreplaces: pfr100518, E\n---\nDear Egon !.');
+    expect(t).toEqual({ letterKey: '442', source: 'translation', replaces: ['pfr100518', 'E'], markdown: 'Dear Egon !.' });
   });
 
   it('rejects unknown sources', () => {

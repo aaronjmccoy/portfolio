@@ -8,19 +8,28 @@
  *   ---
  *   Liebe Eltern, ...
  *
- * Without front matter a file is from the book. Anything else in the folder
- * (README, drafts) is ignored.
+ * Without front matter a file is from the book. The author's typed English
+ * translations, which were scanned with the letters, are `source: translation`
+ * and name the scanned pages the text stands in for, so the reader drops them:
+ *
+ *   ---
+ *   source: translation
+ *   replaces: pfr100518
+ *   ---
+ *
+ * Anything else in the folder (README, drafts) is ignored.
  */
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { Transcription } from './archive-index.ts';
 
 const LETTER_FILE = /^(\d+[a-z]?)\.md$/i;
-const SOURCES = new Set(['book', 'ocr']);
+const SOURCES = new Set(['book', 'ocr', 'translation']);
 
 export function parseTranscription(letterKey: string, raw: string): Transcription {
   const text = raw.replace(/\r\n/g, '\n');
   let source: Transcription['source'] = 'book';
+  let replaces: string[] = [];
   let body = text;
   if (text.startsWith('---\n')) {
     const end = text.indexOf('\n---', 4);
@@ -29,13 +38,15 @@ export function parseTranscription(letterKey: string, raw: string): Transcriptio
       const m = /^(\w+)\s*:\s*(.*)$/.exec(line.trim());
       if (!m) continue;
       if (m[1] === 'source') {
-        if (!SOURCES.has(m[2] ?? '')) throw new Error(`transcription ${letterKey}: source must be "book" or "ocr", got "${m[2]}"`);
+        if (!SOURCES.has(m[2] ?? '')) throw new Error(`transcription ${letterKey}: source must be "book", "ocr" or "translation", got "${m[2]}"`);
         source = m[2] as Transcription['source'];
+      } else if (m[1] === 'replaces') {
+        replaces = (m[2] ?? '').split(',').map((s) => s.trim()).filter(Boolean);
       }
     }
     body = text.slice(end + 4);
   }
-  return { letterKey, markdown: body.trim(), source };
+  return { letterKey, markdown: body.trim(), source, replaces };
 }
 
 export async function loadTranscriptions(dir: string): Promise<Map<string, Transcription>> {

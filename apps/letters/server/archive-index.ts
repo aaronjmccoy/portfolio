@@ -39,8 +39,13 @@ export type Section = {
 export type Transcription = {
   letterKey: string;
   markdown: string;
-  /** "book" when sourced from the author's text, "ocr" when machine-read */
-  source: 'book' | 'ocr';
+  /**
+   * "book" when sourced from the author's text, "ocr" when machine-read from a
+   * letter, "translation" when read from the author's typed English page
+   */
+  source: 'book' | 'ocr' | 'translation';
+  /** Scanned pages (by page name) this text stands in for; the reader omits them */
+  replaces: string[];
 };
 
 export type ArchiveIndex = {
@@ -134,6 +139,8 @@ export function buildArchiveIndex(
     s.letters.sort(byVariant);
     s.loose.sort((a, b) => a.order - b.order);
     for (const l of s.letters) {
+      const replaced = new Set(l.transcription?.replaces.map((p) => p.toLowerCase()));
+      if (replaced.size) l.pages = l.pages.filter((p) => !replaced.has(p.page.toLowerCase()));
       l.pages.sort((a, b) => a.order - b.order);
       l.companions.sort((a, b) => a.order - b.order);
     }

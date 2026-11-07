@@ -182,7 +182,7 @@ export function LetterPage() {
           {letter.transcription ? (
             <>
               <p className="transcript__source">
-                {letter.transcription.source === 'book' ? "From the author's book" : 'Machine-read; may contain errors'}
+                {SOURCE_LABEL[letter.transcription.source] ?? SOURCE_LABEL.ocr}
               </p>
               <div className="transcript__text">
                 {letter.transcription.markdown.split(/\n{2,}/).map((para, i) => (
@@ -227,3 +227,9 @@ export function LetterPage() {
     </article>
   );
 }
+
+const SOURCE_LABEL: Record<string, string> = {
+  book: "From the author's book",
+  translation: "The author's English translation, machine-read from his typed copy; may contain small errors",
+  ocr: 'Machine-read; may contain errors',
+};

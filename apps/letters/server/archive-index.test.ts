@@ -41,9 +41,17 @@ describe('buildArchiveIndex', () => {
   it('attaches transcriptions by letter key and lists letters in reading order', () => {
     const withText = buildArchiveIndex(
       files,
-      new Map([['440', { letterKey: '440', markdown: '# Hello', source: 'book' }]]),
+      new Map([['440', { letterKey: '440', markdown: '# Hello', source: 'book', replaces: [] }]]),
     );
     expect(withText.letterByKey.get('440')!.transcription?.source).toBe('book');
     expect(withText.letters.map((l) => l.key)).toEqual(['15', '400', '440', '441a', '441b', '442', '445']);
+  });
+
+  it('drops the scanned pages a transcription replaces', () => {
+    const withText = buildArchiveIndex(
+      files,
+      new Map([['442', { letterKey: '442', markdown: 'Dear Egon', source: 'translation', replaces: ['b'] }]]),
+    );
+    expect(withText.letterByKey.get('442')!.pages.map((p) => p.page)).toEqual(['A']);
   });
 });

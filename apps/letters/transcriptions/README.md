@@ -16,4 +16,16 @@ source: ocr
 Liebe Eltern, ...
 ```
 
+The author's typed English translations were scanned with the letters. Their text lives here
+as `source: translation`, and `replaces` names the scanned pages (comma-separated page names,
+as in the archive) that the reader then leaves out of the scans:
+
+```
+---
+source: translation
+replaces: pfr100518
+---
+Husum Aug 17th 1943
+```
+
 Files that are not named after a letter, like this one, are ignored.

@@ -107,7 +107,12 @@ test('letter page shows scans with keyboard paging and thumbnails', async ({ pag
   await page.getByRole('button', { name: 'Page 1' }).click();
   await expect(caption).toHaveText(/^Page 1 of/);
   await expect(page.getByRole('button', { name: 'Page 1' })).toHaveAttribute('aria-current', 'true');
-  await expect(page.getByRole('region', { name: 'Transcription' }).getByRole('heading', { level: 2 })).toHaveText('Transcription');
+  const transcript = page.getByRole('region', { name: 'Transcription' });
+  await expect(transcript.getByRole('heading', { level: 2 })).toHaveText('Transcription');
+  // The author's typed translation is shown as text, and its scan is dropped from the pages.
+  await expect(transcript).toContainText('Dear Heinz!');
+  await expect(transcript).toContainText("The author's English translation");
+  await expect(page.locator('img[src*="pfr100313"]')).toHaveCount(0);
   await expectNoA11yViolations(page);
 });
 
