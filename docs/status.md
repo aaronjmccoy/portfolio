@@ -46,15 +46,20 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   on `main`. Reading VM 104's Caddyfile from here was blocked by the permission classifier, so the Caddy block in
   the runbook is a template to merge, not a verified diff.
 
+- 2026-11-07: Letters live on VM 104 (`/opt/letters`, image pulled from GHCR, 5,511 renditions derived in 11 min,
+  Caddy serving `/scans/`, `/img/`, `/photos/` and proxying the rest; metrics fenced by a systemd oneshot).
+  The book's landing page restored as the Home tab (`/`), contents at `/letters`. Verified from outside:
+  `/`, `/letters`, `/letter/440` 200 with SSR titles, `/letter/nope` 404. `portfolio.aaronjmccoy.com` A record
+  added, DNS-only.
+
 ## Next
-- Letters: run `derive-images` on VM 104 against the real scans (inside the Docker image, output to a bind-mounted data dir); first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
+- Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
 - UI: adopt the primitives in the letters app (Button, LiveRegion for page changes); serve Storybook at `portfolio.aaronjmccoy.com/ui/`.
 - Playwright + axe e2e for shop and portfolio (letters done); Lighthouse CI budgets.
-- Deployment: run the letters runbook on VM 104 once the RAM is raised (operator); shop Dockerfile later.
+- Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
-- Raise VM 104 to 4 GB RAM before the Node services deploy.
-- Shopify Partner dev store for Maller Art; Headless channel token; Admin custom app token.
-- Cloudflare A record for `portfolio.aaronjmccoy.com`.
+- Shopify Partner dev store for Maller Art; Headless channel token; Admin custom app token → `apps/shop/.env`.
 - Megan's catalog (titles, prices, photos, editions, shipping).
+- First chapter of transcriptions.
