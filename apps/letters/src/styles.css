@@ -542,73 +542,8 @@
     padding-block: var(--space-6);
   }
 
-  .home__section h2,
-  .memorial h2 {
+  .home__section h2 {
     color: var(--gwl-navy);
-  }
-
-  /* ── in memory ─────────────────────────────────────────────────────── */
-  .memorial {
-    margin-block-start: var(--space-8);
-    margin-block-end: calc(-1 * var(--space-8));
-    padding-block: var(--space-7);
-    display: grid;
-    gap: var(--space-6);
-    align-items: start;
-  }
-
-  @media (min-width: 48rem) {
-    .memorial {
-      grid-template-columns: 16rem minmax(0, 1fr);
-    }
-  }
-
-  .memorial h2 {
-    color: var(--gwl-sky);
-    font-size: var(--fs-lg);
-    font-weight: 600;
-    line-height: var(--lh-tight);
-    margin: 0 0 var(--space-4);
-  }
-
-  .memorial__eyebrow {
-    display: block;
-    font-family: var(--font-ui);
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--gwl-on-navy-muted);
-  }
-
-  .memorial__figure {
-    margin: 0;
-  }
-
-  .memorial__figure img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: 4px solid var(--gwl-parchment);
-  }
-
-  .memorial__figure figcaption {
-    margin-block-start: var(--space-2);
-    font-family: var(--font-ui);
-    font-size: var(--fs-xs);
-    color: var(--gwl-on-navy-muted);
-  }
-
-  .memorial p {
-    max-width: var(--measure);
-  }
-
-  .memorial blockquote {
-    margin: var(--space-4) 0;
-    padding-inline-start: var(--space-4);
-    border-left: 3px solid var(--gwl-sky);
-    max-width: var(--measure);
-    font-style: italic;
   }
 
   .gallery__caption p {

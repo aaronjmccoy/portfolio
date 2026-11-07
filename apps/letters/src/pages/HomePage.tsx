@@ -126,44 +126,6 @@ export function HomePage() {
           of information about life on the front lines in Russia.
         </p>
       </section>
-
-      <section className="memorial band band--navy" aria-labelledby="memory">
-        <figure className="memorial__figure">
-          <img
-            src={photoSrc(photos.steve, 800)}
-            srcSet={photoSrcSet(photos.steve)}
-            sizes="(min-width: 48rem) 16rem, 92vw"
-            alt={photos.steve.alt}
-            width={photos.steve.width}
-            height={photos.steve.height}
-            loading="lazy"
-            decoding="async"
-          />
-          <figcaption>
-            Photo: <a href="https://www.paleoprospectors.com/">Paleo Prospectors</a>
-          </figcaption>
-        </figure>
-        <div>
-          <h2 id="memory">
-            <span className="memorial__eyebrow">In memory of</span> Dr. Steve Nicklas
-          </h2>
-          <p>
-            Steve Nicklas wrote <cite>Memories of a Lost Generation: German War Letters, 1939–1945</cite>. This site is maintained in his
-            memory.
-          </p>
-          <p>He was also the founder of Paleo Prospectors. In the words of the company he built, Steve</p>
-          <blockquote cite="https://www.paleoprospectors.com/#team">
-            <p>
-              created opportunities for amateur fossil fanatics to explore remarkable places, make their own discoveries and contribute
-              important finds to museums and research institutions. Along with Rob, he discovered the &ldquo;Tanis site.&rdquo;
-            </p>
-          </blockquote>
-          <p>
-            <a href="https://www.paleoprospectors.com/">Paleo Prospectors</a> carries on his work in the field, with his daughter Brandi among
-            its guides.
-          </p>
-        </div>
-      </section>
     </article>
   );
 }
