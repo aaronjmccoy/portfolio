@@ -36,7 +36,10 @@ const checks: Check[] = [
     metricsPort: 9901,
     async run(base) {
       const home = await expectText(await fetch(`${base}/`), '<main id="main"', 'letters /');
-      if (!home.includes('Chapter 3')) throw new Error('letters /: contents not server-rendered');
+      if (!home.includes('Memories of a Lost Generation')) throw new Error('letters /: home page not server-rendered');
+      if (home.includes('<template id="B:')) throw new Error('letters /: home page outlined behind a script (blank without JS)');
+      const contents = await expectText(await fetch(`${base}/letters`), '<main id="main"', 'letters /letters');
+      if (!contents.includes('Chapter 3')) throw new Error('letters /letters: contents not server-rendered');
       const letter = await expectText(await fetch(`${base}/letter/440`), '<h1 class="letter__title">Letter 440</h1>', 'letters /letter/440');
       if (!letter.includes('id="__RELAY_DATA__"')) throw new Error('letters /letter/440: Relay store not embedded');
       if (!letter.includes('<title>Letter 440')) throw new Error('letters /letter/440: title not derived from the store');
