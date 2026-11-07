@@ -24,6 +24,8 @@ export type Letter = {
   sectionKey: string;
   pages: Page[];
   companions: Page[]; // non-image files (docx, onetoc2)
+  /** Scans the transcription replaces (the author's typed translation); kept out of `pages` */
+  transcriptionScans: Page[];
   transcription: Transcription | undefined;
 };
 
@@ -125,6 +127,7 @@ export function buildArchiveIndex(
         sectionKey: sKey,
         pages: [],
         companions: [],
+        transcriptionScans: [],
         transcription: transcriptions.get(lKey),
       };
       letterByKey.set(lKey, letter);
@@ -140,8 +143,11 @@ export function buildArchiveIndex(
     s.loose.sort((a, b) => a.order - b.order);
     for (const l of s.letters) {
       const replaced = new Set(l.transcription?.replaces.map((p) => p.toLowerCase()));
-      if (replaced.size) l.pages = l.pages.filter((p) => !replaced.has(p.page.toLowerCase()));
       l.pages.sort((a, b) => a.order - b.order);
+      if (replaced.size) {
+        l.transcriptionScans = l.pages.filter((p) => replaced.has(p.page.toLowerCase()));
+        l.pages = l.pages.filter((p) => !replaced.has(p.page.toLowerCase()));
+      }
       l.companions.sort((a, b) => a.order - b.order);
     }
   }

@@ -30,6 +30,11 @@ type Letter implements Node {
   previous: Letter
   section: Section!
   transcription: Transcription
+
+  """
+  Scans the transcription was read from (the author's typed translation); not in `pages`
+  """
+  transcriptionScans: [Page!]!
   variant: String
 }
 

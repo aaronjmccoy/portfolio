@@ -41,6 +41,10 @@ export const LetterPageQuery = graphql`
         markdown
         source
       }
+      transcriptionScans {
+        id
+        original
+      }
       previous {
         key
         number
@@ -95,6 +99,9 @@ export function LetterPage() {
 
   const name = `Letter ${letter.number}${letter.variant ?? ''}`;
   const chapter = letter.section.chapter === null ? letter.section.title : `Chapter ${letter.section.chapter}: ${letter.section.title}`;
+  // A Word document beside the scans is the author's translation; it is credited with the transcript.
+  const docs = letter.companions.filter((c) => /^docx?$/i.test(c.ext));
+  const otherFiles = letter.companions.filter((c) => !docs.includes(c));
 
   return (
     <article className="letter">
@@ -182,7 +189,7 @@ export function LetterPage() {
           {letter.transcription ? (
             <>
               <p className="transcript__source">
-                {SOURCE_LABEL[letter.transcription.source] ?? SOURCE_LABEL.ocr}
+                <TranscriptSource source={letter.transcription.source} docs={docs} scans={letter.transcriptionScans} />
               </p>
               <div className="transcript__text">
                 {letter.transcription.markdown.split(/\n{2,}/).map((para, i) => (
@@ -193,10 +200,10 @@ export function LetterPage() {
           ) : (
             <p className="transcript__none">This letter has not been transcribed yet. The scans above are the only record.</p>
           )}
-          {letter.companions.length ? (
+          {otherFiles.length ? (
             <p className="transcript__files">
               Files kept with this letter:{' '}
-              {letter.companions.map((c) => (
+              {otherFiles.map((c) => (
                 <a key={c.id} href={c.original}>
                   {c.page}.{c.ext}
                 </a>
@@ -228,8 +235,46 @@ export function LetterPage() {
   );
 }
 
-const SOURCE_LABEL: Record<string, string> = {
-  book: "From the author's book",
-  translation: "The author's English translation, machine-read from his typed copy; may contain small errors",
-  ocr: 'Machine-read; may contain errors',
-};
+type Link = { id: string; original: string };
+
+/** Where the transcript came from, linking the author's own copy so readers can check it. */
+function TranscriptSource({ source, docs, scans }: { source: string; docs: (Link & { page: string; ext: string })[]; scans: readonly Link[] }) {
+  if (docs.length) {
+    return (
+      <>
+        The author&rsquo;s English translation, from his Word document{docs.length > 1 ? 's' : ''}:{' '}
+        {docs.map((d, i) => (
+          <span key={d.id}>
+            {i ? ', ' : ''}
+            <a href={d.original}>
+              {d.page}.{d.ext}
+            </a>
+          </span>
+        ))}
+      </>
+    );
+  }
+  if (source === 'translation') {
+    return (
+      <>
+        The author&rsquo;s English translation, machine-read from his{' '}
+        {scans.length ? (
+          <>
+            typed copy (
+            {scans.map((s, i) => (
+              <span key={s.id}>
+                {i ? ', ' : ''}
+                <a href={s.original}>{scans.length > 1 ? `page ${i + 1}` : 'scan'}</a>
+              </span>
+            ))}
+            )
+          </>
+        ) : (
+          'typed copy'
+        )}
+        ; may contain small errors
+      </>
+    );
+  }
+  return <>{source === 'book' ? "From the author's book" : 'Machine-read; may contain errors'}</>;
+}

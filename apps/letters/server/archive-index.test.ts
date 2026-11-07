@@ -53,5 +53,6 @@ describe('buildArchiveIndex', () => {
       new Map([['442', { letterKey: '442', markdown: 'Dear Egon', source: 'translation', replaces: ['b'] }]]),
     );
     expect(withText.letterByKey.get('442')!.pages.map((p) => p.page)).toEqual(['A']);
+    expect(withText.letterByKey.get('442')!.transcriptionScans.map((p) => p.page)).toEqual(['B']);
   });
 });

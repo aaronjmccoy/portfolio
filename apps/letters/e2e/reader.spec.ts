@@ -111,9 +111,19 @@ test('letter page shows scans with keyboard paging and thumbnails', async ({ pag
   await expect(transcript.getByRole('heading', { level: 2 })).toHaveText('Transcription');
   // The author's typed translation is shown as text, and its scan is dropped from the pages.
   await expect(transcript).toContainText('Dear Heinz!');
-  await expect(transcript).toContainText("The author's English translation");
+  await expect(transcript.locator('.transcript__source')).toContainText('The author’s English translation');
   await expect(page.locator('img[src*="pfr100313"]')).toHaveCount(0);
+  // ...but the disclaimer links the English scan so readers can check the text.
+  await expect(transcript.locator('.transcript__source a')).toHaveAttribute('href', /pfr100313\.jpg$/);
   await expectNoA11yViolations(page);
+});
+
+test("a letter with the author's Word document credits it in the disclaimer", async ({ page }) => {
+  await page.goto('/letter/445');
+  const source = page.getByRole('region', { name: 'Transcription' }).locator('.transcript__source');
+  await expect(source).toContainText('from his Word document');
+  await expect(source.getByRole('link', { name: 'Letter # 445.docx' })).toHaveAttribute('href', /445\.docx$/);
+  await expect(page.locator('.transcript__files')).toHaveCount(0);
 });
 
 test('letter page hydrates without errors', async ({ page }) => {

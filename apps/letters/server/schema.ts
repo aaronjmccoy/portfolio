@@ -65,6 +65,11 @@ builder.node(LetterRef, {
     pageCount: t.int({ resolve: (l) => l.pages.length }),
     companions: t.field({ type: [PageRef], description: 'Non-image files kept beside the scans', resolve: (l) => l.companions }),
     transcription: t.field({ type: TranscriptionRef, nullable: true, resolve: (l) => l.transcription ?? null }),
+    transcriptionScans: t.field({
+      type: [PageRef],
+      description: "Scans the transcription was read from (the author's typed translation); not in `pages`",
+      resolve: (l) => l.transcriptionScans,
+    }),
     previous: t.field({
       type: LetterRef,
       nullable: true,
@@ -83,7 +88,12 @@ builder.node(PageRef, {
   loadOne: (id, { index }) => {
     const slash = id.indexOf('/');
     const letter = index.letterByKey.get(id.slice(0, slash));
-    return letter?.pages.find((p) => p.id === id) ?? letter?.companions.find((p) => p.id === id) ?? null;
+    return (
+      letter?.pages.find((p) => p.id === id) ??
+      letter?.companions.find((p) => p.id === id) ??
+      letter?.transcriptionScans.find((p) => p.id === id) ??
+      null
+    );
   },
   fields: (t) => ({
     page: t.exposeString('page', { description: 'Original page name: "A" or a scanner id like "pfr100313"' }),

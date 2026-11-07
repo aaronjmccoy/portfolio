@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e12cc5a1ed5f954420560ba9244cb781>>
+ * @generated SignedSource<<6bd4150ed40c93494c7e4734edbb44f5>>
  * @lightSyntaxTransform
  */
 
@@ -54,6 +54,10 @@ export type LetterPageQuery$data = {
       readonly markdown: string;
       readonly source: string;
     } | null | undefined;
+    readonly transcriptionScans: ReadonlyArray<{
+      readonly id: string;
+      readonly original: string;
+    }>;
     readonly variant: string | null | undefined;
   } | null | undefined;
 };
@@ -246,12 +250,25 @@ v13 = {
   ],
   "storageKey": null
 },
-v14 = [
+v14 = {
+  "alias": null,
+  "args": null,
+  "concreteType": "Page",
+  "kind": "LinkedField",
+  "name": "transcriptionScans",
+  "plural": true,
+  "selections": [
+    (v2/*:: as any*/),
+    (v10/*:: as any*/)
+  ],
+  "storageKey": null
+},
+v15 = [
   (v3/*:: as any*/),
   (v4/*:: as any*/),
   (v5/*:: as any*/)
 ],
-v15 = [
+v16 = [
   (v3/*:: as any*/),
   (v4/*:: as any*/),
   (v5/*:: as any*/),
@@ -294,6 +311,7 @@ return {
           (v11/*:: as any*/),
           (v12/*:: as any*/),
           (v13/*:: as any*/),
+          (v14/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -301,7 +319,7 @@ return {
             "kind": "LinkedField",
             "name": "previous",
             "plural": false,
-            "selections": (v14/*:: as any*/),
+            "selections": (v15/*:: as any*/),
             "storageKey": null
           },
           {
@@ -311,7 +329,7 @@ return {
             "kind": "LinkedField",
             "name": "next",
             "plural": false,
-            "selections": (v14/*:: as any*/),
+            "selections": (v15/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -358,6 +376,7 @@ return {
           (v11/*:: as any*/),
           (v12/*:: as any*/),
           (v13/*:: as any*/),
+          (v14/*:: as any*/),
           {
             "alias": null,
             "args": null,
@@ -365,7 +384,7 @@ return {
             "kind": "LinkedField",
             "name": "previous",
             "plural": false,
-            "selections": (v15/*:: as any*/),
+            "selections": (v16/*:: as any*/),
             "storageKey": null
           },
           {
@@ -375,7 +394,7 @@ return {
             "kind": "LinkedField",
             "name": "next",
             "plural": false,
-            "selections": (v15/*:: as any*/),
+            "selections": (v16/*:: as any*/),
             "storageKey": null
           }
         ],
@@ -384,16 +403,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "f63506f0c3165aa934dd281d0045959b",
+    "cacheID": "600c0ea61659618ebdfc7db24762e703",
     "id": null,
     "metadata": {},
     "name": "LetterPageQuery",
     "operationKind": "query",
-    "text": "query LetterPageQuery(\n  $key: String!\n) {\n  letter(key: $key) {\n    id\n    key\n    number\n    variant\n    group\n    section {\n      key\n      chapter\n      title\n      id\n    }\n    pages {\n      id\n      page\n      order\n      original\n      image {\n        src\n        srcset\n        width\n        height\n      }\n    }\n    companions {\n      id\n      page\n      ext\n      original\n    }\n    transcription {\n      markdown\n      source\n    }\n    previous {\n      key\n      number\n      variant\n      id\n    }\n    next {\n      key\n      number\n      variant\n      id\n    }\n  }\n}\n"
+    "text": "query LetterPageQuery(\n  $key: String!\n) {\n  letter(key: $key) {\n    id\n    key\n    number\n    variant\n    group\n    section {\n      key\n      chapter\n      title\n      id\n    }\n    pages {\n      id\n      page\n      order\n      original\n      image {\n        src\n        srcset\n        width\n        height\n      }\n    }\n    companions {\n      id\n      page\n      ext\n      original\n    }\n    transcription {\n      markdown\n      source\n    }\n    transcriptionScans {\n      id\n      original\n    }\n    previous {\n      key\n      number\n      variant\n      id\n    }\n    next {\n      key\n      number\n      variant\n      id\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "688ef31c97af65dcd171727fd2fb6f21";
+(node as any).hash = "98f24d7a05f9576f6d3c4241e3d1ed64";
 
 export default node;
