@@ -26,11 +26,16 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   `Image.width/height` in the schema and on `<img>` so scans reserve space (`aspect-ratio: auto 3 / 4` fallback).
   Derived filenames fold the page id to `[A-Za-z0-9._-]` so Caddy and Hono agree on them. Pushed; CI green.
 
+- 2026-11-07: Letters e2e: Playwright + `@axe-core/playwright` (`apps/letters/e2e/reader.spec.ts`, `pnpm e2e` after
+  a build): SSR titles/status, pagination (ch3, 246 letters), focus to `main` after navigation, keyboard paging,
+  no hydration errors, readable with JS off, 404 page; zero axe violations (WCAG 2.2 AA + best-practice) on every
+  route. Playwright 1.65 needs `pnpm exec playwright install chromium` locally once.
+
 ## Next
 - Letters: run `derive-images` on VM 104 against the real scans (inside the Docker image, output to a bind-mounted data dir); first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
 - UI: Dialog/Drawer, Disclosure, VariantPicker, Image, LiveRegion, Button, Price; Storybook with the a11y addon.
-- Playwright + axe e2e per app; Lighthouse CI budgets.
+- Playwright + axe e2e for shop and portfolio (letters done); Lighthouse CI budgets.
 - Deployment: Dockerfiles, Compose on VM 104, Caddy blocks, Pi-hole records.
 
 ## Operator steps outstanding

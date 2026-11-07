@@ -11,7 +11,8 @@
     "build": "pnpm schema:print && pnpm relay && vite build --ssrManifest --outDir dist/client && vite build --ssr src/entry-server.tsx --outDir dist/server",
     "start": "node server/index.ts",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "e2e": "playwright test"
   },
   "dependencies": {
     "@portfolio/ssr": "workspace:*",
@@ -29,6 +30,8 @@
     "sharp": "^0.35.5"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "^1.65.0",
     "@types/react-relay": "^18.2.1",
     "@types/relay-runtime": "^20.1.1",
     "babel-plugin-relay": "^21.0.1",
