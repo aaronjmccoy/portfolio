@@ -1,8 +1,41 @@
 # Lesson 10: talking about it
 
-No code. This is the set of questions to be able to answer from memory, with a file name or a
-number where one exists. Answer each out loud in under two minutes. If you cannot, go back to
-that lesson.
+No code. Two rounds of questions. Round one is definitions: short, from memory, the kind an
+interviewer uses to find out whether the resume is yours. Round two is design: the two-minute
+answers, with a file name or a number where one exists. If an answer will not come, the lesson
+number beside it is where to go back to.
+
+## Round one: definitions (30 seconds each)
+
+Say each one out loud. Lesson 0 has a model answer for every term; yours should be shorter.
+
+| Question | Lesson |
+| --- | --- |
+| What is server-side rendering? What is client-side rendering? | 5 |
+| What is hydration? What is a hydration mismatch? | 5 |
+| What is streaming SSR? | 5 |
+| What is GraphQL, and how is it different from REST? | 2 |
+| What is a schema? A resolver? Context? | 2 |
+| What does code-first mean? | 2 |
+| What is Relay? How is it different from Apollo? | 4 |
+| What is a fragment? What is colocation? What is fragment masking? | 4 |
+| What is a normalized store? | 4 |
+| What does the Relay compiler produce? | 4 |
+| What makes a GraphQL server "Relay-spec"? | 3 |
+| What is a connection? An edge? A cursor? | 3 |
+| What is a global id, and why must it be global? | 3 |
+| Cursor versus offset pagination? | 3 |
+| What is `srcset`? What is `sizes`? | 6 |
+| What is CLS? What is LCP? | 6 |
+| What is idempotent? | 6 |
+| What is WCAG 2.2 AA? | 7 |
+| What is an accessible name? A role? A live region? | 7 |
+| What does axe find, and what does it miss? | 7 |
+| What is an end-to-end test? | 7 |
+| What is a design token? What is a primitive? | 8 |
+| What is a multi-stage Docker build? | 9 |
+| What is a smoke test? | 9 |
+| What is a reverse proxy? | 9 |
 
 ## The two-minute tour
 
@@ -14,37 +47,26 @@ in-process, streams the HTML, and embeds the Relay store so the client hydrates 
 Every page works without JavaScript. Playwright plus axe check every route for WCAG 2.2 AA, and
 the thing ships as a Docker image that CI boots and renders a page from before pushing."
 
-Practise until it is yours, not this text.
+Practise until it is yours, not this text. Every noun in it is in round one.
 
-## Design questions
+## Round two: design (two minutes each)
 
-1. Why GraphQL for a read-only archive? What would REST have cost and saved?
-2. Why Relay rather than Apollo or TanStack Query? Give one real advantage and one real cost.
-3. Where is the N+1 problem in this schema, and why does it not matter here? Where would it matter?
-4. How does SSR know the status code to send?
-5. What is in the serialized store, and what could go wrong if it held user-specific data?
-6. Why is the GraphQL endpoint executed in-process on the server?
-7. The home page was blank without JavaScript. Why, and what fixed it?
-8. What is hydration, what is a mismatch, and how do you avoid one when the server and client see different data?
-
-## Accessibility questions
-
-9. A scan is a picture of handwriting. What is its accessible equivalent, and what does the page do when there is none?
-10. Why does focus move to `<main>` after navigation?
-11. When is `disabled` wrong? Give the two examples from the component library.
-12. What does axe not catch?
-
-## Performance questions
-
-13. Three WebP widths, `srcset`, `sizes`, `width`/`height`, `fetchPriority="high"` on the first scan, `loading="lazy"` on thumbnails: what does each one buy, and which metric does it move?
-14. Where would you look first if a letter page's LCP were 4 seconds?
-15. Lighthouse CI budgets: what are they, and what happens when a build misses one? (The shop wires this; say what you would wire.)
-
-## Shipping questions
-
-16. Walk through the Dockerfile stages and why `pnpm deploy` was not used.
-17. What does CI prove about the image before it pushes?
-18. How does an update go out, and what is never rebuilt?
+1. Why GraphQL for a read-only archive? What would REST have cost and saved? (2)
+2. Why Relay rather than Apollo or TanStack Query? One real advantage, one real cost. (4)
+3. Where is the N+1 problem in this schema, and why does it not matter here? Where would it? (2)
+4. How does SSR know the status code to send? (5)
+5. What is in the serialized store, and what could go wrong if it held user-specific data? (5)
+6. Why is GraphQL executed in-process on the server? (5)
+7. The home page was blank without JavaScript. Why, and what fixed it? (5, 7)
+8. How do you avoid a hydration mismatch when the server and client could see different data? (5)
+9. A scan is a picture of handwriting. What is its accessible equivalent, and what does the page do when there is none? (7)
+10. Why does focus move to `<main>` after navigation? (7)
+11. When is `disabled` wrong? The two examples from the component library. (8)
+12. Three WebP widths, `srcset`, `sizes`, `width`/`height`, `fetchPriority="high"` on the first scan, `loading="lazy"` on thumbnails: what does each buy, and which metric does it move? (6)
+13. Where would you look first if a letter page's LCP were 4 seconds? (6)
+14. Walk through the Dockerfile stages and why `pnpm deploy` was not used. (9)
+15. What does CI prove about the image before it pushes? (9)
+16. How does an update go out, and what is never rebuilt? (6, 9)
 
 ## Mapping to GN's stack
 

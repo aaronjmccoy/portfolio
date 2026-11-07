@@ -57,6 +57,10 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   run by `pnpm learn` (own Vitest config, never in CI). Two tooling facts surfaced: the Relay Vite plugin must skip
   its own source (it mentions the tag), and `graphql` must be aliased to one build under Vitest or Pothos and
   the test hold schemas from different realms.
+- 2026-11-07: Course rewritten for a reader who does not know the vocabulary: `docs/learn/00-glossary.md`
+  defines every term (SSR, hydration, GraphQL, Relay, connections, a11y, Docker) in interview form, and each
+  lesson now opens with "The words" and scripted spoken answers to "What is it?" / "How did you use it?"
+  before the repo walk. Lesson 10 gained a definitions round.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
