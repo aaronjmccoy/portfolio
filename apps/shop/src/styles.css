@@ -52,7 +52,8 @@
   input, button { font: inherit; color: inherit; }
   .site-header, .site-main, .site-footer { padding-inline: var(--page-pad); }
   .site-main { padding-block: 0 clamp(3rem, 7vw, 6rem); }
-  .site-main:focus { outline: none; }
+  /* Focus lands here programmatically after navigation; a ring around the whole page says nothing useful. */
+  .site-main:focus, .site-main:focus-visible { outline: none; box-shadow: none; }
   .loading { padding-block: var(--space-6); color: var(--color-muted); }
 
   /* ── header: brand → nav → tools in DOM order; desktop lifts the tools to row 1 ─ */

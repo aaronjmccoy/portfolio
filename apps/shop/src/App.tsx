@@ -32,16 +32,15 @@ export function App({ environment, cartId }: AppProps) {
 function Main() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
-  const first = useRef(true);
+  const initialKey = useRef(location.key);
   // After a client-side navigation, move focus to the main region so screen
   // readers and keyboard users land on the new page rather than mid-header.
+  // Compared by location key rather than a "first run" flag: StrictMode runs
+  // mount effects twice, and a flag would focus main on the initial load.
   useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
+    if (location.key === initialKey.current) return;
     main.current?.focus();
-  }, [location.pathname]);
+  }, [location.key]);
   return (
     <main id="main" tabIndex={-1} ref={main} className="site-main">
       <Suspense
