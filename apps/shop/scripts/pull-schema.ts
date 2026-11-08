@@ -4,8 +4,9 @@
  * Default source is the introspection JSON that Shopify ships inside
  * @shopify/hydrogen-react, so the schema is reproducible from the lockfile and
  * needs no store or token. Pass --live to introspect the configured store
- * instead (SHOPIFY_STORE_DOMAIN, SHOPIFY_STOREFRONT_TOKEN,
- * SHOPIFY_STOREFRONT_API_VERSION from the environment).
+ * instead (SHOPIFY_STORE_DOMAIN, SHOPIFY_STOREFRONT_PRIVATE_TOKEN or
+ * SHOPIFY_STOREFRONT_TOKEN, SHOPIFY_STOREFRONT_API_VERSION from the environment;
+ * run with `node --env-file=.env scripts/pull-schema.ts --live`).
  */
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 import { createRequire } from 'node:module';
@@ -26,12 +27,19 @@ async function fromPackage(): Promise<IntrospectionQuery> {
 
 async function fromStore(): Promise<IntrospectionQuery> {
   const domain = process.env['SHOPIFY_STORE_DOMAIN'];
-  const token = process.env['SHOPIFY_STOREFRONT_TOKEN'];
+  const privateToken = process.env['SHOPIFY_STOREFRONT_PRIVATE_TOKEN'];
+  const publicToken = process.env['SHOPIFY_STOREFRONT_TOKEN'];
   const version = process.env['SHOPIFY_STOREFRONT_API_VERSION'] ?? '2026-10';
-  if (!domain || !token) throw new Error('SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_TOKEN are required for --live');
+  if (!domain || !(privateToken || publicToken)) {
+    throw new Error('SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_PRIVATE_TOKEN (or SHOPIFY_STOREFRONT_TOKEN) are required for --live');
+  }
+  // Private tokens (shpat_...) are server-only and use their own header.
+  const auth = privateToken
+    ? { 'Shopify-Storefront-Private-Token': privateToken }
+    : { 'X-Shopify-Storefront-Access-Token': publicToken as string };
   const res = await fetch(`https://${domain}/api/${version}/graphql.json`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json', 'X-Shopify-Storefront-Access-Token': token },
+    headers: { 'content-type': 'application/json', ...auth },
     body: JSON.stringify({ query: getIntrospectionQuery() }),
   });
   if (!res.ok) throw new Error(`introspection failed: ${res.status} ${await res.text()}`);
