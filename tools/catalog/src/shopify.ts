@@ -116,8 +116,16 @@ export async function fetchPublicationId(client: AdminClient, name: string): Pro
   return hit.id;
 }
 
-/** Collection ids by handle, creating any that are missing. */
-export async function ensureCollections(client: AdminClient, handles: readonly string[], dryRun: boolean): Promise<Map<string, string>> {
+/**
+ * Collection ids by handle, creating any that are missing and publishing new ones to the
+ * sales channel: a collection the storefront's channel cannot see returns null to it.
+ */
+export async function ensureCollections(
+  client: AdminClient,
+  handles: readonly string[],
+  dryRun: boolean,
+  publicationId: string,
+): Promise<Map<string, string>> {
   const data = await client.request<{ collections: { nodes: Array<{ id: string; handle: string }> } }>(
     /* GraphQL */ `{ collections(first: 100) { nodes { id handle } } }`,
   );
@@ -139,6 +147,7 @@ export async function ensureCollections(client: AdminClient, handles: readonly s
     assertNoUserErrors(`collectionCreate ${handle}`, res.collectionCreate.userErrors);
     const id = res.collectionCreate.collection?.id;
     if (!id) throw new Error(`collectionCreate ${handle}: no collection returned`);
+    await publish(client, id, publicationId);
     ids.set(handle, id);
   }
   return ids;

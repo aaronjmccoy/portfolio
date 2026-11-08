@@ -8,6 +8,8 @@ describe('parseArgs', () => {
       dryRun: false,
       configPath: 'derive.config.json',
       stickerDir: 'stickers',
+      dir: undefined,
+      skip: [],
       only: undefined,
     });
   });
@@ -20,6 +22,11 @@ describe('parseArgs', () => {
     });
     expect(parseArgs(['derive', '--config=y.json', '--stickers=art']).configPath).toBe('y.json');
     expect(parseArgs(['derive', '--stickers=art']).stickerDir).toBe('art');
+    expect(parseArgs(['originals', '--dir', 'photos', '--skip', 'hero-peacock, email', '--skip=instagram'])).toMatchObject({
+      command: 'originals',
+      dir: 'photos',
+      skip: ['hero-peacock', 'email', 'instagram'],
+    });
   });
 
   it('rejects unknown flags, stray arguments and missing values', () => {

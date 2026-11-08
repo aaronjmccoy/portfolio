@@ -19,7 +19,7 @@ export type DeriveOptions = { configPath: string; stickerDir: string; dryRun: bo
 
 const MIME: Record<string, string> = { '.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.webp': 'image/webp' };
 
-/** stickers/<original-handle>.(png|jpg|webp): the artwork for that original's sticker. */
+/** The sticker artwork per original handle, from stickers/<handle>.png or stickers/<handle>-*.png. */
 async function listStickerArt(dir: string): Promise<Map<string, { file: string; mime: string }>> {
   const out = new Map<string, { file: string; mime: string }>();
   let names: string[];
@@ -28,9 +28,14 @@ async function listStickerArt(dir: string): Promise<Map<string, { file: string; 
   } catch {
     return out;
   }
-  for (const name of names) {
+  // stickers/<handle>.png or stickers/<handle>-anything.png; the bare name wins when both exist.
+  for (const name of [...names].sort()) {
     const mime = MIME[extname(name).toLowerCase()];
-    if (mime) out.set(name.slice(0, -extname(name).length), { file: join(dir, name), mime });
+    if (!mime) continue;
+    const stem = name.slice(0, -extname(name).length);
+    if (!out.has(stem)) out.set(stem, { file: join(dir, name), mime });
+    const cut = stem.lastIndexOf('-');
+    if (cut > 0 && !out.has(stem.slice(0, cut))) out.set(stem.slice(0, cut), { file: join(dir, name), mime });
   }
   return out;
 }
@@ -42,11 +47,11 @@ export async function loadConfig(path: string): Promise<DeriveConfig> {
 export async function derive(opts: DeriveOptions, env: NodeJS.ProcessEnv = process.env, log = console.log): Promise<Action[]> {
   const config = await loadConfig(opts.configPath);
   const client = new AdminClient(env);
-  const [originals, tagged, publicationId, collectionIds] = await Promise.all([
+  const publicationId = await fetchPublicationId(client, config.publication);
+  const [originals, tagged, collectionIds] = await Promise.all([
     fetchOriginals(client, config.originals.collection),
     fetchExistingDerived(client),
-    fetchPublicationId(client, config.publication),
-    ensureCollections(client, [config.prints.collection, config.stickers.collection], opts.dryRun),
+    ensureCollections(client, [config.prints.collection, config.stickers.collection], opts.dryRun, publicationId),
   ]);
   // Direct handle lookups are consistent; the tag search (for orphans) may lag behind recent writes.
   const expected = originals.flatMap((o) => [`${o.handle}-print`, `${o.handle}-sticker`]);
