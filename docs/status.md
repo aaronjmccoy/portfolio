@@ -62,9 +62,15 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   lesson now opens with "The words" and scripted spoken answers to "What is it?" / "How did you use it?"
   before the repo walk. Lesson 10 gained a definitions round.
 
+- 2026-11-08: Shopify store `mallerart.myshopify.com` is live (password-protected, USD) on Aaron's reactivated
+  account; Headless channel installed, private Storefront token in `apps/shop/.env` as
+  `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`; smoke query and `schema:pull --live` succeed. Catalog is empty
+  (0 products, default `frontpage` collection), so `tools/catalog` runs before the shop routes.
+
 ## Next
+- Catalog importer first: `tools/catalog` against the Admin GraphQL API, once `SHOPIFY_ADMIN_TOKEN` and Megan's catalog exist.
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
-- Shop: Relay environment for the Storefront API, routes (home, collection, product, search, cart), once the dev store exists.
+- Shop: Relay environment for the Storefront API (private token on the server, public token in the browser), routes (home, collection, product, search, cart).
 - UI: adopt the primitives in the letters app (Button, LiveRegion for page changes); serve Storybook at `portfolio.aaronjmccoy.com/ui/`.
 - Playwright + axe e2e for shop and portfolio (letters done); Lighthouse CI budgets.
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
