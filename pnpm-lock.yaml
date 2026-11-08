@@ -383,11 +383,7 @@ importers:
         specifier: ^10.6.6
         version: 10.6.6(@types/react@19.3.0)(prettier@3.9.10)(react@19.3.1)
 
-  tools/catalog:
-    dependencies:
-      graphql:
-        specifier: ^16.0.0
-        version: 16.15.0
+  tools/catalog: {}
 
 packages:
 
