@@ -89,6 +89,11 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - 2026-11-08: `tools/catalog originals --dir <photos>` creates DRAFT originals from photos named by handle
   (main shot first, details after); ran it on the 8 sets in the mockup's `img/` folder. Collections published
   to Headless with titles Paintings / Prints / Trinkets; Starstuff added to `originals`.
+- 2026-11-08: the 8 originals are ACTIVE placeholders carrying Starstuff's listing data ($5,000, 10 lb, one of a
+  kind, DENY) plus a placeholder description marked as such; all nine (Starstuff included) now share vendor
+  Maller Art, type Original, tag `original`, taxonomy category Paintings. Inventory is untracked on the 8 (the
+  app has no inventory scope); Megan sets quantity 1 as she edits each one. Dev-server fix: Vite's
+  `configLoader: 'native'` so `node --watch` stops restart-looping on Vite's temp config file.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
@@ -99,7 +104,7 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 
 ## Operator steps outstanding
 - GitHub Actions secrets `SHOPIFY_STORE_DOMAIN` and `SHOPIFY_STOREFRONT_TOKEN` (public token) so CI can boot the shop (`gh secret set`).
-- Megan: price, describe and activate the 8 draft originals in the admin; decide print sizes/prices for `tools/catalog/derive.config.json`.
+- Megan: replace the placeholder price, description, weight and quantity on all 9 originals in the admin; decide print sizes/prices for `tools/catalog/derive.config.json`.
 - Shopify: done 2026-11-08 (store, Headless public + private tokens in `apps/shop/.env`, Admin app credentials in `tools/catalog/.env`, all verified). Only the mallerart.com domain move remains, at launch.
 - Megan's catalog (titles, prices, photos, editions, shipping).
 - First chapter of transcriptions.
