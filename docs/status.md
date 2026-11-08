@@ -68,8 +68,8 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   (0 products, default `frontpage` collection), so `tools/catalog` runs before the shop routes.
 - 2026-11-08: Dev Dashboard app `mallerart-api` installed on the store (Basic plan); client credentials grant
   verified from `tools/catalog/.env` (24-hour tokens, scopes write_files, write_products, write_publications,
-  write_product_listings, write_product_feeds). Store has two Headless publications ("Mallerart Headless" and
-  "Mallerart Headless 02"); one is a duplicate to remove. Megan's catalog will be `catalog.xlsx` + `photos/<title>/`
+  write_product_listings, write_product_feeds). Headless publication is `gid://shopify/Publication/355119300651` ("Headless"; the
+  duplicate storefront was removed). Megan's catalog will be `catalog.xlsx` + `photos/<title>/`
   in Nextcloud, not `products.json`.
 
 ## Next
@@ -81,6 +81,6 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
-- Shopify: Headless **public** Storefront token into `apps/shop/.env` (`SHOPIFY_STOREFRONT_TOKEN`); delete the duplicate Headless storefront; confirm this Basic-plan store becomes mallerart.com. Admin app done 2026-11-08.
+- Shopify: Headless **public** Storefront token into `apps/shop/.env` (`SHOPIFY_STOREFRONT_TOKEN`); confirm this Basic-plan store becomes mallerart.com. Admin app done 2026-11-08.
 - Megan's catalog (titles, prices, photos, editions, shipping).
 - First chapter of transcriptions.
