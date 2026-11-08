@@ -81,6 +81,6 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
-- Shopify: Headless **public** Storefront token into `apps/shop/.env` (`SHOPIFY_STOREFRONT_TOKEN`); confirm this Basic-plan store becomes mallerart.com. Admin app done 2026-11-08.
+- Shopify: done 2026-11-08 (store, Headless public + private tokens in `apps/shop/.env`, Admin app credentials in `tools/catalog/.env`, all verified). Only the mallerart.com domain move remains, at launch.
 - Megan's catalog (titles, prices, photos, editions, shipping).
 - First chapter of transcriptions.
