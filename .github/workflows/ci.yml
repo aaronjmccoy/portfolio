@@ -12,6 +12,11 @@ concurrency:
 jobs:
   check:
     runs-on: ubuntu-latest
+    # Public Storefront token: safe in a browser, so safe in CI; the shop's smoke and e2e need a live store.
+    env:
+      SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+      SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_TOKEN }}
+      SHOPIFY_STOREFRONT_API_VERSION: '2026-10'
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -28,6 +33,11 @@ jobs:
 
   e2e:
     runs-on: ubuntu-latest
+    # Public Storefront token: safe in a browser, so safe in CI; the shop's smoke and e2e need a live store.
+    env:
+      SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
+      SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_TOKEN }}
+      SHOPIFY_STOREFRONT_API_VERSION: '2026-10'
     needs: check
     steps:
       - uses: actions/checkout@v4

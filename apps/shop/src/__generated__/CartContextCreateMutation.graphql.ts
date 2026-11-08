@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<39883c0acbac6e27999fe0c9cbb0c24b>>
+ * @generated SignedSource<<fcd2747dda98d00730aa92b638d87c4e>>
  * @lightSyntaxTransform
  */
 
@@ -30,6 +30,7 @@ export type CartContextCreateMutation$variables = {
 export type CartContextCreateMutation$data = {
   readonly cartCreate: {
     readonly cart: {
+      readonly id: string;
       readonly " $fragmentSpreads": FragmentRefs<"CartContents_cart">;
     } | null | undefined;
     readonly userErrors: ReadonlyArray<{
@@ -66,6 +67,13 @@ v1 = [
 v2 = {
   "alias": null,
   "args": null,
+  "kind": "ScalarField",
+  "name": "id",
+  "storageKey": null
+},
+v3 = {
+  "alias": null,
+  "args": null,
   "concreteType": "CartUserError",
   "kind": "LinkedField",
   "name": "userErrors",
@@ -79,13 +87,6 @@ v2 = {
       "storageKey": null
     }
   ],
-  "storageKey": null
-},
-v3 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
   "storageKey": null
 },
 v4 = [
@@ -141,6 +142,7 @@ return {
             "name": "cart",
             "plural": false,
             "selections": [
+              (v2/*:: as any*/),
               {
                 "args": null,
                 "kind": "FragmentSpread",
@@ -149,7 +151,7 @@ return {
             ],
             "storageKey": null
           },
-          (v2/*:: as any*/)
+          (v3/*:: as any*/)
         ],
         "storageKey": null
       }
@@ -179,7 +181,7 @@ return {
             "name": "cart",
             "plural": false,
             "selections": [
-              (v3/*:: as any*/),
+              (v2/*:: as any*/),
               {
                 "alias": null,
                 "args": null,
@@ -238,7 +240,7 @@ return {
                     "plural": true,
                     "selections": [
                       (v5/*:: as any*/),
-                      (v3/*:: as any*/),
+                      (v2/*:: as any*/),
                       {
                         "alias": null,
                         "args": null,
@@ -279,7 +281,7 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v3/*:: as any*/),
+                              (v2/*:: as any*/),
                               (v6/*:: as any*/),
                               {
                                 "alias": null,
@@ -297,7 +299,7 @@ return {
                                     "storageKey": null
                                   },
                                   (v6/*:: as any*/),
-                                  (v3/*:: as any*/)
+                                  (v2/*:: as any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -337,7 +339,7 @@ return {
                                     "name": "height",
                                     "storageKey": null
                                   },
-                                  (v3/*:: as any*/)
+                                  (v2/*:: as any*/)
                                 ],
                                 "storageKey": null
                               },
@@ -373,7 +375,7 @@ return {
                           {
                             "kind": "InlineFragment",
                             "selections": [
-                              (v3/*:: as any*/)
+                              (v2/*:: as any*/)
                             ],
                             "type": "Node",
                             "abstractKey": "__isNode"
@@ -390,23 +392,23 @@ return {
             ],
             "storageKey": null
           },
-          (v2/*:: as any*/)
+          (v3/*:: as any*/)
         ],
         "storageKey": null
       }
     ]
   },
   "params": {
-    "cacheID": "aec5fcfb2283984b6aa28c566c6bd737",
+    "cacheID": "e0cd8fa9b4d9f3c4bd4fd25cf6285861",
     "id": null,
     "metadata": {},
     "name": "CartContextCreateMutation",
     "operationKind": "mutation",
-    "text": "mutation CartContextCreateMutation(\n  $lines: [CartLineInput!]!\n) {\n  cartCreate(input: {lines: $lines}) {\n    cart {\n      ...CartContents_cart\n      id\n    }\n    userErrors {\n      message\n    }\n  }\n}\n\nfragment CartContents_cart on Cart {\n  id\n  checkoutUrl\n  totalQuantity\n  cost {\n    subtotalAmount {\n      amount\n      currencyCode\n    }\n  }\n  lines(first: 100) {\n    nodes {\n      __typename\n      id\n      quantity\n      cost {\n        totalAmount {\n          amount\n          currencyCode\n        }\n      }\n      merchandise {\n        __typename\n        ... on ProductVariant {\n          id\n          title\n          product {\n            handle\n            title\n            id\n          }\n          image {\n            url\n            altText\n            width\n            height\n            id\n          }\n          selectedOptions {\n            name\n            value\n          }\n        }\n        ... on Node {\n          __isNode: __typename\n          id\n        }\n      }\n    }\n  }\n}\n"
+    "text": "mutation CartContextCreateMutation(\n  $lines: [CartLineInput!]!\n) {\n  cartCreate(input: {lines: $lines}) {\n    cart {\n      id\n      ...CartContents_cart\n    }\n    userErrors {\n      message\n    }\n  }\n}\n\nfragment CartContents_cart on Cart {\n  id\n  checkoutUrl\n  totalQuantity\n  cost {\n    subtotalAmount {\n      amount\n      currencyCode\n    }\n  }\n  lines(first: 100) {\n    nodes {\n      __typename\n      id\n      quantity\n      cost {\n        totalAmount {\n          amount\n          currencyCode\n        }\n      }\n      merchandise {\n        __typename\n        ... on ProductVariant {\n          id\n          title\n          product {\n            handle\n            title\n            id\n          }\n          image {\n            url\n            altText\n            width\n            height\n            id\n          }\n          selectedOptions {\n            name\n            value\n          }\n        }\n        ... on Node {\n          __isNode: __typename\n          id\n        }\n      }\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "08359d880faa3f01766fac6f55de464a";
+(node as any).hash = "b8273d02a75f56c67ab679fb786e23f2";
 
 export default node;

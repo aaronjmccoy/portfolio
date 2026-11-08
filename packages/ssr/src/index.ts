@@ -58,8 +58,8 @@ export type SsrOptions = {
   configure?: (app: Hono) => void | Promise<void>;
   /** Counter labelled {route, status}; optional */
   httpRequests?: Counter<'route' | 'status'>;
-  /** Per-request context handed to the app's render function */
-  renderContext?: () => unknown;
+  /** Per-request context handed to the app's render function; receives the Hono context (cookies, headers) */
+  renderContext?: (c: Context) => unknown;
   /** Give up streaming after this long */
   abortMs?: number;
 };
@@ -157,7 +157,7 @@ async function streamHtml(c: Context, renderer: Renderer, opts: SsrOptions): Pro
         console.error(err);
       },
     },
-    opts.renderContext?.(),
+    opts.renderContext?.(c),
   );
   current = result;
   tail = result.tail ?? '';

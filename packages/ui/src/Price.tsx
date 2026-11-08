@@ -11,7 +11,7 @@ export function formatMoney({ amount, currencyCode }: Money, locale = 'en-US'): 
 export type PriceProps = {
   price: Money;
   /** The pre-sale price; shown struck through when higher than `price` */
-  compareAt?: Money | null;
+  compareAt?: Money | null | undefined;
   locale?: string;
   className?: string;
 };

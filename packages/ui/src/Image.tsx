@@ -13,9 +13,9 @@ export type ImageProps = Omit<ComponentPropsWithoutRef<'img'>, 'src' | 'srcSet' 
   src: string;
   /** Required: "" for decorative images, otherwise what the image shows */
   alt: string;
-  /** Intrinsic size of the source; sets the aspect ratio and caps the srcset */
-  width?: number;
-  height?: number;
+  /** Intrinsic size of the source; sets the aspect ratio and caps the srcset. Undefined when the CDN does not know it. */
+  width?: number | undefined;
+  height?: number | undefined;
   /** Candidate widths; the source's own width is appended and larger ones dropped */
   widths?: readonly number[];
   /** Builds the URL for a given width; defaults to Shopify's CDN parameter */

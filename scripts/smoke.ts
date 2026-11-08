@@ -25,8 +25,13 @@ const checks: Check[] = [
     port: 3900,
     metricsPort: 9900,
     async run(base) {
-      await expectText(await fetch(`${base}/`), '<main id="main"', 'shop /');
-      await expectText(await fetch(`${base}/`), '/assets/', 'shop / asset tags');
+      const home = await expectText(await fetch(`${base}/`), '<main id="main"', 'shop /');
+      if (!home.includes('/assets/')) throw new Error('shop /: no asset tags');
+      if (!home.includes('id="__RELAY_DATA__"')) throw new Error('shop /: Relay store not embedded');
+      if (!home.includes('<h2 class="rail__title"')) throw new Error('shop /: collections not server-rendered');
+      if (home.includes('<template id="B:')) throw new Error('shop /: page outlined behind a script (blank without JS)');
+      const missing = await fetch(`${base}/products/nope`);
+      if (missing.status !== 404) throw new Error(`shop /products/nope: expected 404, got ${missing.status}`);
     },
   },
   {
@@ -77,6 +82,16 @@ async function waitFor(url: string, child: ChildProcess, ms = 15_000): Promise<v
 }
 
 let failed = false;
+// The shop talks to the live store; without credentials (a fork's CI) it cannot boot, so it is skipped, loudly.
+if (!process.env['SHOPIFY_STORE_DOMAIN']) {
+  try {
+    process.loadEnvFile(resolve(root, 'apps/shop/.env'));
+  } catch {
+    console.warn('smoke: no SHOPIFY_STORE_DOMAIN and no apps/shop/.env; skipping the shop');
+    checks.splice(checks.findIndex((c) => c.name === 'shop'), 1);
+  }
+}
+
 for (const check of checks) {
   const child = spawn(process.execPath, ['server/index.ts'], {
     cwd: resolve(root, check.dir),

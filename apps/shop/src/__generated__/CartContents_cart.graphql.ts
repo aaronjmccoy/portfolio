@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<fef0ca3a44bb8aeca314e9ff2d66b877>>
+ * @generated SignedSource<<37ec8a21a8faaca9e03451d5fc7d5f71>>
  * @lightSyntaxTransform
  */
 
@@ -29,22 +29,27 @@ export type CartContents_cart$data = {
       };
       readonly id: string;
       readonly merchandise: {
-        readonly id?: string;
-        readonly image?: {
+        readonly __typename: "ProductVariant";
+        readonly id: string;
+        readonly image: {
           readonly altText: string | null | undefined;
           readonly height: number | null | undefined;
           readonly url: any;
           readonly width: number | null | undefined;
         } | null | undefined;
-        readonly product?: {
+        readonly product: {
           readonly handle: string;
           readonly title: string;
         };
-        readonly selectedOptions?: ReadonlyArray<{
+        readonly selectedOptions: ReadonlyArray<{
           readonly name: string;
           readonly value: string;
         }>;
-        readonly title?: string;
+        readonly title: string;
+      } | {
+        // This will never be '%other', but we need some
+        // value in case none of the concrete values match.
+        readonly __typename: "%other";
       };
       readonly quantity: number;
     }>;
@@ -190,6 +195,13 @@ return {
               "plural": false,
               "selections": [
                 {
+                  "alias": null,
+                  "args": null,
+                  "kind": "ScalarField",
+                  "name": "__typename",
+                  "storageKey": null
+                },
+                {
                   "kind": "InlineFragment",
                   "selections": [
                     (v0/*:: as any*/),
@@ -296,6 +308,6 @@ return {
 };
 })();
 
-(node as any).hash = "7a2cc6571972a3788d8bea3d6158a004";
+(node as any).hash = "2be7eac96a315c29d7419a02f8266ffc";
 
 export default node;

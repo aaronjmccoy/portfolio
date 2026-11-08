@@ -77,15 +77,29 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   run skips, price change updates without re-sending media). Existing products are looked up by handle because
   the `products(query:)` search index lags behind writes. Collections `originals`, `prints`, `stickers` now
   exist in the store. Megan works only in the Shopify admin; there is no spreadsheet.
+- 2026-11-08: `apps/shop` storefront built against the live store, following the measured mockup in
+  `koifrog/Web Development/mallerart` (wordmark, nav, search pill, hero, rail-beside-grid collections):
+  Relay environment with SSR preload and store serialization, routes `/`, `/collections/:handle` (paginated
+  `@connection`), `/products/:handle` (variant picker, JSON-LD, add-to-cart form), `/search?q=` (plus
+  predictive suggestions in the header), `/cart`; cart drawer on the native dialog with optimistic
+  `cartLinesAdd/Update/Remove`; the browser talks to `/graphql` on our server, which forwards with the Headless
+  private token (the public token is unused for now); `POST /cart/add|update` make the cart work with
+  JavaScript off; cart id in the `ma_cart` cookie. All 12 operations validated with Shopify's Dev MCP. e2e:
+  axe on every route, keyboard drawer, no-JS cart, 404s (`apps/shop/e2e`). Smoke checks Relay store + 404.
+- 2026-11-08: `tools/catalog originals --dir <photos>` creates DRAFT originals from photos named by handle
+  (main shot first, details after); ran it on the 8 sets in the mockup's `img/` folder. Collections published
+  to Headless with titles Paintings / Prints / Trinkets; Starstuff added to `originals`.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
-- Shop: Relay environment for the Storefront API (private token on the server, public token in the browser), routes (home, collection, product, search, cart).
+- Shop: Lighthouse CI budgets; growth experiment (server-side bucketing, Prometheus funnel, cart attributes); Dockerfile + deploy like letters; an inquire-only state for large originals.
 - UI: adopt the primitives in the letters app (Button, LiveRegion for page changes); serve Storybook at `portfolio.aaronjmccoy.com/ui/`.
-- Playwright + axe e2e for shop and portfolio (letters done); Lighthouse CI budgets.
+- Playwright + axe e2e for portfolio (letters and shop done); Lighthouse CI budgets.
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
+- GitHub Actions secrets `SHOPIFY_STORE_DOMAIN` and `SHOPIFY_STOREFRONT_TOKEN` (public token) so CI can boot the shop (`gh secret set`).
+- Megan: price, describe and activate the 8 draft originals in the admin; decide print sizes/prices for `tools/catalog/derive.config.json`.
 - Shopify: done 2026-11-08 (store, Headless public + private tokens in `apps/shop/.env`, Admin app credentials in `tools/catalog/.env`, all verified). Only the mallerart.com domain move remains, at launch.
 - Megan's catalog (titles, prices, photos, editions, shipping).
 - First chapter of transcriptions.
