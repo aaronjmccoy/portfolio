@@ -1,0 +1,22 @@
+{
+  "originals": { "collection": "originals" },
+  "publication": "Headless",
+  "prints": {
+    "collection": "prints",
+    "titleSuffix": "Print",
+    "option": "Size",
+    "sizes": [
+      { "name": "8 × 10 in", "price": "35.00", "weightOz": 6 },
+      { "name": "11 × 14 in", "price": "55.00", "weightOz": 10 },
+      { "name": "16 × 20 in", "price": "95.00", "weightOz": 18 }
+    ],
+    "descriptionHtml": "<p>Archival print of <em>{title}</em>, made to order.</p>"
+  },
+  "stickers": {
+    "collection": "stickers",
+    "titleSuffix": "Sticker",
+    "price": "5.00",
+    "weightOz": 0.5,
+    "descriptionHtml": "<p>Vinyl sticker of <em>{title}</em>.</p>"
+  }
+}

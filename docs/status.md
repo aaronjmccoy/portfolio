@@ -71,9 +71,14 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   write_product_listings, write_product_feeds). Headless publication is `gid://shopify/Publication/355119300651` ("Headless"; the
   duplicate storefront was removed). Megan's catalog will be `catalog.xlsx` + `photos/<title>/`
   in Nextcloud, not `products.json`.
+- 2026-11-08: `tools/catalog derive` built and verified against the live store with a throwaway original
+  (deleted afterwards): staged upload of sticker art, `productSet` keyed by handle with options/variants and
+  images reused from the original, `publishablePublish` to Headless, fingerprint tag for idempotency (second
+  run skips, price change updates without re-sending media). Existing products are looked up by handle because
+  the `products(query:)` search index lags behind writes. Collections `originals`, `prints`, `stickers` now
+  exist in the store. Megan works only in the Shopify admin; there is no spreadsheet.
 
 ## Next
-- Catalog importer first: `tools/catalog` against the Admin GraphQL API (client credentials grant), once the Dev Dashboard app credentials and Megan's catalog exist.
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
 - Shop: Relay environment for the Storefront API (private token on the server, public token in the browser), routes (home, collection, product, search, cart).
 - UI: adopt the primitives in the letters app (Button, LiveRegion for page changes); serve Storybook at `portfolio.aaronjmccoy.com/ui/`.
