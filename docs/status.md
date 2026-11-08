@@ -66,6 +66,11 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   account; Headless channel installed, private Storefront token in `apps/shop/.env` as
   `SHOPIFY_STOREFRONT_PRIVATE_TOKEN`; smoke query and `schema:pull --live` succeed. Catalog is empty
   (0 products, default `frontpage` collection), so `tools/catalog` runs before the shop routes.
+- 2026-11-08: Dev Dashboard app `mallerart-api` installed on the store (Basic plan); client credentials grant
+  verified from `tools/catalog/.env` (24-hour tokens, scopes write_files, write_products, write_publications,
+  write_product_listings, write_product_feeds). Store has two Headless publications ("Mallerart Headless" and
+  "Mallerart Headless 02"); one is a duplicate to remove. Megan's catalog will be `catalog.xlsx` + `photos/<title>/`
+  in Nextcloud, not `products.json`.
 
 ## Next
 - Catalog importer first: `tools/catalog` against the Admin GraphQL API (client credentials grant), once the Dev Dashboard app credentials and Megan's catalog exist.
@@ -76,6 +81,6 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
-- Shopify: Headless **public** Storefront token into `apps/shop/.env` (`SHOPIFY_STOREFRONT_TOKEN`); Dev Dashboard app for the importer (scopes read/write_products, read/write_publications, write_files; custom distribution; installed on the store), client id + secret into `tools/catalog/.env`. Store and private token done 2026-11-08.
+- Shopify: Headless **public** Storefront token into `apps/shop/.env` (`SHOPIFY_STOREFRONT_TOKEN`); delete the duplicate Headless storefront; confirm this Basic-plan store becomes mallerart.com. Admin app done 2026-11-08.
 - Megan's catalog (titles, prices, photos, editions, shipping).
 - First chapter of transcriptions.
