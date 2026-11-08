@@ -80,7 +80,9 @@ export async function createSsrApp(opts: SsrOptions): Promise<Hono> {
     renderer = async () => ({ template, render: mod.render });
   } else {
     const { createServer } = await import('vite');
-    const vite = await createServer({ root: opts.root, server: { middlewareMode: true }, appType: 'custom' });
+    // 'native' imports vite.config.ts with Node itself. The default 'bundle' loader writes a temp copy under
+    // node_modules/.vite-temp, imports it and deletes it, which node --watch sees as a change and restarts on, forever.
+    const vite = await createServer({ root: opts.root, server: { middlewareMode: true }, appType: 'custom', configLoader: 'native' });
     // Hand non-HTML requests (modules, HMR, assets) to Vite's connect middleware.
     app.use('*', async (c, next) => {
       if (c.req.header('accept')?.includes('text/html')) return next();
