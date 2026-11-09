@@ -94,6 +94,10 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   Maller Art, type Original, tag `original`, taxonomy category Paintings. Inventory is untracked on the 8 (the
   app has no inventory scope); Megan sets quantity 1 as she edits each one. Dev-server fix: Vite's
   `configLoader: 'native'` so `node --watch` stops restart-looping on Vite's temp config file.
+- 2026-11-08: home page collections are a mosaic: six rows (gaps included) per column, each tile's spans chosen
+  on the server from the image's own proportions (`apps/shop/src/lib/mosaic.ts`, landscapes take two columns),
+  `grid-auto-flow: dense` fills the holes; no JS, no cropping beyond half a row. Rail tightened to 250/767 of the
+  row with a smaller section title so "Paintings" stays on one line.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<2844b951c7efa9c4ed3664877162c9cf>>
+ * @generated SignedSource<<e21f5f63aaee03fdbe5b4583228d04d6>>
  * @lightSyntaxTransform
  */
 
@@ -109,7 +109,7 @@ v8 = [
       {
         "kind": "Literal",
         "name": "first",
-        "value": 6
+        "value": 8
       }
     ],
     "concreteType": "ProductConnection",
@@ -210,7 +210,7 @@ v8 = [
         "storageKey": null
       }
     ],
-    "storageKey": "products(first:6)"
+    "storageKey": "products(first:8)"
   }
 ];
 return {
@@ -293,12 +293,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c5554056df5e0efa9e4e5c834dfdf5a6",
+    "cacheID": "d3c33c45e50705f4bb54840b8e25a329",
     "id": null,
     "metadata": {},
     "name": "HomePageQuery",
     "operationKind": "query",
-    "text": "query HomePageQuery {\n  originals: collection(handle: \"originals\") {\n    ...HomePage_section\n    id\n  }\n  prints: collection(handle: \"prints\") {\n    ...HomePage_section\n    id\n  }\n  stickers: collection(handle: \"stickers\") {\n    ...HomePage_section\n    id\n  }\n}\n\nfragment HomePage_section on Collection {\n  id\n  handle\n  title\n  description\n  products(first: 6) {\n    nodes {\n      id\n      ...ProductCard_product\n    }\n  }\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
+    "text": "query HomePageQuery {\n  originals: collection(handle: \"originals\") {\n    ...HomePage_section\n    id\n  }\n  prints: collection(handle: \"prints\") {\n    ...HomePage_section\n    id\n  }\n  stickers: collection(handle: \"stickers\") {\n    ...HomePage_section\n    id\n  }\n}\n\nfragment HomePage_section on Collection {\n  id\n  handle\n  title\n  description\n  products(first: 8) {\n    nodes {\n      id\n      ...ProductCard_product\n    }\n  }\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
   }
 };
 })();

@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<26555c873b8784208f39a137e05cf727>>
+ * @generated SignedSource<<29788f75d1f83e5f7cf479486585fab4>>
  * @lightSyntaxTransform
  */
 
@@ -69,7 +69,7 @@ return {
         {
           "kind": "Literal",
           "name": "first",
-          "value": 6
+          "value": 8
         }
       ],
       "concreteType": "ProductConnection",
@@ -95,7 +95,7 @@ return {
           "storageKey": null
         }
       ],
-      "storageKey": "products(first:6)"
+      "storageKey": "products(first:8)"
     }
   ],
   "type": "Collection",
@@ -103,6 +103,6 @@ return {
 };
 })();
 
-(node as any).hash = "821fef3966ce9339614dd3b8b9e4cf86";
+(node as any).hash = "3b51332c28587aa3805c1f8645e28f6a";
 
 export default node;

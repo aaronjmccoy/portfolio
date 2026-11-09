@@ -47,7 +47,10 @@ test.describe('server-rendered routes', () => {
     await expect(nav.getByRole('link')).toHaveText(['Paintings', 'Prints', 'Trinkets']);
     await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Paintings', 'Prints', 'Trinkets']);
     await expect(page.locator('.hero__media')).toHaveAttribute('fetchpriority', 'high');
-    await expect(page.getByRole('link', { name: new RegExp(PRODUCT_TITLE) }).first()).toBeVisible();
+    // Paintings is a mosaic of the first eight pieces; which eight depends on the store, so check the tiles, not a title.
+    const tiles = page.locator('#originals .mosaic .card');
+    await expect(tiles.first()).toBeVisible();
+    await expect(tiles.first()).toHaveAttribute('style', /--span-rows:\s*\d+/);
   });
 
   test('product page carries JSON-LD and a real add-to-cart form', async ({ page }) => {

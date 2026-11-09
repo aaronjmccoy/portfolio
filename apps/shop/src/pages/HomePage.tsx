@@ -27,7 +27,7 @@ const SectionFragment = graphql`
     handle
     title
     description
-    products(first: 6) {
+    products(first: 8) {
       nodes {
         id
         ...ProductCard_product
@@ -36,7 +36,7 @@ const SectionFragment = graphql`
   }
 `;
 
-/** The one-page gallery from the mockup: hero, then each collection as a rail beside a grid. */
+/** The one-page gallery from the mockup: hero, then each collection as a rail beside a mosaic of its pieces. */
 export function HomePage() {
   const data = useLazyLoadQuery<QueryType>(HomePageQuery, {}, { fetchPolicy });
   const sections = [data.originals, data.prints, data.stickers];
@@ -68,10 +68,13 @@ function Section({ collection, tagline }: { collection: HomePage_section$key; ta
         </p>
       </div>
       {c.products.nodes.length ? (
-        <div className="collection__grid">
-          {c.products.nodes.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))}
+        // The outer div is the size container the mosaic's row unit is measured against.
+        <div className="collection__grid collection__grid--mosaic">
+          <div className="mosaic">
+            {c.products.nodes.map((p) => (
+              <ProductCard key={p.id} product={p} mosaic />
+            ))}
+          </div>
         </div>
       ) : (
         <p className="collection__empty">Coming soon.</p>
