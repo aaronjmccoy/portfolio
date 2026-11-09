@@ -107,6 +107,27 @@ test.describe('cart with JavaScript', () => {
   });
 });
 
+test.describe('narrow screens', () => {
+  test.use({ viewport: { width: 320, height: 640 } });
+
+  // WCAG 2.2 target size (2.5.8) and reflow (1.4.10) bite at the smallest width, which the default viewport never exercises.
+  for (const path of ['/', `/products/${PRODUCT}`, '/cart']) {
+    test(`${path} at 320px: no horizontal overflow, targets at least 24px, axe clean`, async ({ page }) => {
+      await page.goto(path);
+      expect(await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth)).toBeLessThanOrEqual(1);
+      const small = await page.evaluate(() =>
+        [...document.querySelectorAll<HTMLElement>('a, button, input')]
+          .filter((el) => el.getClientRects().length > 0)
+          .map((el) => ({ el, r: el.getBoundingClientRect(), inline: el.tagName === 'A' && getComputedStyle(el).display === 'inline' }))
+          .filter(({ r, inline }) => !inline && (r.width < 24 || r.height < 24))
+          .map(({ el, r }) => `${el.tagName.toLowerCase()} "${(el.getAttribute('aria-label') ?? el.textContent ?? '').trim().slice(0, 20)}" ${Math.round(r.width)}x${Math.round(r.height)}`),
+      );
+      expect(small).toEqual([]);
+      await expectNoA11yViolations(page);
+    });
+  }
+});
+
 test.describe('product gallery', () => {
   test('hovering a shot magnifies and pans; clicking opens the gallery at native size', async ({ page }) => {
     await page.goto(`/products/${PRODUCT}`);

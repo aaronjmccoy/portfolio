@@ -108,6 +108,10 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   navigation scrolls to the top and focuses main with preventScroll, so the header stays in view; keyed on
   pathname so a variant pick no longer steals focus. Fixed Add to cart rendering black on black: the shop's
   `button { color: inherit }` reset outranked the ui button; now scoped to `button:not(.ui-button)`.
+- 2026-11-08: accessibility pass beyond the e2e axe runs (six routes x 320/768/1440, gallery/drawer/suggestions
+  open, keyboard walk with focus-ring check, reflow, target size, headings/landmarks, reduced motion): one real
+  failure, WCAG 2.2 target size at 320px on the nav, cart and footer links; fixed with a 1.5rem minimum height.
+  e2e now runs reflow + target size + axe at 320px on home, product and cart.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
