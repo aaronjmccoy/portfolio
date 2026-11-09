@@ -2,10 +2,11 @@ import { useMemo } from 'react';
 import type { FormEvent } from 'react';
 import { graphql, useLazyLoadQuery } from 'react-relay';
 import { Link, useParams, useSearchParams } from 'react-router';
-import { Button, Image, Price, VariantPicker } from '@portfolio/ui';
+import { Button, Price, VariantPicker } from '@portfolio/ui';
 import type { ProductPageQuery as QueryType } from '../__generated__/ProductPageQuery.graphql.ts';
 import { useCart } from '../cart/CartContext.tsx';
 import { NotFound } from '../components/NotFound.tsx';
+import { ProductGallery } from '../components/ProductGallery.tsx';
 import { Title } from '../components/Title.tsx';
 import { jsonLdScript, plainText, productJsonLd } from '../lib/jsonld.ts';
 import { hasRealOptions, initialVariant, nextSelection, pickerOptions, selectionOf } from '../lib/variants.ts';
@@ -67,8 +68,6 @@ export const ProductPageQuery = graphql`
   }
 `;
 
-const GALLERY_SIZES = '(min-width: 60rem) 55vw, 100vw';
-
 export function ProductPage() {
   const { handle = '' } = useParams();
   const [params, setParams] = useSearchParams();
@@ -92,7 +91,9 @@ export function ProductPage() {
 
   const images = product.images.nodes;
   const heroImage = images.find((i) => i.url === variant?.image?.url) ?? images[0];
-  const others = images.filter((i) => i !== heroImage);
+  const gallery = [heroImage, ...images.filter((i) => i !== heroImage)].flatMap((i, n) =>
+    i ? [{ url: i.url, alt: i.altText ?? (n === 0 ? product.title : `${product.title}, another view`), width: i.width ?? undefined, height: i.height ?? undefined }] : [],
+  );
   const crumb = product.collections.nodes[0];
   const url = `${SITE_URL}/products/${product.handle}`;
   const jsonLd = productJsonLd({
@@ -108,20 +109,7 @@ export function ProductPage() {
     <article className="product">
       <Title text={product.title} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }} />
-      <div className="product__gallery">
-        {heroImage ? (
-          <Image className="product__image" src={heroImage.url} alt={heroImage.altText ?? product.title} width={heroImage.width ?? undefined} height={heroImage.height ?? undefined} sizes={GALLERY_SIZES} priority />
-        ) : null}
-        {others.length ? (
-          <ul className="product__thumbs" aria-label={`More views of ${product.title}`}>
-            {others.map((img) => (
-              <li key={img.url}>
-                <Image className="product__image" src={img.url} alt={img.altText ?? `${product.title}, another view`} width={img.width ?? undefined} height={img.height ?? undefined} sizes={GALLERY_SIZES} />
-              </li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
+      <ProductGallery images={gallery} title={product.title} />
       <div className="product__panel">
         {crumb ? (
           <nav aria-label="Breadcrumb" className="crumbs">

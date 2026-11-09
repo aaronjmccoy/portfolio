@@ -101,6 +101,13 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   `components/Mosaic.tsx`); dynamic programming over the store's order minimises crop, favours wide landscapes
   and charges avoidable empty columns. No JS; one column just stacks. Rail tightened to 250/767 of the row,
   smaller section title so "Paintings" stays on one line, and the rail is sticky beside the mosaic at 60rem.
+- 2026-11-08: product page images: hover shows a magnified view that pans inside the frame (mouse only; a
+  2048px rendition, percentage background position); click opens a quiet gallery on a native modal dialog,
+  tinted window, full-resolution file fitted to the viewport, previous/next arrows and arrow keys, Escape or a
+  click off the image leaves (`components/Magnifier.tsx`, `Lightbox.tsx`, `ProductGallery.tsx`). Client-side
+  navigation scrolls to the top and focuses main with preventScroll, so the header stays in view; keyed on
+  pathname so a variant pick no longer steals focus. Fixed Add to cart rendering black on black: the shop's
+  `button { color: inherit }` reset outranked the ui button; now scoped to `button:not(.ui-button)`.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).

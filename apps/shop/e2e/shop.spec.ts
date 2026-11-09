@@ -55,6 +55,12 @@ test.describe('server-rendered routes', () => {
 
   test('product page carries JSON-LD and a real add-to-cart form', async ({ page }) => {
     await page.goto(`/products/${PRODUCT}`);
+    // the primary button keeps the design system's colours: not ink on ink
+    const colours = await page.getByRole('button', { name: 'Add to cart' }).evaluate((el) => {
+      const cs = getComputedStyle(el);
+      return [cs.color, cs.backgroundColor];
+    });
+    expect(colours[0]).not.toBe(colours[1]);
     const ld = await page.locator('script[type="application/ld+json"]').textContent();
     const data = JSON.parse(ld ?? '{}') as { '@type'?: string; offers?: unknown[] };
     expect(data['@type']).toBe('Product');
@@ -98,6 +104,64 @@ test.describe('cart with JavaScript', () => {
     await expect(page).toHaveURL(/\/search\?q=/);
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Results for');
     await expect(page.getByRole('main')).toBeFocused();
+  });
+});
+
+test.describe('product gallery', () => {
+  test('hovering a shot magnifies and pans; clicking opens the gallery at native size', async ({ page }) => {
+    await page.goto(`/products/${PRODUCT}`);
+    await page.waitForLoadState('networkidle');
+    const shot = page.locator('.shot').first();
+    const box = (await shot.boundingBox()) as { x: number; y: number; width: number; height: number };
+    // The hero is taller than the viewport; stay inside the part that is on screen.
+    const seen = Math.min(box.height, (page.viewportSize()?.height ?? 720) - box.y);
+    const lens = page.getByTestId('lens').first();
+    // Keep nudging the mouse until the hydrated handler shows the lens (it also waits for the large image).
+    await expect(async () => {
+      await page.mouse.move(box.x + box.width * 0.2, box.y + seen * 0.2);
+      await page.mouse.move(box.x + box.width * 0.25, box.y + seen * 0.25);
+      await expect(lens).toBeVisible({ timeout: 3_000 });
+    }).toPass({ timeout: 20_000 });
+    const before = await lens.evaluate((el) => el.style.backgroundPosition);
+    await page.mouse.move(box.x + box.width * 0.75, box.y + seen * 0.75);
+    const after = await lens.evaluate((el) => el.style.backgroundPosition);
+    expect(after).not.toBe(before);
+    await page.mouse.move(0, 0);
+    await expect(lens).toBeHidden();
+
+    await shot.click();
+    const dialog = page.getByRole('dialog', { name: `${PRODUCT_TITLE} gallery` });
+    await expect(dialog).toBeVisible();
+    const count = dialog.locator('.lightbox__count');
+    await expect(count).toHaveText(/^1 of \d+$/);
+    // the gallery shows the uploaded file itself, not a resized rendition
+    expect(await dialog.locator('.lightbox__image').getAttribute('src')).not.toMatch(/[?&]width=/);
+    // nothing but the two arrows (and the image) to interact with
+    await expect(dialog.getByRole('button')).toHaveCount(2);
+    await page.keyboard.press('ArrowRight');
+    await expect(count).toHaveText(/^2 of \d+$/);
+    await dialog.getByRole('button', { name: 'Previous image' }).click();
+    await expect(count).toHaveText(/^1 of \d+$/);
+    await expectNoA11yViolations(page);
+    await page.keyboard.press('Escape');
+    await expect(dialog).toBeHidden();
+    await expect(shot).toBeFocused();
+    // a click anywhere off the image also leaves
+    await shot.click();
+    await expect(dialog).toBeVisible();
+    await page.mouse.click(8, 8);
+    await expect(dialog).toBeHidden();
+  });
+
+  test('moving to another page focuses main with the header still in view', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+    await page.evaluate(() => window.scrollTo(0, 1200));
+    await page.getByRole('navigation', { name: 'Collections' }).getByRole('link', { name: 'Paintings' }).click();
+    await expect(page).toHaveURL(/\/collections\/originals$/);
+    await expect(page.getByRole('main')).toBeFocused();
+    await expect(page.locator('.site-header')).toBeInViewport();
+    expect(await page.evaluate(() => window.scrollY)).toBe(0);
   });
 });
 

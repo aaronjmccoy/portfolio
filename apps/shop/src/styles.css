@@ -50,7 +50,9 @@
   ul { padding: 0; list-style: none; }
   img { display: block; max-width: 100%; height: auto; }
   a { color: inherit; text-decoration: none; }
-  input, button { font: inherit; color: inherit; }
+  input, button { font: inherit; }
+  /* the design system's buttons set their own colours; this reset was painting Add to cart black on black */
+  input, button:not(.ui-button) { color: inherit; }
   .site-header, .site-main, .site-footer { padding-inline: var(--page-pad); }
   .site-main { padding-block: 0 clamp(3rem, 7vw, 6rem); }
   /* Focus lands here programmatically after navigation; a ring around the whole page says nothing useful. */
@@ -146,6 +148,19 @@
   .product { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--row-gap); padding-block-start: var(--space-5); align-items: start; }
   .product__gallery { display: grid; gap: var(--gutter); }
   .product__image { width: 100%; background: var(--color-rule); }
+  /* a shot: a button around the image; hover pans a magnified copy inside the same frame */
+  .shot { position: relative; display: block; width: 100%; padding: 0; border: 0; background: var(--color-rule); cursor: zoom-in; overflow: hidden; }
+  .shot__lens { position: absolute; inset: 0; background-repeat: no-repeat; pointer-events: none; }
+  /* the gallery: the window tints, the image floats in the middle, two arrows, nothing else */
+  .lightbox { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; margin: 0; padding: 0; border: 0; background: transparent; display: none; place-items: center; }
+  .lightbox[open] { display: grid; }
+  .lightbox::backdrop { background: rgb(0 0 0 / 0.82); }
+  .lightbox__image { display: block; width: auto; height: auto; max-width: calc(100vw - 2 * var(--space-4)); max-height: calc(100dvh - 2 * var(--space-4)); object-fit: contain; box-shadow: 0 1rem 3rem rgb(0 0 0 / 0.5); }
+  .lightbox__arrow { position: absolute; top: 50%; translate: 0 -50%; display: grid; place-items: center; width: 3rem; height: 3rem; padding: 0; border: 0; border-radius: var(--radius-pill); background: rgb(0 0 0 / 0.35); color: #fff; cursor: pointer; }
+  .lightbox__arrow svg { width: 1.5rem; height: 1.5rem; }
+  .lightbox__arrow:hover { background: rgb(0 0 0 / 0.6); }
+  .lightbox__arrow--prev { left: var(--space-4); }
+  .lightbox__arrow--next { right: var(--space-4); }
   .product__thumbs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--gutter); }
   .product__panel { display: grid; gap: var(--space-4); align-content: start; }
   .crumbs { font-size: var(--fs-caption); color: var(--color-muted); }

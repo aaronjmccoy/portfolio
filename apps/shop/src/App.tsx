@@ -32,15 +32,17 @@ export function App({ environment, cartId }: AppProps) {
 function Main() {
   const location = useLocation();
   const main = useRef<HTMLElement>(null);
-  const initialKey = useRef(location.key);
-  // After a client-side navigation, move focus to the main region so screen
-  // readers and keyboard users land on the new page rather than mid-header.
-  // Compared by location key rather than a "first run" flag: StrictMode runs
-  // mount effects twice, and a flag would focus main on the initial load.
+  const lastPath = useRef(location.pathname);
+  // After a client-side navigation to another page, scroll to the top and
+  // move focus to the main region, without letting the focus call scroll the
+  // header out of view. Keyed on the pathname: a query change (variant pick)
+  // must not steal focus, and StrictMode's second mount run sees no change.
   useEffect(() => {
-    if (location.key === initialKey.current) return;
-    main.current?.focus();
-  }, [location.key]);
+    if (lastPath.current === location.pathname) return;
+    lastPath.current = location.pathname;
+    if (!location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    main.current?.focus({ preventScroll: true });
+  }, [location.pathname, location.hash]);
   return (
     <main id="main" tabIndex={-1} ref={main} className="site-main">
       <Suspense
