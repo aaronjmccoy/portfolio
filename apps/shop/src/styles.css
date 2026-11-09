@@ -121,10 +121,11 @@
   .collection__grid { display: grid; grid-template-columns: repeat(var(--cols), minmax(0, 1fr)); gap: var(--row-gap) var(--gutter); align-items: start; }
   .collection__empty { font-size: var(--fs-caption); color: var(--color-muted); }
 
-  /* ── mosaic (home page) ──────────────────────────────────────────────────
-     Six rows (with their gaps) make one column; each card spans whole rows chosen from its
-     image's proportions on the server (lib/mosaic.ts), landscapes take two
-     columns, and dense placement fills the holes. The outer element is the size
+  /* ── mosaic (home page and collection pages) ────────────────────────────
+     Six rows (with their gaps) make one column. The server packs the cards into
+     flush bands from their images' proportions (lib/mosaic.ts) and gives each
+     card its grid lines for two and for three columns as custom properties;
+     the breakpoints below pick one set. The outer element is the size
      container, because cq units cannot measure the element they are set on.
      Below 30rem there is one column and the cards simply stack. */
   .collection__grid--mosaic { display: block; container-type: inline-size; }
@@ -206,14 +207,15 @@
       --mosaic-col: calc((100cqw - (var(--cols) - 1) * var(--gutter)) / var(--cols));
       --mosaic-unit: calc((var(--mosaic-col) - (var(--mosaic-rows-per-col) - 1) * var(--gutter)) / var(--mosaic-rows-per-col));
       grid-auto-rows: var(--mosaic-unit);
-      grid-auto-flow: dense;
       gap: var(--gutter);
       align-items: stretch;
     }
-    .mosaic .card { grid-column: span var(--span-cols, 1); grid-row: span var(--span-rows, 7); min-height: 0; }
+    .mosaic .card { grid-column: var(--m2-c) / span var(--m2-cs); grid-row: var(--m2-r) / span var(--m2-rs); min-height: 0; }
     .mosaic .card__link { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: 100%; }
     .mosaic .card__media { height: 100%; min-height: 0; object-fit: cover; }
     .mosaic .card__media--empty { aspect-ratio: auto; }
+    /* every ribbon the same height, so flush tiles mean flush images */
+    .mosaic .card__title, .mosaic .card__caption { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .site-header { grid-template-areas: 'brand tools' 'nav nav'; grid-template-columns: minmax(0, 1fr) auto; column-gap: var(--gutter); }
     .site-tools { justify-self: end; align-self: start; }
     .search { flex: none; width: var(--pill-w); }
@@ -224,8 +226,11 @@
   @media (min-width: 60rem) {
     :root { --cols: 3; }
     .collection { grid-template-columns: minmax(0, var(--rail-track)) minmax(0, var(--grid-track)); column-gap: var(--gutter); }
-    .collection__rail { grid-column: 1; grid-row: 1; }
-    .collection__grid, .collection__body, .collection__empty { grid-column: 2; grid-row: 1; }
+    /* the rail rides along as the mosaic scrolls past */
+    .collection__rail { grid-column: 1; grid-row: 1; position: sticky; top: var(--space-5); }
+    /* direct children only: on a collection page the mosaic sits inside .collection__body, which is a grid of its own */
+    .collection > .collection__grid, .collection > .collection__body, .collection > .collection__empty { grid-column: 2; grid-row: 1; }
+    .mosaic .card { grid-column: var(--m3-c) / span var(--m3-cs); grid-row: var(--m3-r) / span var(--m3-rs); }
     .hero { --hero-ratio: 2.75 / 1; }
     .product { grid-template-columns: minmax(0, 11fr) minmax(0, 9fr); column-gap: calc(var(--gutter) * 2); }
     .product__panel { position: sticky; top: var(--space-5); }

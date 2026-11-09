@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<3b8378bf5160b541de16a794ebd9c083>>
+ * @generated SignedSource<<9acc83973f4c1e9a844e5321bb072a05>>
  * @lightSyntaxTransform
  */
 
@@ -182,40 +182,11 @@ return {
                       {
                         "alias": null,
                         "args": null,
-                        "kind": "ScalarField",
-                        "name": "handle",
-                        "storageKey": null
-                      },
-                      (v5/*:: as any*/),
-                      {
-                        "alias": null,
-                        "args": null,
-                        "kind": "ScalarField",
-                        "name": "availableForSale",
-                        "storageKey": null
-                      },
-                      {
-                        "alias": null,
-                        "args": null,
                         "concreteType": "Image",
                         "kind": "LinkedField",
                         "name": "featuredImage",
                         "plural": false,
                         "selections": [
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "url",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "kind": "ScalarField",
-                            "name": "altText",
-                            "storageKey": null
-                          },
                           {
                             "alias": null,
                             "args": null,
@@ -230,8 +201,37 @@ return {
                             "name": "height",
                             "storageKey": null
                           },
-                          (v4/*:: as any*/)
+                          (v4/*:: as any*/),
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "url",
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
+                            "kind": "ScalarField",
+                            "name": "altText",
+                            "storageKey": null
+                          }
                         ],
+                        "storageKey": null
+                      },
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "handle",
+                        "storageKey": null
+                      },
+                      (v5/*:: as any*/),
+                      {
+                        "alias": null,
+                        "args": null,
+                        "kind": "ScalarField",
+                        "name": "availableForSale",
                         "storageKey": null
                       },
                       {
@@ -328,12 +328,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "c4f799c2fecd62167c64e2d2765f446b",
+    "cacheID": "05531a8eb0f30b32fd3abf6ce2e3deb9",
     "id": null,
     "metadata": {},
     "name": "CollectionPageQuery",
     "operationKind": "query",
-    "text": "query CollectionPageQuery(\n  $handle: String!\n  $first: Int!\n  $after: String\n) {\n  collection(handle: $handle) {\n    id\n    title\n    description\n    ...CollectionPage_products_2HEEH6\n  }\n}\n\nfragment CollectionPage_products_2HEEH6 on Collection {\n  products(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
+    "text": "query CollectionPageQuery(\n  $handle: String!\n  $first: Int!\n  $after: String\n) {\n  collection(handle: $handle) {\n    id\n    title\n    description\n    ...CollectionPage_products_2HEEH6\n  }\n}\n\nfragment CollectionPage_products_2HEEH6 on Collection {\n  products(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        ...Mosaic_products\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment Mosaic_products on Product {\n  id\n  featuredImage {\n    width\n    height\n    id\n  }\n  ...ProductCard_product\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
   }
 };
 })();

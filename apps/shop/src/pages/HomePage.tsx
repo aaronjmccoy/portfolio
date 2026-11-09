@@ -2,7 +2,7 @@ import { graphql, useFragment, useLazyLoadQuery } from 'react-relay';
 import { Link } from 'react-router';
 import type { HomePageQuery as QueryType } from '../__generated__/HomePageQuery.graphql.ts';
 import type { HomePage_section$key } from '../__generated__/HomePage_section.graphql.ts';
-import { ProductCard } from '../components/ProductCard.tsx';
+import { Mosaic } from '../components/Mosaic.tsx';
 import { Title } from '../components/Title.tsx';
 import { fetchPolicy } from '../relay/environment.ts';
 import { HERO, SECTIONS } from '../site.ts';
@@ -29,8 +29,7 @@ const SectionFragment = graphql`
     description
     products(first: 8) {
       nodes {
-        id
-        ...ProductCard_product
+        ...Mosaic_products
       }
     }
   }
@@ -68,14 +67,7 @@ function Section({ collection, tagline }: { collection: HomePage_section$key; ta
         </p>
       </div>
       {c.products.nodes.length ? (
-        // The outer div is the size container the mosaic's row unit is measured against.
-        <div className="collection__grid collection__grid--mosaic">
-          <div className="mosaic">
-            {c.products.nodes.map((p) => (
-              <ProductCard key={p.id} product={p} mosaic />
-            ))}
-          </div>
-        </div>
+        <Mosaic products={c.products.nodes} />
       ) : (
         <p className="collection__empty">Coming soon.</p>
       )}

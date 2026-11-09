@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<94bd669835c6d9461e95b97de15bec1c>>
+ * @generated SignedSource<<4655c65a29763501b0ce5c372f2d02f1>>
  * @lightSyntaxTransform
  */
 
@@ -15,7 +15,7 @@ export type CollectionPage_products$data = {
     readonly edges: ReadonlyArray<{
       readonly node: {
         readonly id: string;
-        readonly " $fragmentSpreads": FragmentRefs<"ProductCard_product">;
+        readonly " $fragmentSpreads": FragmentRefs<"Mosaic_products">;
       };
     }>;
   };
@@ -111,7 +111,7 @@ return {
                 {
                   "args": null,
                   "kind": "FragmentSpread",
-                  "name": "ProductCard_product"
+                  "name": "Mosaic_products"
                 },
                 {
                   "alias": null,
@@ -168,6 +168,6 @@ return {
 };
 })();
 
-(node as any).hash = "61d24547bcd261cf8355820a939bb82a";
+(node as any).hash = "49350d1cf72aa95e1c12f881d49c88b0";
 
 export default node;

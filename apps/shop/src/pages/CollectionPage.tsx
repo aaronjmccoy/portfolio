@@ -4,7 +4,7 @@ import { Button } from '@portfolio/ui';
 import type { CollectionPageQuery as QueryType } from '../__generated__/CollectionPageQuery.graphql.ts';
 import type { CollectionPage_products$key } from '../__generated__/CollectionPage_products.graphql.ts';
 import { NotFound } from '../components/NotFound.tsx';
-import { ProductCard } from '../components/ProductCard.tsx';
+import { Mosaic } from '../components/Mosaic.tsx';
 import { Title } from '../components/Title.tsx';
 import { fetchPolicy } from '../relay/environment.ts';
 
@@ -29,7 +29,7 @@ const ProductsFragment = graphql`
       edges {
         node {
           id
-          ...ProductCard_product
+          ...Mosaic_products
         }
       }
     }
@@ -60,9 +60,7 @@ function Products({ collection }: { collection: CollectionPage_products$key }) {
   if (edges.length === 0) return <p className="collection__empty">Nothing here yet.</p>;
   return (
     <div className="collection__body">
-      <div className="collection__grid">
-        {edges.map((e, i) => (e?.node ? <ProductCard key={e.node.id} product={e.node} priority={i < 3} headingLevel={2} /> : null))}
-      </div>
+      <Mosaic products={edges.flatMap((e) => (e?.node ? [e.node] : []))} headingLevel={2} priorityCount={3} />
       {hasNext ? (
         <p className="collection__more">
           <Button variant="secondary" onClick={() => loadNext(COLLECTION_PAGE_SIZE)} busy={isLoadingNext}>

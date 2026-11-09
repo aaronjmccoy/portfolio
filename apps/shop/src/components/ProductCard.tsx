@@ -3,7 +3,6 @@ import { graphql, useFragment } from 'react-relay';
 import { Link } from 'react-router';
 import { Image, formatMoney } from '@portfolio/ui';
 import type { ProductCard_product$key } from '../__generated__/ProductCard_product.graphql.ts';
-import { mosaicSizes, mosaicSpan } from '../lib/mosaic.ts';
 
 export const ProductCardFragment = graphql`
   fragment ProductCard_product on Product {
@@ -43,21 +42,21 @@ export type ProductCardProps = {
   priority?: boolean;
   /** 3 under a section's h2 (home page), 2 under a page's h1 (collection, search) */
   headingLevel?: 2 | 3;
-  /** In a `.mosaic` grid: span columns and rows from the image's own proportions (see lib/mosaic.ts). */
-  mosaic?: boolean;
+  /** `sizes` for the image; the default fits the plain 3-up grid */
+  sizes?: string;
+  /** Grid placement in a `.mosaic`, as the custom properties from lib/mosaic.ts */
+  style?: CSSProperties;
 };
 
 /**
  * One piece of work in a grid: image, then a ribbon with title and price. The
- * whole card is the link. In a mosaic the card is told its spans through two
+ * whole card is the link. In a mosaic the parent passes the placement as
  * custom properties and the CSS does the rest.
  */
-export function ProductCard({ product, priority = false, headingLevel = 3, mosaic = false }: ProductCardProps) {
+export function ProductCard({ product, priority = false, headingLevel = 3, sizes = CARD_SIZES, style }: ProductCardProps) {
   const p = useFragment(ProductCardFragment, product);
   const img = p.featuredImage;
   const Heading = headingLevel === 2 ? 'h2' : 'h3';
-  const span = mosaic ? mosaicSpan(img?.width, img?.height) : undefined;
-  const style = span ? ({ '--span-cols': span.cols, '--span-rows': span.rows } as CSSProperties) : undefined;
   return (
     <article className="card" style={style}>
       <Link to={`/products/${p.handle}`} className="card__link">
@@ -68,7 +67,7 @@ export function ProductCard({ product, priority = false, headingLevel = 3, mosai
             alt={img.altText ?? ''}
             width={img.width ?? undefined}
             height={img.height ?? undefined}
-            sizes={span ? mosaicSizes(span.cols) : CARD_SIZES}
+            sizes={sizes}
             priority={priority}
           />
         ) : (

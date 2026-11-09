@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e21f5f63aaee03fdbe5b4583228d04d6>>
+ * @generated SignedSource<<685fdde4d503a4553f6841c96b0b009d>>
  * @lightSyntaxTransform
  */
 
@@ -126,15 +126,6 @@ v8 = [
         "plural": true,
         "selections": [
           (v4/*:: as any*/),
-          (v5/*:: as any*/),
-          (v6/*:: as any*/),
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "availableForSale",
-            "storageKey": null
-          },
           {
             "alias": null,
             "args": null,
@@ -143,20 +134,6 @@ v8 = [
             "name": "featuredImage",
             "plural": false,
             "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "url",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "altText",
-                "storageKey": null
-              },
               {
                 "alias": null,
                 "args": null,
@@ -171,8 +148,31 @@ v8 = [
                 "name": "height",
                 "storageKey": null
               },
-              (v4/*:: as any*/)
+              (v4/*:: as any*/),
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "url",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "altText",
+                "storageKey": null
+              }
             ],
+            "storageKey": null
+          },
+          (v5/*:: as any*/),
+          (v6/*:: as any*/),
+          {
+            "alias": null,
+            "args": null,
+            "kind": "ScalarField",
+            "name": "availableForSale",
             "storageKey": null
           },
           {
@@ -293,12 +293,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "d3c33c45e50705f4bb54840b8e25a329",
+    "cacheID": "37be91000378672eb555859d24672d24",
     "id": null,
     "metadata": {},
     "name": "HomePageQuery",
     "operationKind": "query",
-    "text": "query HomePageQuery {\n  originals: collection(handle: \"originals\") {\n    ...HomePage_section\n    id\n  }\n  prints: collection(handle: \"prints\") {\n    ...HomePage_section\n    id\n  }\n  stickers: collection(handle: \"stickers\") {\n    ...HomePage_section\n    id\n  }\n}\n\nfragment HomePage_section on Collection {\n  id\n  handle\n  title\n  description\n  products(first: 8) {\n    nodes {\n      id\n      ...ProductCard_product\n    }\n  }\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
+    "text": "query HomePageQuery {\n  originals: collection(handle: \"originals\") {\n    ...HomePage_section\n    id\n  }\n  prints: collection(handle: \"prints\") {\n    ...HomePage_section\n    id\n  }\n  stickers: collection(handle: \"stickers\") {\n    ...HomePage_section\n    id\n  }\n}\n\nfragment HomePage_section on Collection {\n  id\n  handle\n  title\n  description\n  products(first: 8) {\n    nodes {\n      ...Mosaic_products\n      id\n    }\n  }\n}\n\nfragment Mosaic_products on Product {\n  id\n  featuredImage {\n    width\n    height\n    id\n  }\n  ...ProductCard_product\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
   }
 };
 })();

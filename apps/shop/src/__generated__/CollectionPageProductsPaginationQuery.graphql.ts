@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<e9dfa622c13c1e54574c0fb3846175d1>>
+ * @generated SignedSource<<7cbd6c83601022175d326a01379f1ae9>>
  * @lightSyntaxTransform
  */
 
@@ -165,6 +165,46 @@ return {
                           {
                             "alias": null,
                             "args": null,
+                            "concreteType": "Image",
+                            "kind": "LinkedField",
+                            "name": "featuredImage",
+                            "plural": false,
+                            "selections": [
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "width",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "height",
+                                "storageKey": null
+                              },
+                              (v4/*:: as any*/),
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "url",
+                                "storageKey": null
+                              },
+                              {
+                                "alias": null,
+                                "args": null,
+                                "kind": "ScalarField",
+                                "name": "altText",
+                                "storageKey": null
+                              }
+                            ],
+                            "storageKey": null
+                          },
+                          {
+                            "alias": null,
+                            "args": null,
                             "kind": "ScalarField",
                             "name": "handle",
                             "storageKey": null
@@ -181,46 +221,6 @@ return {
                             "args": null,
                             "kind": "ScalarField",
                             "name": "availableForSale",
-                            "storageKey": null
-                          },
-                          {
-                            "alias": null,
-                            "args": null,
-                            "concreteType": "Image",
-                            "kind": "LinkedField",
-                            "name": "featuredImage",
-                            "plural": false,
-                            "selections": [
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "url",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "altText",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "width",
-                                "storageKey": null
-                              },
-                              {
-                                "alias": null,
-                                "args": null,
-                                "kind": "ScalarField",
-                                "name": "height",
-                                "storageKey": null
-                              },
-                              (v4/*:: as any*/)
-                            ],
                             "storageKey": null
                           },
                           {
@@ -315,16 +315,16 @@ return {
     ]
   },
   "params": {
-    "cacheID": "fdb9c793196c285d13b5b56872d89c69",
+    "cacheID": "21e643ae268734e6c566b34026283eb7",
     "id": null,
     "metadata": {},
     "name": "CollectionPageProductsPaginationQuery",
     "operationKind": "query",
-    "text": "query CollectionPageProductsPaginationQuery(\n  $after: String\n  $first: Int!\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...CollectionPage_products_2HEEH6\n    id\n  }\n}\n\nfragment CollectionPage_products_2HEEH6 on Collection {\n  products(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        ...ProductCard_product\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
+    "text": "query CollectionPageProductsPaginationQuery(\n  $after: String\n  $first: Int!\n  $id: ID!\n) {\n  node(id: $id) {\n    __typename\n    ...CollectionPage_products_2HEEH6\n    id\n  }\n}\n\nfragment CollectionPage_products_2HEEH6 on Collection {\n  products(first: $first, after: $after) {\n    edges {\n      node {\n        id\n        ...Mosaic_products\n        __typename\n      }\n      cursor\n    }\n    pageInfo {\n      endCursor\n      hasNextPage\n    }\n  }\n  id\n}\n\nfragment Mosaic_products on Product {\n  id\n  featuredImage {\n    width\n    height\n    id\n  }\n  ...ProductCard_product\n}\n\nfragment ProductCard_product on Product {\n  id\n  handle\n  title\n  availableForSale\n  featuredImage {\n    url\n    altText\n    width\n    height\n    id\n  }\n  priceRange {\n    minVariantPrice {\n      amount\n      currencyCode\n    }\n    maxVariantPrice {\n      amount\n      currencyCode\n    }\n  }\n}\n"
   }
 };
 })();
 
-(node as any).hash = "61d24547bcd261cf8355820a939bb82a";
+(node as any).hash = "49350d1cf72aa95e1c12f881d49c88b0";
 
 export default node;

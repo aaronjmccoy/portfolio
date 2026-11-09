@@ -50,7 +50,7 @@ test.describe('server-rendered routes', () => {
     // Paintings is a mosaic of the first eight pieces; which eight depends on the store, so check the tiles, not a title.
     const tiles = page.locator('#originals .mosaic .card');
     await expect(tiles.first()).toBeVisible();
-    await expect(tiles.first()).toHaveAttribute('style', /--span-rows:\s*\d+/);
+    await expect(tiles.first()).toHaveAttribute('style', /--m3-rs:\s*\d+/);
   });
 
   test('product page carries JSON-LD and a real add-to-cart form', async ({ page }) => {

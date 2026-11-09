@@ -1,5 +1,5 @@
 /**
- * @generated SignedSource<<29788f75d1f83e5f7cf479486585fab4>>
+ * @generated SignedSource<<7a42dd69a518f27e22aa2ec3a0b0be05>>
  * @lightSyntaxTransform
  */
 
@@ -15,8 +15,7 @@ export type HomePage_section$data = {
   readonly id: string;
   readonly products: {
     readonly nodes: ReadonlyArray<{
-      readonly id: string;
-      readonly " $fragmentSpreads": FragmentRefs<"ProductCard_product">;
+      readonly " $fragmentSpreads": FragmentRefs<"Mosaic_products">;
     }>;
   };
   readonly title: string;
@@ -27,21 +26,19 @@ export type HomePage_section$key = {
   readonly " $fragmentSpreads": FragmentRefs<"HomePage_section">;
 };
 
-const node: ReaderFragment = (function(){
-var v0 = {
-  "alias": null,
-  "args": null,
-  "kind": "ScalarField",
-  "name": "id",
-  "storageKey": null
-};
-return {
+const node: ReaderFragment = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
   "name": "HomePage_section",
   "selections": [
-    (v0/*:: as any*/),
+    {
+      "alias": null,
+      "args": null,
+      "kind": "ScalarField",
+      "name": "id",
+      "storageKey": null
+    },
     {
       "alias": null,
       "args": null,
@@ -85,11 +82,10 @@ return {
           "name": "nodes",
           "plural": true,
           "selections": [
-            (v0/*:: as any*/),
             {
               "args": null,
               "kind": "FragmentSpread",
-              "name": "ProductCard_product"
+              "name": "Mosaic_products"
             }
           ],
           "storageKey": null
@@ -101,8 +97,7 @@ return {
   "type": "Collection",
   "abstractKey": null
 };
-})();
 
-(node as any).hash = "3b51332c28587aa3805c1f8645e28f6a";
+(node as any).hash = "169e16549f281fb382d9d47170d67def";
 
 export default node;
