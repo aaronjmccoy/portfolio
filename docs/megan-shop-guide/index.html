@@ -32,17 +32,24 @@
   p, ul, ol, table, figure, .note { max-width: var(--measure); }
   .lede { font-size: 1.15rem; color: var(--muted); }
   nav.toc { position: relative; }
+  .toc__box { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+  .toc__box > summary { cursor: pointer; padding: 0.75rem 1.1rem; font-weight: 700; }
+  .toc__box > ol { padding: 0 1.1rem 1rem; }
   nav.toc ol { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
   nav.toc li { margin: 0.35rem 0; }
   nav.toc a { color: var(--ink); text-decoration: none; }
   nav.toc a:hover { color: var(--accent); }
   nav.toc .sub { padding-left: 0.9rem; color: var(--muted); }
-  @media (min-width: 64rem) {
-    .layout { grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; }
+  /* The left contents ribbon only shows when there is room for it and the checklist column; below that it collapses first. */
+  @media (min-width: 80rem) {
+    .layout { grid-template-columns: 13rem minmax(0, 1fr); gap: 3rem; }
     nav.toc { grid-row: 1 / span 2; }
     nav.toc > div { position: sticky; top: 2rem; padding-top: 3.5rem; }
+    .toc__box { border: 0; background: none; }
+    .toc__box > summary { display: none; }
+    .toc__box > ol { padding: 0; }
   }
-  @media (max-width: 63.99rem) { nav.toc { border: 1px solid var(--rule); border-radius: var(--radius); padding: 1rem 1.25rem; background: var(--surface); } }
+  @media (max-width: 79.99rem) { nav.toc { padding-top: 1rem; } }
   ol.steps { padding-left: 1.4rem; }
   ol.steps > li { margin: 0.6rem 0; padding-left: 0.25rem; }
   ol.steps > li::marker { font-weight: 700; color: var(--accent); }
@@ -70,13 +77,26 @@
   .checks input { width: 1.15rem; height: 1.15rem; margin-top: 0.25rem; accent-color: var(--accent); flex: none; }
   .checks input:checked + span { color: var(--muted); text-decoration: line-through; }
   .split { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.5rem; }
-  .side__box { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 1rem 1.1rem; }
-  .side__title { font-weight: 700; margin: 0 0 0.25rem; }
+  .side__box { border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+  .side__title { font-weight: 700; padding: 0.85rem 1.1rem; cursor: pointer; }
+  .side__count { float: right; font-size: 0.85rem; font-weight: 600; color: var(--muted); margin-left: 0.75rem; }
+  .side__title::after { content: ""; display: block; clear: both; }
+  .side__inner { padding: 0 1.1rem 1rem; }
   .side__hint { font-size: 0.8rem; color: var(--muted); margin: 0.5rem 0 0; }
   .side .checks { margin: 0; font-size: 0.95rem; }
-  @media (min-width: 80rem) {
-    .split { grid-template-columns: minmax(0, 1fr) 17rem; gap: 2.5rem; align-items: start; }
-    .side { position: sticky; top: 2rem; max-height: calc(100vh - 4rem); overflow: auto; }
+  /* Phones: a bar pinned to the bottom of the screen while its section is in view; tap to open. */
+  @media (max-width: 55.99rem) {
+    .side { position: sticky; bottom: 0; z-index: 5; margin: 0 -8px; padding: 0 0 8px; }
+    .side__box { box-shadow: 0 -6px 24px rgb(0 0 0 / 0.18); }
+    .side__box[open] .side__inner { max-height: 55vh; overflow: auto; }
+  }
+  /* Wider: a column beside the text, centred in the window as the section scrolls past. */
+  @media (min-width: 56rem) {
+    .split { grid-template-columns: minmax(0, 1fr) 16rem; gap: 2.5rem; align-items: start; }
+    .side { position: sticky; top: 0; height: 100vh; display: flex; align-items: center; }
+    .side__box { width: 100%; max-height: calc(100vh - 2rem); overflow: auto; }
+    .side__title { cursor: default; list-style: none; }
+    .side__title::-webkit-details-marker { display: none; }
   }
   footer { margin-top: 4rem; font-size: 0.85rem; color: var(--muted); }
 </style>
@@ -85,6 +105,8 @@
 <div class="layout">
   <nav class="toc" aria-label="Contents">
     <div>
+      <details class="toc__box" data-open-from="80" open>
+      <summary>Contents</summary>
       <ol>
         <li><a href="#overview">How the shop is split</a></li>
         <li><a href="#paintings">1. Paintings</a></li>
@@ -96,6 +118,7 @@
         <li><a href="#trinkets">3. Trinkets with Printful</a></li>
         <li><a href="#help">If a button has moved</a></li>
       </ol>
+      </details>
     </div>
   </nav>
 
@@ -238,8 +261,9 @@
       <p>If the new painting should have prints, add a row for it to your print sizes table (<a href="#sizes">2b</a>).</p>
         </div>
         <aside class="side" aria-label="Paintings checklist">
-          <div class="side__box">
-            <p class="side__title">A painting is ready when</p>
+          <details class="side__box" data-open-from="56" open>
+            <summary class="side__title">A painting is ready when<span class="side__count"></span></summary>
+            <div class="side__inner">
             <ul class="checks" data-list="painting">
         <li><label><input type="checkbox"><span>Real title, description, price and packed weight</span></label></li>
         <li><label><input type="checkbox"><span>The whole painting is the first photo</span></label></li>
@@ -249,7 +273,8 @@
         <li><label><input type="checkbox"><span>Status is Active</span></label></li>
       </ul>
             <p class="side__hint">Ticks are remembered in this browser.</p>
-          </div>
+            </div>
+          </details>
         </aside>
       </div>
     </section>
@@ -317,15 +342,17 @@
 
         </div>
         <aside class="side" aria-label="Prints checklist">
-          <div class="side__box">
-            <p class="side__title">Prints are ready for Aaron when</p>
+          <details class="side__box" data-open-from="56" open>
+            <summary class="side__title">Prints are ready for Aaron when<span class="side__count"></span></summary>
+            <div class="side__inner">
             <ul class="checks" data-list="print">
         <li><label><input type="checkbox"><span>Paper chosen after the sample pack and a real sample</span></label></li>
         <li><label><input type="checkbox"><span>Print sizes and prices filled in for every painting that gets prints, and sent</span></label></li>
         <li><label><input type="checkbox"><span>Print files ready: 300 DPI at each painting's largest print size</span></label></li>
       </ul>
             <p class="side__hint">Ticks are remembered in this browser.</p>
-          </div>
+            </div>
+          </details>
         </aside>
       </div>
     </section>
@@ -389,8 +416,9 @@
       <p>To add or remove colours or sizes later, do it in Printful, not Shopify, so the two stay in step.</p>
         </div>
         <aside class="side" aria-label="Trinkets checklist">
-          <div class="side__box">
-            <p class="side__title">A trinket is ready when</p>
+          <details class="side__box" data-open-from="56" open>
+            <summary class="side__title">A trinket is ready when<span class="side__count"></span></summary>
+            <div class="side__inner">
             <ul class="checks" data-list="trinket">
         <li><label><input type="checkbox"><span>Artwork follows the product's file guidelines</span></label></li>
         <li><label><input type="checkbox"><span>Priced in Printful and submitted to the store</span></label></li>
@@ -399,7 +427,8 @@
         <li><label><input type="checkbox"><span>Status is Active in Shopify</span></label></li>
       </ul>
             <p class="side__hint">Ticks are remembered in this browser.</p>
-          </div>
+            </div>
+          </details>
         </aside>
       </div>
     </section>
@@ -424,14 +453,32 @@
     let saved = [];
     try { saved = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { saved = []; }
     const boxes = [...list.querySelectorAll('input')];
+    const count = list.closest('.side__box').querySelector('.side__count');
+    const show = () => { count.textContent = boxes.filter((b) => b.checked).length + ' of ' + boxes.length + ' done'; };
     boxes.forEach((box, i) => {
       box.checked = saved.includes(i);
       box.addEventListener('change', () => {
         const on = boxes.flatMap((b, j) => (b.checked ? [j] : []));
         try { localStorage.setItem(key, JSON.stringify(on)); } catch (e) { /* not remembered; still works */ }
+        show();
       });
     });
+    show();
   });
+
+  // Collapsible panels: always open, and not collapsible, from their width up; closed below it until tapped.
+  document.querySelectorAll('details[data-open-from]').forEach((d) => {
+    const wide = window.matchMedia('(min-width: ' + d.dataset.openFrom + 'rem)');
+    const apply = () => { d.open = wide.matches; };
+    d.querySelector('summary').addEventListener('click', (e) => { if (wide.matches) e.preventDefault(); });
+    wide.addEventListener('change', apply);
+    apply();
+  });
+  // Following a link in the collapsed contents closes it again.
+  document.querySelectorAll('.toc__box a').forEach((link) => link.addEventListener('click', () => {
+    const d = link.closest('details');
+    if (!window.matchMedia('(min-width: ' + d.dataset.openFrom + 'rem)').matches) d.open = false;
+  }));
 </script>
 </body>
 </html>
