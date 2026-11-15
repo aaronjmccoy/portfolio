@@ -14,7 +14,9 @@ pnpm derive --only blue-heron
 For every original it generates a **print** product (one variant per size in
 `derive.config.json`, the original's photos reused) and, when `stickers/<handle>.png`
 exists, a **sticker** product with that artwork uploaded through a staged upload. Both are
-published to the Headless channel. Derived products are keyed by handle
+published to the Headless channel and created as **drafts**: Megan activates each one in the
+admin once its print-on-demand vendor is configured and a sample has passed. Updates never
+change a listing's status (see `docs/megan-shop-guide.md`). Derived products are keyed by handle
 (`<original>-print`, `<original>-sticker`), tagged `derived`, `source:<original>` and
 `fp:<hash>`; an unchanged product is skipped, a changed price or size list updates it, an
 original removed from the collection is reported as an orphan to archive by hand.

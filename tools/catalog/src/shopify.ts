@@ -166,7 +166,8 @@ export type ProductSetInput = {
   descriptionHtml: string;
   vendor: string;
   productType: string;
-  status: 'ACTIVE' | 'DRAFT';
+  /** Omitted on update so Shopify keeps whatever status Megan set in the admin. */
+  status?: 'ACTIVE' | 'DRAFT';
   tags: string[];
   collections: string[];
   files?: FileInput[];

@@ -112,6 +112,11 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
   open, keyboard walk with focus-ring check, reflow, target size, headings/landmarks, reduced motion): one real
   failure, WCAG 2.2 target size at 320px on the nav, cart and footer links; fixed with a 1.5rem minimum height.
   e2e now runs reflow + target size + axe at 320px on home, product and cart.
+- 2026-11-15: fulfilment chosen: Prodigi for prints (giclée, Hahnemühle papers, US facility; listings are
+  created in Shopify and configured per variant in Prodigi's dashboard, which cannot push products), Printful
+  for Trinkets (everything not an original or a print; products made in Printful and pushed to Shopify).
+  Megan's walkthrough: `docs/megan-shop-guide.md` (admin and vendor dashboards only, steps from vendor help
+  pages). `derive` now creates listings as DRAFT and never changes status on update.
 
 ## Next
 - Letters: first chapter of transcriptions from the book; Markdown rendering of transcriptions (currently paragraphs only).
@@ -121,6 +126,12 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - Deployment: shop and portfolio Dockerfiles, following the letters recipe.
 
 ## Operator steps outstanding
+- Aaron: connect Prodigi (Sales channels → Connect your Shopify store), install the Printful app, billing in
+  both, Shopify shipping rates for originals / Prodigi / Printful. Resolve order processing: Prodigi says the
+  store must not auto-fulfil or status updates stop; Printful's help says with manual fulfilment each Printful
+  order needs Request fulfillment in Shopify. Confirm with one test order of each.
+- Aaron: `derive` applies one size list to every original; prints must match each painting's proportions, so
+  it needs per-original sizes (Megan sends a painting / paper / size / price list).
 - GitHub Actions secrets `SHOPIFY_STORE_DOMAIN` and `SHOPIFY_STOREFRONT_TOKEN` (public token) so CI can boot the shop (`gh secret set`).
 - Megan: replace the placeholder price, description, weight and quantity on all 9 originals in the admin; decide print sizes/prices for `tools/catalog/derive.config.json`.
 - Shopify: done 2026-11-08 (store, Headless public + private tokens in `apps/shop/.env`, Admin app credentials in `tools/catalog/.env`, all verified). Only the mallerart.com domain move remains, at launch.

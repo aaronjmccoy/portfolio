@@ -47,7 +47,8 @@ export function printInput(o: Original, cfg: DeriveConfig, collectionId: string)
     descriptionHtml: fill(cfg.prints.descriptionHtml, o.title),
     vendor: o.vendor,
     productType: cfg.prints.titleSuffix,
-    status: o.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
+    // Always a draft: Megan activates it in the admin once the printer is set up and a sample has passed.
+    status: 'DRAFT',
     tags: [TAG_DERIVED, 'print', tagSource(o.handle)],
     collections: [collectionId],
     files: imageFiles(o.images, `${o.title}, print`),
@@ -68,7 +69,7 @@ export function stickerInput(o: Original, cfg: DeriveConfig, collectionId: strin
     descriptionHtml: fill(cfg.stickers.descriptionHtml, o.title),
     vendor: o.vendor,
     productType: cfg.stickers.titleSuffix,
-    status: o.status === 'ACTIVE' ? 'ACTIVE' : 'DRAFT',
+    status: 'DRAFT',
     tags: [TAG_DERIVED, 'sticker', tagSource(o.handle)],
     collections: [collectionId],
     files: [{ originalSource: art.originalSource, alt: art.alt, contentType: 'IMAGE', duplicateResolutionMode: 'APPEND_UUID' }],
@@ -115,10 +116,13 @@ export function plan({ originals, existing, config, collectionIds, stickerArt, o
       actions.push({ kind: 'skip', handle: input.handle, source: o.handle, reason: 'unchanged' });
       return;
     }
+    // An update never touches status: activating a listing is Megan's call in the admin.
+    const keepStatus: ProductSetInput = { ...tagged };
+    delete keepStatus.status;
     // productSet replaces the media set; re-sending the same images would duplicate them.
-    const withoutFiles: ProductSetInput = { ...tagged };
+    const withoutFiles: ProductSetInput = { ...keepStatus };
     delete withoutFiles.files;
-    const update = prev.mediaCount > 0 ? withoutFiles : tagged;
+    const update = prev.mediaCount > 0 ? withoutFiles : keepStatus;
     actions.push({ kind: 'update', handle: input.handle, input: update, source: o.handle, sourceId: o.id, id: prev.id });
   };
 

@@ -53,8 +53,9 @@ describe('printInput', () => {
     expect(input.tags).toEqual(['derived', 'print', 'source:blue-heron']);
   });
 
-  it('keeps the derivatives of a draft original in draft', () => {
+  it('creates every derivative as a draft, even of an active original, for Megan to activate', () => {
     expect(printInput({ ...heron, status: 'DRAFT' }, config, 'c').status).toBe('DRAFT');
+    expect(printInput(heron, config, 'c').status).toBe('DRAFT');
   });
 });
 
@@ -114,6 +115,8 @@ describe('plan', () => {
     const p = plan({ originals: [heron], existing, config, collectionIds, stickerArt: new Map() });
     const upd = p.actions[0];
     expect(upd?.kind === 'update' && upd.input.files?.length).toBe(1);
+    // an update leaves the status Megan set alone
+    expect(upd?.kind === 'update' && 'status' in upd.input).toBe(false);
     expect(p.actions[1]).toMatchObject({ kind: 'skip', handle: 'blue-heron-sticker', reason: 'no sticker artwork on disk' });
   });
 
