@@ -115,7 +115,7 @@ Plan of record: `C:\Users\Aaron\.claude\plans\i-moved-to-caes-lovely-hanrahan.md
 - 2026-11-15: fulfilment chosen: Prodigi for prints (giclée, Hahnemühle papers, US facility; listings are
   created in Shopify and configured per variant in Prodigi's dashboard, which cannot push products), Printful
   for Trinkets (everything not an original or a print; products made in Printful and pushed to Shopify).
-  Megan's walkthrough: `docs/megan-shop-guide.md` (admin and vendor dashboards only, steps from vendor help
+  Megan's walkthrough: `docs/megan-shop-guide/index.html` (admin and vendor dashboards only, steps from vendor help
   pages). `derive` now creates listings as DRAFT and never changes status on update.
 
 ## Next

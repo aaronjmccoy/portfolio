@@ -1,0 +1,418 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maller Art Shop Guide</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --surface: #ffffff; --ink: #1a1a1a; --muted: #5b5b5b; --rule: #e4e1da;
+    --accent: #a3400a; --accent-soft: #fbe9dd; --ok: #1b6e3a; --ok-soft: #e3f2e8; --todo: #8a5a00; --todo-soft: #fdf1d6;
+    --radius: 10px; --measure: 46rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151514; --surface: #1e1e1c; --ink: #ecebe7; --muted: #a9a7a1; --rule: #34332f;
+      --accent: #ff8a4c; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #151514; --surface: #1e1e1c; --ink: #ecebe7; --muted: #a9a7a1; --rule: #34332f;
+    --accent: #ff8a4c; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  a { color: var(--accent); text-underline-offset: 0.15em; }
+  a:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 72rem; margin: 0 auto; padding: 0 16px 6rem; gap: 2rem; }
+  header.top { padding: 3rem 0 1rem; max-width: var(--measure); }
+  h1 { font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: -0.02em; margin: 0 0 0.75rem; }
+  h2 { font-size: 1.6rem; letter-spacing: -0.01em; margin: 3.5rem 0 0.5rem; padding-top: 1rem; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.15rem; margin: 2.25rem 0 0.5rem; }
+  p, ul, ol, table, figure, .note { max-width: var(--measure); }
+  .lede { font-size: 1.15rem; color: var(--muted); }
+  nav.toc { position: relative; }
+  nav.toc ol { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; }
+  nav.toc li { margin: 0.35rem 0; }
+  nav.toc a { color: var(--ink); text-decoration: none; }
+  nav.toc a:hover { color: var(--accent); }
+  nav.toc .sub { padding-left: 0.9rem; color: var(--muted); }
+  @media (min-width: 64rem) {
+    .layout { grid-template-columns: 14rem minmax(0, 1fr); gap: 3rem; }
+    nav.toc { grid-row: 1 / span 2; }
+    nav.toc > div { position: sticky; top: 2rem; padding-top: 3.5rem; }
+  }
+  @media (max-width: 63.99rem) { nav.toc { border: 1px solid var(--rule); border-radius: var(--radius); padding: 1rem 1.25rem; background: var(--surface); } }
+  ol.steps { padding-left: 1.4rem; }
+  ol.steps > li { margin: 0.6rem 0; padding-left: 0.25rem; }
+  ol.steps > li::marker { font-weight: 700; color: var(--accent); }
+  ul li { margin: 0.3rem 0; }
+  .ui { font-weight: 650; background: var(--accent-soft); padding: 0.05em 0.35em; border-radius: 4px; white-space: nowrap; }
+  .help { font-size: 0.85rem; color: var(--muted); margin-left: 0.25rem; white-space: nowrap; }
+  code { font: 0.9em ui-monospace, Consolas, monospace; background: var(--accent-soft); padding: 0.05em 0.3em; border-radius: 4px; }
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; margin: 1rem 0; }
+  th, td { text-align: left; padding: 0.55rem 0.6rem; border-bottom: 1px solid var(--rule); vertical-align: top; }
+  th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); }
+  .scroll { overflow-x: auto; max-width: var(--measure); }
+  .scroll table { min-width: 34rem; }
+  figure { margin: 1.25rem 0 1.75rem; }
+  figure img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+  figcaption { font-size: 0.9rem; color: var(--muted); margin-top: 0.5rem; }
+  figcaption ol { margin: 0.35rem 0 0; padding-left: 1.4rem; }
+  .badge { display: inline-grid; place-items: center; width: 1.35em; height: 1.35em; border-radius: 50%; background: #e8590c; color: #fff; font-size: 0.8em; font-weight: 700; margin-right: 0.2em; }
+  .note { border-left: 4px solid var(--accent); background: var(--surface); padding: 0.8rem 1rem; border-radius: 0 var(--radius) var(--radius) 0; margin: 1.25rem 0; }
+  .tag { display: inline-block; font-size: 0.78rem; font-weight: 700; padding: 0.1rem 0.5rem; border-radius: 999px; white-space: nowrap; }
+  .tag.todo { background: var(--todo-soft); color: var(--todo); }
+  .tag.ok { background: var(--ok-soft); color: var(--ok); }
+  .checks { list-style: none; padding: 0; }
+  .checks li { margin: 0.4rem 0; }
+  .checks label { display: flex; gap: 0.6rem; align-items: flex-start; cursor: pointer; }
+  .checks input { width: 1.15rem; height: 1.15rem; margin-top: 0.25rem; accent-color: var(--accent); flex: none; }
+  .checks input:checked + span { color: var(--muted); text-decoration: line-through; }
+  footer { margin-top: 4rem; font-size: 0.85rem; color: var(--muted); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <div>
+      <ol>
+        <li><a href="#overview">How the shop is split</a></li>
+        <li><a href="#paintings">1. Paintings</a></li>
+        <li class="sub"><a href="#where">Where things show up</a></li>
+        <li class="sub"><a href="#todo">What's left on each</a></li>
+        <li class="sub"><a href="#finish">Finishing a listing</a></li>
+        <li class="sub"><a href="#new">Adding a new painting</a></li>
+        <li><a href="#prints">2. Prints with Prodigi</a></li>
+        <li><a href="#trinkets">3. Trinkets with Printful</a></li>
+        <li><a href="#checklists">Checklists</a></li>
+        <li><a href="#help">If a button has moved</a></li>
+      </ol>
+    </div>
+  </nav>
+
+  <main>
+    <header class="top">
+      <h1>Adding work to the Maller Art shop</h1>
+      <p class="lede">How to list paintings and set up prints and trinkets. Everything happens in Shopify, Prodigi and Printful; nothing here needs code.</p>
+    </header>
+
+    <section id="overview">
+      <h2>How the shop is split</h2>
+      <div class="scroll" tabindex="0" role="region" aria-label="Where each section is made and managed">
+        <table>
+          <thead><tr><th>Section on the site</th><th>What it holds</th><th>Who makes and ships it</th><th>Where you work</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Paintings</strong></td><td>Your originals</td><td>You</td><td>Shopify</td></tr>
+            <tr><td><strong>Prints</strong></td><td>Giclée prints of the paintings</td><td>Prodigi</td><td>Prodigi, plus one switch in Shopify</td></tr>
+            <tr><td><strong>Trinkets</strong></td><td>Stickers, clothing, hats, bags, anything that isn't a painting or a print</td><td>Printful</td><td>Printful, plus a quick check in Shopify</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <figure>
+        <img src="screens/nav.jpg" width="1440" height="360" alt="The top of the shop: the Maller Art wordmark with the Paintings, Prints and Trinkets links outlined.">
+        <figcaption>The three sections are the three links under the wordmark <span class="badge">1</span>. Each is a collection in Shopify.</figcaption>
+      </figure>
+      <p>Logins:</p>
+      <ul>
+        <li>Shopify admin: <a href="https://mallerart.myshopify.com/admin">mallerart.myshopify.com/admin</a></li>
+        <li>Prodigi: <a href="https://dashboard.prodigi.com">dashboard.prodigi.com</a></li>
+        <li>Printful: <a href="https://www.printful.com/dashboard">printful.com/dashboard</a></li>
+      </ul>
+      <p>Aaron looks after the connections between these accounts, billing, shipping rates and order settings. The screenshots below are of our own shop, to show where each thing you type ends up. For the admin screens themselves, each step links to the help page it comes from.</p>
+    </section>
+
+    <section id="paintings">
+      <h2>1. Paintings</h2>
+
+      <h3 id="where">Where things show up</h3>
+      <figure>
+        <img src="screens/home-paintings.jpg" width="1440" height="1000" loading="lazy" alt="The Paintings section of the home page, with the section title, Tough Guy's photo, title and price outlined and numbered 1 to 4.">
+        <figcaption>On the home page:
+          <ol>
+            <li>The collection the painting is in, <strong>Paintings</strong>.</li>
+            <li>The painting's <strong>first photo</strong>. The grid keeps each photo's own shape, so tall paintings get tall tiles and wide ones span two columns.</li>
+            <li>The <strong>title</strong>.</li>
+            <li>The <strong>price</strong>, or <em>Sold</em> once it has sold.</li>
+          </ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="screens/product.jpg" width="1440" height="2300" loading="lazy" alt="Starstuff's page with six areas outlined: the main photo, the detail photos below it, the Home page link above the title, the title, the price and the description.">
+        <figcaption>On a painting's own page:
+          <ol>
+            <li>The first photo, large.</li>
+            <li>Every other photo, in the order you set.</li>
+            <li>The collection link. Starstuff's says <em>Home page</em> because it's still in Shopify's default Home page collection; it should say Paintings (see the Starstuff note below).</li>
+            <li>Title.</li>
+            <li>Price.</li>
+            <li>Description, here still the placeholder.</li>
+          </ol>
+        </figcaption>
+      </figure>
+      <figure>
+        <img src="screens/magnifier.jpg" width="1440" height="740" loading="lazy" alt="Starstuff's page with the mouse over the main photo, which shows a close magnified view of the eye and gold flecks.">
+        <figcaption>Hovering over a photo magnifies it, so photos need real resolution: at least 2048 pixels on the long side.</figcaption>
+      </figure>
+      <figure>
+        <img src="screens/gallery.jpg" width="1440" height="900" loading="lazy" alt="The full-screen gallery: the page is dimmed and Starstuff's photo fills the middle, with left and right arrows at the edges.">
+        <figcaption>Clicking a photo opens the gallery, which shows each photo at full size with arrows to step through them.</figcaption>
+      </figure>
+
+      <h3 id="todo">What's left on each painting</h3>
+      <p>Read from the store on 15 November 2026. All nine are live on the site with made-up details.</p>
+      <div class="scroll" tabindex="0" role="region" aria-label="What's left on each painting">
+        <table>
+          <thead><tr><th>Painting</th><th>Photos</th><th>Price</th><th>Description</th><th>Weight</th><th>Alt text</th><th>Track quantity</th></tr></thead>
+          <tbody>
+            <tr><td>Feather Bedfellows Study</td><td>3</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">3 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Flaunt</td><td>1</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">1 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Little King</td><td>4</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">4 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Mask Man</td><td>1</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">1 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Peering</td><td>6</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">6 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Starstuff</td><td>4</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">4 to write</span></td><td><span class="tag ok">on, 1 available</span></td></tr>
+            <tr><td>The Bishop</td><td>3</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">3 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Three Brothers</td><td>8</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">8 to write</span></td><td><span class="tag todo">off</span></td></tr>
+            <tr><td>Tough Guy</td><td>5</td><td><span class="tag todo">$5,000 placeholder</span></td><td><span class="tag todo">placeholder</span></td><td><span class="tag todo">10 lb placeholder</span></td><td><span class="tag todo">5 to write</span></td><td><span class="tag todo">off</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>"Alt text to write" counts photos whose alt text is still just the painting's name. All nine are already in Paintings and published to the site.</p>
+      <div class="note"><strong>Starstuff only:</strong> in <span class="ui">Product organization</span>, remove <em>Home page</em> from <span class="ui">Collections</span> so its page links back to Paintings. Hover over Home page in the Collections field and click the <strong>×</strong>, then <span class="ui">Save</span>. <a class="help" href="https://help.shopify.com/en/manual/products/collections/manual-shopify-collection">Shopify help</a></div>
+
+      <h3 id="finish">Finishing a listing</h3>
+      <p>For each painting:</p>
+      <ol class="steps">
+        <li>In Shopify, go to <span class="ui">Products</span> and click the painting. <a class="help" href="https://help.shopify.com/en/manual/products/add-update-products">Shopify help</a></li>
+        <li><strong>Title</strong>: the painting's name as you want it shown.</li>
+        <li><strong>Description</strong>: delete both placeholder lines and write the real one. Worth including:
+          <ul>
+            <li>size in inches, width × height, and the framed size if framed</li>
+            <li>medium and surface</li>
+            <li>year</li>
+            <li>framed, ready to hang, or unframed</li>
+            <li>signed, and where</li>
+            <li>a sentence or two about the piece</li>
+          </ul>
+        </li>
+        <li><strong>Media</strong>, the photos. <a class="help" href="https://help.shopify.com/en/manual/products/product-media/add-media">Shopify help</a>
+          <ul>
+            <li>The <strong>first</strong> photo is the one in the grid and the big one on the page. Make it the whole painting, straight on, cropped to the edge of the canvas, in even light with no glare.</li>
+            <li>After it: close-ups of texture and brushwork, the edges, the signature, the back, the painting on a wall for scale.</li>
+            <li>Drag photos to reorder them. Whatever is first becomes the main photo.</li>
+            <li>At least 2048 pixels on the long side. Shopify's limit is 25 megapixels and 20 MB per photo: 4000 × 5000 is 20 megapixels and fine, 6000 × 6000 is 36 and will be refused. JPEG, PNG, WEBP and HEIC all work.</li>
+          </ul>
+        </li>
+        <li><strong>Alt text</strong> on every photo: click the photo, click <span class="ui">Add alt text</span>, type a short description, then <span class="ui">Save alt text</span>. Describe what's in the picture in under 125 characters, for example <em>"Black cockatoo in oils, head turned over its shoulder, gold flecks across dark blue feathers"</em> or <em>"Detail of the eye and pale beak"</em>. Screen readers read it aloud to people who can't see the image. <a class="help" href="https://help.shopify.com/en/manual/products/product-media/add-alt-text">Shopify help</a></li>
+        <li><strong>Price</strong>: the real price. Leave the compare-at price empty.</li>
+        <li><strong>Inventory</strong>: turn on <span class="ui">Track quantity</span> and set <span class="ui">Available</span> to 1. Leave the out-of-stock setting on <span class="ui">Stop selling when out of stock</span>. Each painting then sells once and shows as <em>Sold</em>. <a class="help" href="https://help.shopify.com/en/manual/products/inventory/getting-started-with-inventory/set-up-inventory-tracking">Shopify help</a></li>
+        <li><strong>Shipping</strong>: the packed weight, painting plus packaging. Weigh it boxed if you can.</li>
+        <li><strong>Product organization</strong>: already filled in on these nine. It should read Type <em>Original</em>, Vendor <em>Maller Art</em>, Collections <em>Paintings</em>, Tags <em>original</em>. Leave it.</li>
+        <li><strong>Search engine listing</strong>: click the pencil and check the <span class="ui">URL handle</span> reads well, like <code>three-brothers</code>. Settle it once. After prints of a painting exist, don't change its handle; the prints are tied to it. <a class="help" href="https://help.shopify.com/en/manual/products/add-update-products">Shopify help</a></li>
+        <li><strong>Publishing</strong>: make sure <em>Headless</em> is in the list. Headless is the new site; a painting not published there won't appear.</li>
+        <li><strong>Status</strong>: <span class="ui">Active</span> once everything is real. <span class="ui">Draft</span> keeps it off the site.</li>
+        <li>Click <span class="ui">Save</span>.</li>
+      </ol>
+      <div class="note">If a painting is too large or fragile for a normal courier, tell Aaron before you set it to Active so its shipping can be arranged.</div>
+
+      <h3 id="new">Adding a new painting</h3>
+      <p>The quickest way is to copy a finished painting, so the organisation fields come along:</p>
+      <ol class="steps">
+        <li>In <span class="ui">Products</span>, open any finished painting.</li>
+        <li>Click <span class="ui">More actions</span>, then <span class="ui">Duplicate product</span>. <a class="help" href="https://help.shopify.com/en/manual/products/add-update-products">Shopify help</a></li>
+        <li>Type the new painting's title, choose <span class="ui">Draft</span> as the status, and click <span class="ui">Duplicate product</span>.</li>
+        <li>On the copy, delete the old photos, then work through <a href="#finish">steps 3 to 13 above</a>.</li>
+        <li>Check <span class="ui">Product organization</span> still reads Original / Maller Art / Paintings / original.</li>
+      </ol>
+      <p>You can also start from <span class="ui">Products</span> → <span class="ui">Add product</span>. Then fill in Product organization yourself: Type <em>Original</em>, Vendor <em>Maller Art</em>, Collections <em>Paintings</em>, Tags <em>original</em>.</p>
+      <p>If the new painting should have prints, add it to your prints list for Aaron (<a href="#sizes">2b</a>).</p>
+    </section>
+
+    <section id="prints">
+      <h2>2. Prints with Prodigi</h2>
+      <figure>
+        <img src="screens/prints-trinkets.jpg" width="1440" height="700" loading="lazy" alt="The Prints and Trinkets sections of the home page, both outlined and both showing Coming soon.">
+        <figcaption>Prints <span class="badge">1</span> and Trinkets <span class="badge">2</span> say <em>Coming soon</em> until their first products are Active.</figcaption>
+      </figure>
+      <p><strong>How it works.</strong> For each painting you want to sell as prints, Aaron creates a listing in Shopify called "<em>Painting name</em> Print", with one option per size at your prices and the painting's photos copied across. It arrives as a <strong>Draft</strong>, so nobody can buy it yet. You tell Prodigi which paper and size each option is and give it the high-resolution file. When your sample looks right, you switch the listing to Active.</p>
+
+      <h3 id="paper">2a. Choose the paper (once)</h3>
+      <ol class="steps">
+        <li>Order Prodigi's fine art sample pack from your Prodigi account: £10 plus tax, free shipping, sent from their US facility. It has their bestselling papers printed with stock images. <a class="help" href="https://www.prodigi.com/start/samples/">Prodigi samples</a></li>
+        <li>Compare the papers in daylight next to the originals. The ones worth comparing for paintings: <a class="help" href="https://www.prodigi.com/blog/how-to-choose-the-best-fine-art-or-photography-paper-for-your-print/">Prodigi paper guide</a>
+          <ul>
+            <li><strong>Hahnemühle German Etching</strong>, 310 gsm: velvety matte, textured, warm white</li>
+            <li><strong>Hahnemühle Photo Rag</strong>, 308 gsm: smooth matte cotton, light felt texture</li>
+            <li><strong>Cold press watercolour</strong>, 315 gsm: matte cotton, strong texture</li>
+            <li><strong>Enhanced Matte Art</strong>, 200 gsm: smooth matte, natural white, no optical brighteners; the budget option</li>
+          </ul>
+        </li>
+        <li>Order one real print of one painting on your top two papers. Prodigi refunds half of one sample per product type if you email the order number to <a href="mailto:support@prodigi.com">support@prodigi.com</a>.</li>
+      </ol>
+
+      <h3 id="sizes">2b. Choose sizes and prices for each painting</h3>
+      <p>Print sizes have to match the painting's shape or the print gets cropped. Divide the painting's width by its height and pick sizes that give the same number:</p>
+      <ul>
+        <li>a 16 × 20 in painting is 0.8, so 8 × 10 and 16 × 20 keep the whole image</li>
+        <li>a 12 × 18 in painting is 0.67, so 8 × 12, 12 × 18 and 20 × 30 keep it</li>
+        <li>a square painting needs square sizes</li>
+      </ul>
+      <p>Prodigi's dashboard shows its own price for each paper and size. Your price has to cover that plus shipping. Send Aaron a list like this and he'll create the print listings from it:</p>
+      <div class="scroll" tabindex="0" role="region" aria-label="Example prints list">
+        <table>
+          <thead><tr><th>Painting</th><th>Paper</th><th>Size</th><th>Your price</th></tr></thead>
+          <tbody>
+            <tr><td>Starstuff</td><td>Hahnemühle German Etching</td><td>8 × 12 in</td><td>$</td></tr>
+            <tr><td>Starstuff</td><td>Hahnemühle German Etching</td><td>12 × 18 in</td><td>$</td></tr>
+            <tr><td>Flaunt</td><td>…</td><td>…</td><td>$</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 id="files">2c. Prepare the print files</h3>
+      <p>The print file is not the listing photo. It needs a high-resolution scan or photograph of the painting. <a class="help" href="https://www.prodigi.com/blog/create-print-on-demand-wall-art/">Prodigi file guide</a></p>
+      <ul>
+        <li><strong>Resolution</strong>: 300 DPI at the largest size you sell. A 16 × 20 in print needs 4800 × 6000 pixels. A photo 4000 pixels wide only covers about 13 inches.</li>
+        <li><strong>Colour</strong>: RGB.</li>
+        <li><strong>Format</strong>: JPG is safest. Prodigi takes JPG, PNG or PDF, but some papers only JPG or PDF.</li>
+        <li>One file usually covers every size of the same shape. Prodigi's uploader shows the pixel size each product wants and warns if a file is too small.</li>
+        <li>Prodigi's product pages offer ICC profiles. They're for checking a proof against a real print, not for on-screen soft proofing.</li>
+      </ul>
+
+      <h3 id="prodigi">2d. Set up the prints in Prodigi</h3>
+      <p>When Aaron says the print listings are in Shopify, give it a few minutes; they can take up to an hour to show up in Prodigi. <a class="help" href="https://www.prodigi.com/shopify-print-on-demand-app/support/configure-your-products/">Prodigi help</a></p>
+      <ol class="steps">
+        <li>Log in to Prodigi and click <span class="ui">Sales channels</span> in the left menu.</li>
+        <li>Click <span class="ui">Configure</span> on the Shopify store connection.</li>
+        <li>You'll see every product in the shop, including the paintings and Printful items. Find "<em>Painting name</em> Print" and turn its <strong>purple toggle</strong> on. Leave everything else off; a grey product is one Prodigi won't make.</li>
+        <li>Click <span class="ui">Configure</span> on that print. Each size appears as a variant.</li>
+        <li>On the first size, click <span class="ui">Choose product</span>, search the catalogue, and pick your paper in that size. Answer any questions about finish, upload the print file, and click <span class="ui">Save</span>.</li>
+        <li>Click the <strong>three dots</strong> on the right to copy that product and image to the other sizes. Then on each other size click <span class="ui">Change product</span> and pick the matching size.</li>
+        <li>Click the <span class="ui">Shipping</span> tile and choose <strong>Standard</strong>. Budget is cheaper and slower, Express faster and dearer. It saves by itself.</li>
+      </ol>
+
+      <h3 id="live">2e. Check a sample, then go live</h3>
+      <ol class="steps">
+        <li>Order one finished print from your Prodigi account and check it against the painting.</li>
+        <li>When it's right, in Shopify open "<em>Painting name</em> Print", set <span class="ui">Status</span> to <span class="ui">Active</span>, and <span class="ui">Save</span>.</li>
+      </ol>
+      <div class="note">Leave two things alone on print listings in Shopify. <strong>Sizes and options:</strong> changing or deleting a size can make Prodigi treat the listing as new and lose your setup, so ask Aaron. <strong>The description:</strong> it comes from one shared template so all prints read the same; ask Aaron and it changes for every print.</div>
+    </section>
+
+    <section id="trinkets">
+      <h2>3. Trinkets with Printful</h2>
+      <p>Trinkets is everything that isn't a painting or a print: stickers, shirts, hoodies, hats, totes and the rest.</p>
+
+      <h3 id="art">3a. Prepare the artwork</h3>
+      <ul>
+        <li><strong>PNG with a transparent background.</strong> A JPG prints as a white box.</li>
+        <li><strong>sRGB colour</strong>, the profile called <em>sRGB IEC61966-2.1</em>.</li>
+        <li><strong>Resolution</strong>: at least 150 DPI at the printed size; 300 DPI for stickers, phone cases and DTFlex products. No gain above 300.</li>
+        <li><strong>No soft edges.</strong> Semi-transparent edges, fades and drop shadows print unevenly on fabric.</li>
+        <li>Each product in Printful's catalogue has a <span class="ui">File guidelines</span> tab with its print area and rules. Check it before designing.</li>
+        <li>On blends and heathers the fabric shows through the ink and mutes colour. Plain 100% cotton gives the truest colour with DTG.</li>
+      </ul>
+      <p><a class="help" href="https://www.printful.com/creating-dtg-file">Printful DTG file guide</a> <a class="help" href="https://www.printful.com/blog/preparing-dtf-print-file">Printful DTF file guide</a></p>
+
+      <h3 id="dtg">3b. DTG or DTFlex?</h3>
+      <p>The two ways Printful prints a full-colour image on clothing: <a class="help" href="https://www.printful.com/blog/types-of-shirt-printing">Printful comparison</a></p>
+      <div class="scroll" tabindex="0" role="region" aria-label="DTG and DTFlex compared">
+        <table>
+          <thead><tr><th></th><th>DTG (direct to garment)</th><th>DTFlex (Printful's direct-to-film)</th></tr></thead>
+          <tbody>
+            <tr><th scope="row">How</th><td>Ink printed straight into the fabric</td><td>Printed on film, then heat-pressed on top</td></tr>
+            <tr><th scope="row">Feel</th><td>Soft, almost no feel, breathes</td><td>Slightly thicker and raised, less breathable on big prints</td></tr>
+            <tr><th scope="row">Fabrics</th><td>100% cotton</td><td>Cotton, polyester, fleece, nylon, blends, hats</td></tr>
+            <tr><th scope="row">Colour</th><td>Good, with fine detail and gradients</td><td>The most vivid</td></tr>
+            <tr><th scope="row">Washing</th><td>Fades gradually</td><td>Holds colour longest; if it fails, edges crack or lift</td></tr>
+            <tr><th scope="row">Watch for</th><td>Duller colour on blends</td><td>Black on black fabric comes out dark grey</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>When bright, lasting colour matters most, choose DTFlex. When the shirt is cotton and softness matters most, choose DTG. DTFlex is only on some products; Printful's catalogue has a <em>DTFlex products</em> collection, including the Unisex Staple T-Shirt, Unisex Premium Hoodie and several caps. If unsure, sample the same design both ways.</p>
+
+      <h3 id="printful">3c. Make the product in Printful</h3>
+      <p><a class="help" href="https://www.printful.com/blog/how-to-start-an-online-store-with-printful">Printful help</a></p>
+      <ol class="steps">
+        <li>In the Printful Dashboard, go to <span class="ui">Stores</span> and click <span class="ui">Add product</span>. Some accounts show <span class="ui">My products</span> → <span class="ui">Create product</span> instead. Choose the Maller Art store if asked.</li>
+        <li>Pick the product from the catalogue.</li>
+        <li>Click <span class="ui">Start designing</span> to open the Design Maker. Upload your file and position it.</li>
+        <li>Choose the colours and sizes to offer, then <span class="ui">Proceed to mockups</span>.</li>
+        <li>Pick the mockups customers will see: basic plain backgrounds or styled scenes.</li>
+        <li><strong>Product details</strong>: Printful fills in a description. Add the painting's name and a line about it. A tidy title pattern is the painting plus the item: "Flaunt Tee", "Starstuff Sticker".</li>
+        <li><strong>Pricing</strong>: Printful shows its cost and a suggested price; set your retail price. Printful's cost excludes shipping and tax. Leave <span class="ui">Free shipping on my storefront</span> off unless you and Aaron agree otherwise, because shipping is charged in Shopify.</li>
+        <li>Click <span class="ui">Submit to store</span>.</li>
+      </ol>
+
+      <h3 id="shopify-trinket">3d. Finish it in Shopify</h3>
+      <ol class="steps">
+        <li>In Shopify, go to <span class="ui">Products</span> and open the new item.</li>
+        <li>Set <span class="ui">Status</span> to <span class="ui">Draft</span> while you order a sample from Printful.</li>
+        <li>In <span class="ui">Product organization</span>, click the <strong>+</strong> next to <span class="ui">Collections</span> and choose <em>Trinkets</em>. <a class="help" href="https://help.shopify.com/en/manual/products/collections/manual-shopify-collection">Shopify help</a></li>
+        <li>In <span class="ui">Publishing</span>, make sure <em>Headless</em> is in the list.</li>
+        <li>Click <span class="ui">Save</span>.</li>
+        <li>When the sample is right, set <span class="ui">Status</span> to <span class="ui">Active</span> and <span class="ui">Save</span>.</li>
+      </ol>
+      <p>To add or remove colours or sizes later, do it in Printful, not Shopify, so the two stay in step.</p>
+    </section>
+
+    <section id="checklists">
+      <h2>Checklists</h2>
+      <p>Tick as you go. The ticks are remembered in this browser only.</p>
+      <h3>A painting is ready when</h3>
+      <ul class="checks" data-list="painting">
+        <li><label><input type="checkbox"><span>Real title, description, price and packed weight</span></label></li>
+        <li><label><input type="checkbox"><span>The whole painting is the first photo</span></label></li>
+        <li><label><input type="checkbox"><span>Every photo has alt text</span></label></li>
+        <li><label><input type="checkbox"><span>Track quantity is on with 1 available</span></label></li>
+        <li><label><input type="checkbox"><span>In Paintings and published to Headless</span></label></li>
+        <li><label><input type="checkbox"><span>Status is Active</span></label></li>
+      </ul>
+      <h3>A print is ready when</h3>
+      <ul class="checks" data-list="print">
+        <li><label><input type="checkbox"><span>Paper, sizes and prices sent to Aaron</span></label></li>
+        <li><label><input type="checkbox"><span>Print file is 300 DPI at the largest size</span></label></li>
+        <li><label><input type="checkbox"><span>Every size set up in Prodigi, toggle on, Standard shipping</span></label></li>
+        <li><label><input type="checkbox"><span>A sample has passed</span></label></li>
+        <li><label><input type="checkbox"><span>Status is Active in Shopify</span></label></li>
+      </ul>
+      <h3>A trinket is ready when</h3>
+      <ul class="checks" data-list="trinket">
+        <li><label><input type="checkbox"><span>Artwork follows the product's file guidelines</span></label></li>
+        <li><label><input type="checkbox"><span>Priced in Printful and submitted to the store</span></label></li>
+        <li><label><input type="checkbox"><span>In Trinkets and published to Headless</span></label></li>
+        <li><label><input type="checkbox"><span>A sample has passed</span></label></li>
+        <li><label><input type="checkbox"><span>Status is Active in Shopify</span></label></li>
+      </ul>
+    </section>
+
+    <section id="help">
+      <h2>If a button has moved</h2>
+      <p>These are the pages each step comes from:</p>
+      <ul>
+        <li>Shopify: <a href="https://help.shopify.com/en/manual/products/add-update-products">adding and editing products</a>, <a href="https://help.shopify.com/en/manual/products/product-media/add-media">adding photos</a>, <a href="https://help.shopify.com/en/manual/products/product-media/add-alt-text">alt text</a>, <a href="https://help.shopify.com/en/manual/products/inventory/getting-started-with-inventory/set-up-inventory-tracking">tracking quantity</a>, <a href="https://help.shopify.com/en/manual/products/collections/manual-shopify-collection">collections</a></li>
+        <li>Prodigi: <a href="https://www.prodigi.com/shopify-print-on-demand-app/support/configure-your-products/">setting up Shopify products</a>, <a href="https://www.prodigi.com/faq/shopify/">Shopify questions</a>, <a href="https://www.prodigi.com/blog/how-to-choose-the-best-fine-art-or-photography-paper-for-your-print/">paper guide</a>, <a href="https://www.prodigi.com/blog/create-print-on-demand-wall-art/">preparing files</a>, <a href="https://www.prodigi.com/start/samples/">samples</a></li>
+        <li>Printful: <a href="https://www.printful.com/blog/how-to-start-an-online-store-with-printful">adding products</a>, <a href="https://www.printful.com/creating-dtg-file">DTG files</a>, <a href="https://www.printful.com/blog/preparing-dtf-print-file">DTF files</a>, <a href="https://www.printful.com/blog/types-of-shirt-printing">printing methods</a></li>
+      </ul>
+      <footer>Maller Art shop guide · November 2026</footer>
+    </section>
+  </main>
+</div>
+<script>
+  // Remember ticked checklist items in this browser. Storage can be unavailable (private windows, file:// rules), so every access is guarded.
+  document.querySelectorAll('.checks').forEach((list) => {
+    const key = 'ma-guide-' + list.dataset.list;
+    let saved = [];
+    try { saved = JSON.parse(localStorage.getItem(key) || '[]'); } catch (e) { saved = []; }
+    const boxes = [...list.querySelectorAll('input')];
+    boxes.forEach((box, i) => {
+      box.checked = saved.includes(i);
+      box.addEventListener('change', () => {
+        const on = boxes.flatMap((b, j) => (b.checked ? [j] : []));
+        try { localStorage.setItem(key, JSON.stringify(on)); } catch (e) { /* not remembered; still works */ }
+      });
+    });
+  });
+</script>
+</body>
+</html>
