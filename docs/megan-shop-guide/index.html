@@ -7,20 +7,22 @@
 <style>
   :root {
     --bg: #fbfaf7; --surface: #ffffff; --ink: #1a1a1a; --muted: #5b5b5b; --rule: #e4e1da;
-    --accent: #a3400a; --on-accent: #ffffff; --accent-soft: #fbe9dd; --ok: #1b6e3a; --ok-soft: #e3f2e8; --todo: #8a5a00; --todo-soft: #fdf1d6;
+    --accent: #a3400a; --on-accent: #ffffff; --danger: #b3261e; --accent-soft: #fbe9dd; --ok: #1b6e3a; --ok-soft: #e3f2e8; --todo: #8a5a00; --todo-soft: #fdf1d6;
     --radius: 10px; --measure: 46rem;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #151514; --surface: #1e1e1c; --ink: #ecebe7; --muted: #a9a7a1; --rule: #34332f;
-      --accent: #ff8a4c; --on-accent: #151514; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
+      --accent: #ff8a4c; --on-accent: #151514; --danger: #ff8a80; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
     }
   }
   :root[data-theme="dark"] {
     --bg: #151514; --surface: #1e1e1c; --ink: #ecebe7; --muted: #a9a7a1; --rule: #34332f;
-    --accent: #ff8a4c; --on-accent: #151514; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
+    --accent: #ff8a4c; --on-accent: #151514; --danger: #ff8a80; --accent-soft: #3a2418; --ok: #6fcf8f; --ok-soft: #1c2e22; --todo: #f2c25b; --todo-soft: #352b14;
   }
   * { box-sizing: border-box; }
+  /* keep a focused field clear of the sticky Save bar (and the phone checklist bar) */
+  html { scroll-padding-top: 5.5rem; scroll-padding-bottom: 5rem; }
   body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
   a { color: var(--accent); text-underline-offset: 0.15em; }
   a:focus-visible, summary:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
@@ -101,32 +103,38 @@
   /* author display rules (.btn is inline-flex) would otherwise beat the hidden attribute */
   [hidden] { display: none !important; }
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-  .btn { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.35rem 0.9rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 2.5rem; min-width: 5.5rem; padding: 0.4rem 1.1rem; border-radius: 999px; border: 2px solid var(--accent); background: var(--accent); color: var(--on-accent); font: inherit; font-size: 0.95rem; font-weight: 650; cursor: pointer; }
   .btn--quiet { background: transparent; color: var(--accent); }
-  .btn:focus-visible, input:focus-visible + .btn, .sizes input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
-  #sizes-open:focus-visible + .btn, .sizes-file__actions label:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
-  .sizes-file { max-width: var(--measure); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 0.85rem 1rem; margin: 1rem 0; }
-  .sizes-file__status { margin: 0 0 0.6rem; font-weight: 600; }
-  .sizes-file__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-  .sizes-file__hint { margin: 0.6rem 0 0; font-size: 0.85rem; color: var(--muted); }
-  .sizes-paper { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: center; }
-  .sizes-paper label { font-weight: 600; }
-  .sizes input, .sizes-paper input { font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--bg); border: 1px solid var(--muted); border-radius: 6px; padding: 0.3rem 0.45rem; }
-  .sizes-paper input { min-width: 16rem; }
-  .sizes table { min-width: 40rem; }
-  .sizes input.num { width: 4.25rem; }
-  .sizes input.price { width: 5.5rem; }
-  .sizes .dims { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
-  .sizes .prints { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
-  .sizes .prints li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; margin: 0; }
-  .sizes tbody th { text-transform: none; letter-spacing: 0; font-size: 0.95rem; color: var(--ink); }
-  .sizes .x { color: var(--muted); }
-  .sizes .remove { border: 0; background: none; color: var(--muted); font: inherit; font-size: 0.85rem; text-decoration: underline; cursor: pointer; padding: 0.25rem; min-height: 1.5rem; }
-  .sizes .add { margin-top: 0.4rem; }
-  .sizes .warn[hidden] { display: none; }
-  .sizes .warn { font-size: 0.8rem; font-weight: 700; color: var(--todo); background: var(--todo-soft); border-radius: 999px; padding: 0.1rem 0.5rem; }
-  .sizes .title-in { width: 12rem; }
-  .sizes .handle-in { width: 12rem; font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem; }
+  .btn:hover { filter: brightness(1.08); }
+  .btn:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .sizes-bar { position: sticky; top: 0; z-index: 4; max-width: var(--measure); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.5rem 1rem; padding: 0.6rem 0.9rem; margin: 1rem 0 0.25rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); }
+  .sizes-bar__status { margin: 0; font-weight: 600; font-size: 0.95rem; }
+  .sizes-bar__actions { display: flex; gap: 0.5rem; }
+  .sizes-hint { font-size: 0.85rem; color: var(--muted); }
+  .field label, .pt__label { display: block; font-size: 0.85rem; font-weight: 650; margin-bottom: 0.25rem; }
+  .field input, .field select, .pt input { font: inherit; font-size: 1rem; color: var(--ink); background: var(--bg); border: 1px solid var(--muted); border-radius: 8px; padding: 0.45rem 0.6rem; min-height: 2.5rem; }
+  .field input:focus-visible, .field select:focus-visible, .pt input:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .pt input[aria-invalid="true"] { border-color: var(--danger); }
+  .sizes-paper select { min-width: 17rem; max-width: 100%; }
+  .sizes-list { display: grid; gap: 0.9rem; max-width: var(--measure); margin-top: 1.25rem; }
+  .pt { margin: 0; padding: 0.9rem 1rem 1rem; border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); display: grid; gap: 0.75rem 1.5rem; }
+  .pt legend { font-weight: 700; padding: 0 0.35rem; margin-left: -0.35rem; }
+  .pt__size input { width: 8.5rem; }
+  .pt__new { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-end; }
+  .pt__new input { width: 13rem; }
+  .pt__prints ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.5rem; }
+  .pt__heads { display: grid; grid-template-columns: 8.5rem 7rem; gap: 0.6rem; margin: 0 0 0.25rem; }
+  .pr { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.6rem; margin: 0; }
+  .pr__size { width: 8.5rem; }
+  .pr__price { width: 7rem; }
+  .pr__price-wrap { position: relative; display: inline-block; }
+  .pr__price-wrap::before { content: "$"; position: absolute; left: 0.6rem; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+  .pr__price-wrap input { padding-left: 1.3rem; }
+  .pt input::placeholder { color: var(--muted); font-style: italic; }
+  .warn { font-size: 0.8rem; font-weight: 700; color: var(--todo); background: var(--todo-soft); border-radius: 999px; padding: 0.15rem 0.55rem; }
+  .err { flex-basis: 100%; margin: 0; font-size: 0.85rem; color: var(--danger); }
+  .linkish { border: 0; background: none; padding: 0.25rem 0; min-height: 1.5rem; font: inherit; font-size: 0.9rem; color: var(--accent); text-decoration: underline; cursor: pointer; }
+  @media (min-width: 40rem) { .pt { grid-template-columns: 9.5rem minmax(0, 1fr); } .pt__new { grid-column: 1 / -1; } }
   footer { margin-top: 4rem; font-size: 0.85rem; color: var(--muted); }
 </style>
 </head>
@@ -340,35 +348,29 @@
         <li>a square painting needs square sizes</li>
       </ul>
       <p>Check the sizes exist on your chosen paper by searching Prodigi's catalogue in the dashboard; it also shows Prodigi's price for each size. Your price has to cover that plus shipping.</p>
-      <p>Fill in the table below. Width comes first in every size, and prices are in US dollars. A print size that doesn't match the painting's shape is flagged so you can fix it before anything is printed.</p>
-      <div class="sizes-file" id="sizes-file">
-        <p class="sizes-file__status" id="sizes-status" role="status">Saved in this browser as you type.</p>
-        <div class="sizes-file__actions">
-          <button type="button" class="btn" id="sizes-pick" hidden>Save to a file</button>
-          <button type="button" class="btn" id="sizes-reconnect" hidden>Reconnect the file</button>
-          <button type="button" class="btn btn--quiet" id="sizes-download">Download a copy</button>
-          <label class="btn btn--quiet" for="sizes-open">Open a saved file</label>
-          <input type="file" id="sizes-open" accept="application/json,.json" class="visually-hidden">
+      <p>Fill in each painting below. Type sizes in inches with the width first, like <strong>12 × 18</strong> or <strong>12x18</strong>, and prices in US dollars. A print size that doesn't match the painting's shape is flagged so you can fix it before anything is printed.</p>
+      <div class="sizes-bar">
+        <p class="sizes-bar__status" id="sizes-status" role="status">Your work is kept in this browser.</p>
+        <div class="sizes-bar__actions">
+          <button type="button" class="btn" id="sizes-save">Save</button>
+          <button type="button" class="btn btn--quiet" id="sizes-open">Open</button>
         </div>
-        <p class="sizes-file__hint" id="sizes-hint">Pick a file once with <strong>Save to a file</strong> and every change after that is written to it. That file is what you send Aaron.</p>
+        <input type="file" id="sizes-open-file" accept=".json,application/json" hidden>
       </div>
-      <p class="sizes-paper"><label for="sizes-paper">Paper for all prints</label>
-        <input id="sizes-paper" list="papers" placeholder="Choose after the samples">
-        <datalist id="papers">
-          <option value="Hahnemühle German Etching"></option>
-          <option value="Hahnemühle Photo Rag"></option>
-          <option value="Cold press watercolour"></option>
-          <option value="Enhanced Matte Art"></option>
-        </datalist>
-      </p>
-      <div class="scroll sizes" tabindex="0" role="region" aria-label="Print sizes for each painting">
-        <table>
-          <thead><tr><th scope="col">Painting</th><th scope="col">Painting size (in)</th><th scope="col">Print sizes (in) and prices</th></tr></thead>
-          <tbody id="sizes-body"></tbody>
-        </table>
+      <p class="sizes-hint" id="sizes-hint">Your work is kept in this browser. Click <strong>Save</strong> to download the file to send Aaron, and <strong>Open</strong> to load it back.</p>
+      <div class="field sizes-paper">
+        <label for="sizes-paper">Paper for all prints</label>
+        <select id="sizes-paper">
+          <option value="">Not chosen yet</option>
+          <option>Hahnemühle German Etching</option>
+          <option>Hahnemühle Photo Rag</option>
+          <option>Cold press watercolour</option>
+          <option>Enhanced Matte Art</option>
+        </select>
       </div>
-      <p><button type="button" class="btn btn--quiet" id="sizes-add-painting">Add a new painting</button></p>
-      <p>Leave a painting without print sizes if it shouldn't have prints. For a new painting, use the same URL handle as its Shopify listing.</p>
+      <div class="sizes-list" id="sizes-list"></div>
+      <p><button type="button" class="btn btn--quiet" id="sizes-add-painting">Add a painting</button></p>
+      <p>Leave a painting with no print sizes if it shouldn't have prints. To remove a print size, clear it.</p>
 
       <h3 id="files">2c. Prepare the print files</h3>
       <p>Get these ready now; you'll need them when the listings are set up with Prodigi. The print file is not the listing photo. It needs a high-resolution scan or photograph of the painting. <a class="help" href="https://www.prodigi.com/blog/create-print-on-demand-wall-art/">Prodigi file guide</a></p>
@@ -507,8 +509,9 @@
   });
 
   // ── Print sizes form ──
-  // State lives in localStorage (per browser). With the File System Access API (Chrome, Edge) the page also writes
-  // the JSON to a file Megan picked once, on every change; the file handle is kept in IndexedDB between visits.
+  // State is the JSON Aaron receives. It lives in localStorage; with the File System Access API (Chrome, Edge) it is
+  // also written to the file Megan saved to or opened, on every change. The DOM is built once per painting and then
+  // edited in place, so typing never loses focus.
   (() => {
     const KEY = 'ma-guide-print-sizes';
     const PAINTINGS = [
@@ -520,183 +523,289 @@
     let state = fresh();
     try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.paintings)) state = saved; } catch (e) { /* start fresh */ }
 
-    const body = document.getElementById('sizes-body');
+    const list = document.getElementById('sizes-list');
     const status = document.getElementById('sizes-status');
     const paper = document.getElementById('sizes-paper');
-    const pick = document.getElementById('sizes-pick');
-    const reconnect = document.getElementById('sizes-reconnect');
+    const saveBtn = document.getElementById('sizes-save');
+    const openBtn = document.getElementById('sizes-open');
+    const openFile = document.getElementById('sizes-open-file');
     const hint = document.getElementById('sizes-hint');
     const canWrite = typeof window.showSaveFilePicker === 'function';
+    const FILE_NAME = 'maller-art-print-sizes.json';
     let fileHandle = null;
+    let uid = 0;
 
-    const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) && n > 0 ? n : null; };
-    const time = () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     const json = () => JSON.stringify(state, null, 2) + '\n';
+    const time = () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const fmt = (w, h) => (w && h ? w + ' × ' + h : '');
+    const parseSize = (v) => {
+      const t = v.trim();
+      if (!t) return { ok: true, w: null, h: null };
+      const m = t.match(/^(\d+(?:\.\d+)?)\s*(?:x|×|\*|by)\s*(\d+(?:\.\d+)?)\s*(?:in|inches|")?$/i);
+      return m ? { ok: true, w: parseFloat(m[1]), h: parseFloat(m[2]) } : { ok: false };
+    };
+    const parsePrice = (v) => {
+      const t = v.replace(/[$,\s]/g, '');
+      if (!t) return { ok: true, p: null };
+      const n = parseFloat(t);
+      return /^\d+(\.\d{1,2})?$/.test(t) && n > 0 ? { ok: true, p: n } : { ok: false };
+    };
     const crops = (pt, pr) => pt.width && pt.height && pr.width && pr.height && Math.abs(pr.width / pr.height - pt.width / pt.height) / (pt.width / pt.height) > 0.02;
 
-    // IndexedDB: one store holding the chosen file handle.
+    // IndexedDB keeps the file handle between visits.
     const idb = (mode, fn) => new Promise((resolve, reject) => {
       const open = indexedDB.open('ma-guide', 1);
       open.onupgradeneeded = () => open.result.createObjectStore('kv');
       open.onerror = () => reject(open.error);
       open.onsuccess = () => { try { const tx = open.result.transaction('kv', mode); const req = fn(tx.objectStore('kv')); tx.oncomplete = () => resolve(req && req.result); tx.onerror = () => reject(tx.error); } catch (e) { reject(e); } };
     });
+    const rememberHandle = (h) => idb('readwrite', (st) => st.put(h, 'sizes-file')).catch(() => {});
 
-    async function writeFile() {
+    async function writeFile(ask) {
       if (!fileHandle) return false;
       try {
-        if ((await fileHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') { showReconnect(); return false; }
+        let perm = await fileHandle.queryPermission({ mode: 'readwrite' });
+        if (perm !== 'granted' && ask) perm = await fileHandle.requestPermission({ mode: 'readwrite' });
+        if (perm !== 'granted') return false;
         const w = await fileHandle.createWritable();
         await w.write(json());
         await w.close();
         return true;
-      } catch (e) { showReconnect(); return false; }
+      } catch (e) { return false; }
     }
-    function showReconnect() {
-      reconnect.hidden = false;
-      pick.hidden = true;
-      reconnect.textContent = 'Reconnect ' + (fileHandle ? fileHandle.name : 'the file');
-      status.textContent = 'Saved in this browser. Click Reconnect to keep writing to ' + (fileHandle ? fileHandle.name : 'your file') + '.';
-    }
+    let lastStatus = '';
+    const say = (text) => { if (text !== lastStatus) { status.textContent = text; lastStatus = text; } };
 
-    async function save() {
+    async function persist(ask = false) {
       state.updatedAt = new Date().toISOString();
       try { localStorage.setItem(KEY, json()); } catch (e) { /* browser storage unavailable */ }
-      const wrote = await writeFile();
-      status.textContent = wrote ? 'Saved to ' + fileHandle.name + ' at ' + time() + '.' : (fileHandle ? status.textContent : 'Saved in this browser at ' + time() + '.');
-    }
-
-    function sizeInputs(prefix, label, obj, onChange) {
-      const wrap = document.createElement('span');
-      wrap.className = 'dims';
-      for (const [field, word] of [['width', 'width'], ['height', 'height']]) {
-        if (field === 'height') { const x = document.createElement('span'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-hidden', 'true'); wrap.append(x); }
-        const input = document.createElement('input');
-        input.type = 'number'; input.min = '0'; input.step = '0.25'; input.inputMode = 'decimal'; input.className = 'num';
-        input.value = obj[field] ?? '';
-        input.setAttribute('aria-label', label + ' ' + word + ' in inches');
-        input.addEventListener('change', () => { obj[field] = num(input.value); onChange(); });
-        wrap.append(input);
+      if (fileHandle) {
+        if (await writeFile(ask)) say('Saved to ' + fileHandle.name + ' at ' + time() + '.');
+        else say('Kept in this browser. Click Save to keep saving to ' + fileHandle.name + '.');
+      } else {
+        say('Kept in this browser at ' + time() + '. Click Save to save a file.');
       }
-      return wrap;
     }
 
-    function warnings(i) {
-      const pt = state.paintings[i];
-      body.rows[i].querySelectorAll('.prints li').forEach((li, j) => { li.querySelector('.warn').hidden = !crops(pt, pt.prints[j]); });
+    // One text field with an inline error underneath.
+    function textInput(cls, label, value, placeholder, inputmode) {
+      const input = document.createElement('input');
+      input.type = 'text';
+      input.className = cls;
+      input.id = 'f' + (++uid);
+      input.value = value;
+      input.autocomplete = 'off';
+      if (placeholder) input.placeholder = placeholder;
+      if (inputmode) input.inputMode = inputmode;
+      if (label) input.setAttribute('aria-label', label);
+      return input;
+    }
+    function errorFor(input, holder) {
+      const p = document.createElement('p');
+      p.className = 'err'; p.id = input.id + '-err'; p.hidden = true;
+      input.setAttribute('aria-describedby', p.id);
+      holder.append(p);
+      return (msg) => { p.hidden = !msg; p.textContent = msg || ''; if (msg) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid'); };
     }
 
-    function render() {
-      paper.value = state.paper || '';
-      body.replaceChildren(...state.paintings.map((pt, i) => {
-        const tr = document.createElement('tr');
-        const name = pt.title || 'New painting';
+    function paintingFieldset(pt, example) {
+      const fs = document.createElement('fieldset');
+      fs.className = 'pt';
+      const legend = document.createElement('legend');
+      const name = () => pt.title || 'New painting';
+      legend.textContent = name();
+      fs.append(legend);
 
-        const th = document.createElement('th');
-        th.scope = 'row';
-        if (pt.isNew) {
-          const t = document.createElement('input'); t.className = 'title-in'; t.value = pt.title || ''; t.placeholder = 'Title';
-          t.setAttribute('aria-label', 'New painting ' + (i + 1) + ' title');
-          t.addEventListener('change', () => { pt.title = t.value.trim(); save(); });
-          const h = document.createElement('input'); h.className = 'handle-in'; h.value = pt.handle || ''; h.placeholder = 'url-handle';
-          h.setAttribute('aria-label', 'New painting ' + (i + 1) + ' URL handle, as in Shopify');
-          h.addEventListener('change', () => { pt.handle = h.value.trim().toLowerCase(); save(); });
-          const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove'; rm.textContent = 'Remove painting';
-          rm.addEventListener('click', () => { state.paintings.splice(i, 1); save(); render(); });
-          th.append(t, document.createElement('br'), h, document.createElement('br'), rm);
-        } else {
-          th.textContent = pt.title;
+      if (pt.isNew) {
+        const box = document.createElement('div'); box.className = 'pt__new';
+        for (const [field, text, ph] of [['title', 'Title', 'e.g. Night Heron'], ['handle', 'URL handle in Shopify', 'e.g. night-heron']]) {
+          const f = document.createElement('div'); f.className = 'field';
+          const input = textInput('', null, pt[field] || '', ph);
+          const lab = document.createElement('label'); lab.htmlFor = input.id; lab.textContent = text;
+          input.addEventListener('change', () => {
+            pt[field] = field === 'handle' ? input.value.trim().toLowerCase() : input.value.trim();
+            if (field === 'handle') input.value = pt.handle;
+            legend.textContent = name();
+            relabel();
+            persist();
+          });
+          f.append(lab, input); box.append(f);
         }
-
-        const tdSize = document.createElement('td');
-        tdSize.append(sizeInputs('painting', name + ' painting', pt, () => { save(); warnings(i); }));
-
-        const tdPrints = document.createElement('td');
-        const ul = document.createElement('ul'); ul.className = 'prints';
-        pt.prints.forEach((pr, j) => {
-          const li = document.createElement('li');
-          const label = name + ' print ' + (j + 1);
-          li.append(sizeInputs('print', label, pr, () => { save(); warnings(i); }));
-          const at = document.createElement('span'); at.className = 'x'; at.textContent = '$'; at.setAttribute('aria-hidden', 'true');
-          const price = document.createElement('input');
-          price.type = 'number'; price.min = '0'; price.step = '0.01'; price.inputMode = 'decimal'; price.className = 'price';
-          price.value = pr.price ?? '';
-          price.setAttribute('aria-label', label + ' price in dollars');
-          price.addEventListener('change', () => { const v = num(price.value); pr.price = v === null ? null : Math.round(v * 100) / 100; save(); });
-          li.append(at, price);
-          const w = document.createElement('span'); w.className = 'warn'; w.textContent = 'crops the painting'; w.hidden = !crops(pt, pr); li.append(w);
-          const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove'; rm.textContent = 'Remove';
-          rm.setAttribute('aria-label', 'Remove ' + label);
-          rm.addEventListener('click', () => { pt.prints.splice(j, 1); save(); render(); });
-          li.append(rm);
-          ul.append(li);
+        const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'linkish'; rm.textContent = 'Remove this painting';
+        rm.addEventListener('click', () => {
+          state.paintings.splice(state.paintings.indexOf(pt), 1);
+          const next = fs.nextElementSibling ? fs.nextElementSibling.querySelector('input') : document.getElementById('sizes-add-painting');
+          fs.remove(); persist(); next.focus();
         });
-        const add = document.createElement('button'); add.type = 'button'; add.className = 'btn btn--quiet add'; add.textContent = 'Add a print size';
-        add.setAttribute('aria-label', 'Add a print size for ' + name);
-        add.addEventListener('click', () => {
-          pt.prints.push({ width: null, height: null, price: null });
-          save(); render();
-          body.rows[i].querySelectorAll('.prints li:last-child input')[0]?.focus();
+        box.append(rm);
+        fs.append(box);
+      }
+
+      // painting size
+      const sizeBox = document.createElement('div'); sizeBox.className = 'field pt__size';
+      const size = textInput('', null, fmt(pt.width, pt.height), example ? 'e.g. 24 × 36' : '');
+      const sizeLab = document.createElement('label'); sizeLab.htmlFor = size.id; sizeLab.textContent = 'Painting size';
+      sizeBox.append(sizeLab, size);
+      const sizeErr = errorFor(size, sizeBox);
+      size.addEventListener('change', () => {
+        const r = parseSize(size.value);
+        if (!r.ok) { sizeErr('Write it as width × height, like 24 × 36.'); return; }
+        sizeErr(null);
+        pt.width = r.w; pt.height = r.h; size.value = fmt(r.w, r.h);
+        warnAll(); persist();
+      });
+      fs.append(sizeBox);
+
+      // print sizes: real rows plus one blank row that becomes real when typed in
+      const printsBox = document.createElement('div'); printsBox.className = 'pt__prints';
+      const heads = document.createElement('p'); heads.className = 'pt__heads'; heads.setAttribute('aria-hidden', 'true');
+      heads.innerHTML = '<span class="pt__label">Print size</span><span class="pt__label">Price</span>';
+      const ul = document.createElement('ul');
+      printsBox.append(heads, ul);
+      fs.append(printsBox);
+      const rows = new Map(); // li -> print object (blank row has none)
+
+      function relabel() {
+        [...ul.children].forEach((li, j) => {
+          const blank = !rows.has(li);
+          li.querySelector('.pr__size').setAttribute('aria-label', blank ? 'New print size for ' + name() : name() + ' print ' + (j + 1) + ' size');
+          li.querySelector('.pr__price').setAttribute('aria-label', blank ? 'Price of the new print size for ' + name() : name() + ' print ' + (j + 1) + ' price in dollars');
         });
-        tdPrints.append(ul, add);
-        tr.append(th, tdSize, tdPrints);
-        return tr;
-      }));
+      }
+      function warnAll() { rows.forEach((pr, li) => { li.querySelector('.warn').hidden = !crops(pt, pr); }); }
+
+      function row(pr) {
+        const li = document.createElement('li'); li.className = 'pr';
+        const sz = textInput('pr__size', null, pr ? fmt(pr.width, pr.height) : '', !pr && example && !rows.size ? 'e.g. 12 × 18' : '');
+        const wrap = document.createElement('span'); wrap.className = 'pr__price-wrap';
+        const price = textInput('pr__price', null, pr && pr.price != null ? String(pr.price) : '', !pr && example && !rows.size ? 'e.g. 85' : '', 'decimal');
+        wrap.append(price);
+        const warn = document.createElement('span'); warn.className = 'warn'; warn.textContent = 'crops the painting'; warn.hidden = true;
+        li.append(sz, wrap, warn);
+        const szErr = errorFor(sz, li);
+        const prErr = errorFor(price, li);
+        if (pr) rows.set(li, pr);
+
+        // typing into the blank row makes it real and opens a new blank row below; focus stays put
+        const promote = () => {
+          if (rows.has(li)) return;
+          const obj = { width: null, height: null, price: null };
+          pt.prints.push(obj); rows.set(li, obj);
+          sz.placeholder = ''; price.placeholder = '';
+          ul.append(row(null));
+          relabel();
+        };
+        sz.addEventListener('input', () => { if (sz.value.trim()) promote(); });
+        price.addEventListener('input', () => { if (price.value.trim()) promote(); });
+
+        const commit = () => {
+          const obj = rows.get(li);
+          if (!obj) return;
+          const r = parseSize(sz.value);
+          const q = parsePrice(price.value);
+          szErr(r.ok ? null : 'Write it as width × height, like 12 × 18.');
+          prErr(q.ok ? null : 'A price in dollars, like 85 or 85.50.');
+          if (r.ok) { obj.width = r.w; obj.height = r.h; if (r.w) sz.value = fmt(r.w, r.h); }
+          if (q.ok) obj.price = q.p;
+          warn.hidden = !crops(pt, obj);
+          persist();
+        };
+        sz.addEventListener('change', commit);
+        price.addEventListener('change', commit);
+
+        // a row emptied of both size and price disappears once focus has left it
+        li.addEventListener('focusout', (e) => {
+          if (li.contains(e.relatedTarget)) return;
+          if (!rows.has(li) || sz.value.trim() || price.value.trim()) return;
+          pt.prints.splice(pt.prints.indexOf(rows.get(li)), 1);
+          rows.delete(li); li.remove(); relabel(); persist();
+        });
+        return li;
+      }
+
+      pt.prints.forEach((pr) => ul.append(row(pr)));
+      ul.append(row(null));
+      relabel(); warnAll();
+      return fs;
     }
 
-    paper.addEventListener('change', () => { state.paper = paper.value.trim(); save(); });
+    function renderAll() {
+      paper.value = state.paper || '';
+      list.replaceChildren(...state.paintings.map((pt, i) => paintingFieldset(pt, i === 0)));
+    }
+
+    paper.addEventListener('change', () => { state.paper = paper.value; persist(); });
     document.getElementById('sizes-add-painting').addEventListener('click', () => {
-      state.paintings.push({ handle: '', title: '', width: null, height: null, prints: [], isNew: true });
-      save(); render();
-      body.rows[body.rows.length - 1].querySelector('input')?.focus();
+      const pt = { handle: '', title: '', width: null, height: null, prints: [], isNew: true };
+      state.paintings.push(pt);
+      const fs = paintingFieldset(pt, false);
+      list.append(fs);
+      fs.querySelector('input').focus();
+      persist();
     });
-    document.getElementById('sizes-download').addEventListener('click', () => {
+
+    function download() {
       const a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([json()], { type: 'application/json' }));
-      a.download = 'maller-art-print-sizes.json';
+      a.download = FILE_NAME;
       a.click();
       setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-    });
-    document.getElementById('sizes-open').addEventListener('change', async (e) => {
-      const file = e.target.files && e.target.files[0];
-      if (!file) return;
+      say('Downloaded ' + FILE_NAME + ' at ' + time() + '.');
+    }
+    function load(text, name) {
+      const loaded = JSON.parse(text);
+      if (!loaded || !Array.isArray(loaded.paintings)) throw new Error('not a print sizes file');
+      state = loaded;
+      renderAll();
+      say('Opened ' + name + '.');
+    }
+
+    saveBtn.addEventListener('click', async () => {
+      if (!canWrite) { await persist(); download(); return; }
       try {
-        const loaded = JSON.parse(await file.text());
-        if (!loaded || !Array.isArray(loaded.paintings)) throw new Error('not a print sizes file');
-        state = loaded; await save(); render();
-        status.textContent = 'Opened ' + file.name + '.';
-      } catch (err) { status.textContent = file.name + " isn't a print sizes file from this page."; }
-      e.target.value = '';
+        if (!fileHandle) {
+          fileHandle = await window.showSaveFilePicker({ suggestedName: FILE_NAME, types: [{ description: 'Print sizes', accept: { 'application/json': ['.json'] } }] });
+          rememberHandle(fileHandle);
+        }
+        await persist(true);
+      } catch (e) { /* save dialog cancelled */ }
+    });
+    openBtn.addEventListener('click', async () => {
+      if (typeof window.showOpenFilePicker !== 'function') { openFile.click(); return; }
+      try {
+        const [h] = await window.showOpenFilePicker({ types: [{ description: 'Print sizes', accept: { 'application/json': ['.json'] } }] });
+        load(await (await h.getFile()).text(), h.name);
+        fileHandle = h; rememberHandle(h);
+        await persist(true);
+      } catch (e) {
+        if (e && e.name !== 'AbortError') say("That file isn't a print sizes file from this page.");
+      }
+    });
+    openFile.addEventListener('change', async () => {
+      const file = openFile.files && openFile.files[0];
+      if (!file) return;
+      try { load(await file.text(), file.name); await persist(); }
+      catch (e) { say(file.name + " isn't a print sizes file from this page."); }
+      openFile.value = '';
     });
 
     if (canWrite) {
-      pick.hidden = false;
-      pick.addEventListener('click', async () => {
-        try {
-          fileHandle = await window.showSaveFilePicker({ suggestedName: 'maller-art-print-sizes.json', types: [{ description: 'Print sizes', accept: { 'application/json': ['.json'] } }] });
-          try { await idb('readwrite', (st) => st.put(fileHandle, 'sizes-file')); } catch (e) { /* remembered for this visit only */ }
-          pick.textContent = 'Save to a different file';
-          await save();
-        } catch (e) { /* picker cancelled */ }
-      });
-      reconnect.addEventListener('click', async () => {
-        if (fileHandle && (await fileHandle.requestPermission({ mode: 'readwrite' })) === 'granted') {
-          reconnect.hidden = true; pick.hidden = false; pick.textContent = 'Save to a different file';
-          await save();
-        }
-      });
+      hint.innerHTML = 'Click <strong>Save</strong> once and choose where to keep the file; after that every change saves to it by itself. That file is what you send Aaron. <strong>Open</strong> picks up a saved file and keeps saving to it.';
       idb('readonly', (st) => st.get('sizes-file')).then(async (h) => {
         if (!h) return;
         fileHandle = h;
-        pick.textContent = 'Save to a different file';
-        if ((await h.queryPermission({ mode: 'readwrite' })) === 'granted') status.textContent = 'Saving to ' + h.name + ' as you type.';
-        else showReconnect();
+        say((await h.queryPermission({ mode: 'readwrite' })) === 'granted' ? 'Saving to ' + h.name + ' as you go.' : 'Kept in this browser. Click Save to keep saving to ' + h.name + '.');
       }).catch(() => {});
-    } else {
-      hint.textContent = "This browser can't write to a file as you type. Everything is kept here in the browser; use Download a copy and send Aaron that file. Chrome and Edge can save to the file automatically.";
     }
-    render();
+    renderAll();
   })();
+
+  // Tables only take a Tab stop when they actually scroll sideways.
+  const scrollStops = () => document.querySelectorAll('.scroll').forEach((el) => {
+    if (el.scrollWidth > el.clientWidth + 1) el.tabIndex = 0; else el.removeAttribute('tabindex');
+  });
+  window.addEventListener('resize', scrollStops);
+  scrollStops();
 
   // Collapsible panels: always open, and not collapsible, from their width up; closed below it until tapped.
   document.querySelectorAll('details[data-open-from]').forEach((d) => {
