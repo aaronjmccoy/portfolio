@@ -47,6 +47,8 @@ test.describe('server-rendered routes', () => {
     await expect(nav.getByRole('link')).toHaveText(['Paintings', 'Prints', 'Trinkets']);
     await expect(page.getByRole('heading', { level: 2 })).toHaveText(['Paintings', 'Prints', 'Trinkets']);
     await expect(page.locator('.hero__media')).toHaveAttribute('fetchpriority', 'high');
+    // the hero actually loads from the production build (it used to 404 outside /assets/)
+    await expect.poll(() => page.locator('.hero__media').evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth)).toBeGreaterThan(0);
     // Paintings is a mosaic of the first eight pieces; which eight depends on the store, so check the tiles, not a title.
     const tiles = page.locator('#originals .mosaic .card');
     await expect(tiles.first()).toBeVisible();

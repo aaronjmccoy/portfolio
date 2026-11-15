@@ -1,0 +1,27 @@
+# /opt/shop/compose.yaml on VM 104 `webhost` (192.168.88.5). See README.md.
+#
+# The app port binds loopback: the webhost's Caddy proxies mallerart.com to it,
+# as it does for the letters reader. Metrics stay on loopback until a Prometheus
+# scrape and DOCKER-USER fence are added (see README).
+services:
+  shop:
+    # After the first `docker compose pull`, pin to the digest it reports:
+    #   image: ghcr.io/aaronjmccoy/portfolio-shop@sha256:...
+    image: ghcr.io/aaronjmccoy/portfolio-shop:latest
+    container_name: shop
+    restart: unless-stopped
+    # SHOPIFY_STORE_DOMAIN, SHOPIFY_STOREFRONT_PRIVATE_TOKEN, SHOPIFY_STOREFRONT_TOKEN,
+    # SHOPIFY_STOREFRONT_API_VERSION. Mode 600, root-owned; never committed.
+    env_file: .env
+    ports:
+      - '127.0.0.1:3002:3002'
+      - '127.0.0.1:9466:9466'
+    read_only: true
+    tmpfs:
+      - /tmp
+    mem_limit: 384m
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'

@@ -1,3 +1,4 @@
+import heroSrc from './assets/hero-peacock.jpg';
 /** Site-wide copy and the collections the storefront is built around. Megan edits titles and descriptions in Shopify; these are the handles and fallbacks. */
 export const SITE = 'Maller Art';
 export const TAGLINE = 'Paintings, Prints & Trinkets';
@@ -23,7 +24,8 @@ export const SECTIONS: readonly Section[] = [
 ];
 
 export const HERO = {
-  src: '/hero-peacock.jpg',
+  // Imported so Vite fingerprints it into /assets/, which the production server serves with the rest of the build.
+  src: heroSrc,
   width: 2560,
   height: 930,
   alt: 'Watercolour of a white peacock in profile, its blue-flecked head turned to the left against a wide fan of pale green and cream tail feathers.',
