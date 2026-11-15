@@ -98,6 +98,35 @@
     .side__title { cursor: default; list-style: none; }
     .side__title::-webkit-details-marker { display: none; }
   }
+  /* author display rules (.btn is inline-flex) would otherwise beat the hidden attribute */
+  [hidden] { display: none !important; }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .btn { display: inline-flex; align-items: center; min-height: 2.25rem; padding: 0.35rem 0.9rem; border-radius: 999px; border: 1px solid var(--accent); background: var(--accent); color: #fff; font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer; }
+  .btn--quiet { background: transparent; color: var(--accent); }
+  .btn:focus-visible, input:focus-visible + .btn, .sizes input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  #sizes-open:focus-visible + .btn, .sizes-file__actions label:focus-within { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .sizes-file { max-width: var(--measure); border: 1px solid var(--rule); border-radius: var(--radius); background: var(--surface); padding: 0.85rem 1rem; margin: 1rem 0; }
+  .sizes-file__status { margin: 0 0 0.6rem; font-weight: 600; }
+  .sizes-file__actions { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .sizes-file__hint { margin: 0.6rem 0 0; font-size: 0.85rem; color: var(--muted); }
+  .sizes-paper { display: flex; flex-wrap: wrap; gap: 0.5rem 0.75rem; align-items: center; }
+  .sizes-paper label { font-weight: 600; }
+  .sizes input, .sizes-paper input { font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--bg); border: 1px solid var(--muted); border-radius: 6px; padding: 0.3rem 0.45rem; }
+  .sizes-paper input { min-width: 16rem; }
+  .sizes table { min-width: 40rem; }
+  .sizes input.num { width: 4.25rem; }
+  .sizes input.price { width: 5.5rem; }
+  .sizes .dims { display: inline-flex; align-items: center; gap: 0.3rem; white-space: nowrap; }
+  .sizes .prints { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+  .sizes .prints li { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3rem 0.5rem; margin: 0; }
+  .sizes tbody th { text-transform: none; letter-spacing: 0; font-size: 0.95rem; color: var(--ink); }
+  .sizes .x { color: var(--muted); }
+  .sizes .remove { border: 0; background: none; color: var(--muted); font: inherit; font-size: 0.85rem; text-decoration: underline; cursor: pointer; padding: 0.25rem; min-height: 1.5rem; }
+  .sizes .add { margin-top: 0.4rem; }
+  .sizes .warn[hidden] { display: none; }
+  .sizes .warn { font-size: 0.8rem; font-weight: 700; color: var(--todo); background: var(--todo-soft); border-radius: 999px; padding: 0.1rem 0.5rem; }
+  .sizes .title-in { width: 12rem; }
+  .sizes .handle-in { width: 12rem; font-family: ui-monospace, Consolas, monospace; font-size: 0.85rem; }
   footer { margin-top: 4rem; font-size: 0.85rem; color: var(--muted); }
 </style>
 </head>
@@ -311,24 +340,35 @@
         <li>a square painting needs square sizes</li>
       </ul>
       <p>Check the sizes exist on your chosen paper by searching Prodigi's catalogue in the dashboard; it also shows Prodigi's price for each size. Your price has to cover that plus shipping.</p>
-      <p>Fill in this table and send it to Aaron. Width comes first in every size.</p>
-      <div class="scroll" tabindex="0" role="region" aria-label="Print sizes to send Aaron">
+      <p>Fill in the table below. Width comes first in every size, and prices are in US dollars. A print size that doesn't match the painting's shape is flagged so you can fix it before anything is printed.</p>
+      <div class="sizes-file" id="sizes-file">
+        <p class="sizes-file__status" id="sizes-status" role="status">Saved in this browser as you type.</p>
+        <div class="sizes-file__actions">
+          <button type="button" class="btn" id="sizes-pick" hidden>Save to a file</button>
+          <button type="button" class="btn" id="sizes-reconnect" hidden>Reconnect the file</button>
+          <button type="button" class="btn btn--quiet" id="sizes-download">Download a copy</button>
+          <label class="btn btn--quiet" for="sizes-open">Open a saved file</label>
+          <input type="file" id="sizes-open" accept="application/json,.json" class="visually-hidden">
+        </div>
+        <p class="sizes-file__hint" id="sizes-hint">Pick a file once with <strong>Save to a file</strong> and every change after that is written to it. That file is what you send Aaron.</p>
+      </div>
+      <p class="sizes-paper"><label for="sizes-paper">Paper for all prints</label>
+        <input id="sizes-paper" list="papers" placeholder="Choose after the samples">
+        <datalist id="papers">
+          <option value="Hahnemühle German Etching"></option>
+          <option value="Hahnemühle Photo Rag"></option>
+          <option value="Cold press watercolour"></option>
+          <option value="Enhanced Matte Art"></option>
+        </datalist>
+      </p>
+      <div class="scroll sizes" tabindex="0" role="region" aria-label="Print sizes for each painting">
         <table>
-          <thead><tr><th>Painting</th><th>Painting size</th><th>Print sizes</th><th>Price for each print size</th></tr></thead>
-          <tbody>
-            <tr><td>Feather Bedfellows Study</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Flaunt</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Little King</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Mask Man</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Peering</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Starstuff</td><td>__ × __ in</td><td>e.g. 8 × 12, 12 × 18</td><td>e.g. $__, $__</td></tr>
-            <tr><td>The Bishop</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Three Brothers</td><td>__ × __ in</td><td></td><td></td></tr>
-            <tr><td>Tough Guy</td><td>__ × __ in</td><td></td><td></td></tr>
-          </tbody>
+          <thead><tr><th scope="col">Painting</th><th scope="col">Painting size (in)</th><th scope="col">Print sizes (in) and prices</th></tr></thead>
+          <tbody id="sizes-body"></tbody>
         </table>
       </div>
-      <p>Leave a painting's print sizes blank if it shouldn't have prints. Add a row for any new painting.</p>
+      <p><button type="button" class="btn btn--quiet" id="sizes-add-painting">Add a new painting</button></p>
+      <p>Leave a painting without print sizes if it shouldn't have prints. For a new painting, use the same URL handle as its Shopify listing.</p>
 
       <h3 id="files">2c. Prepare the print files</h3>
       <p>Get these ready now; you'll need them when the listings are set up with Prodigi. The print file is not the listing photo. It needs a high-resolution scan or photograph of the painting. <a class="help" href="https://www.prodigi.com/blog/create-print-on-demand-wall-art/">Prodigi file guide</a></p>
@@ -347,7 +387,7 @@
             <div class="side__inner">
             <ul class="checks" data-list="print">
         <li><label><input type="checkbox"><span>Paper chosen after the sample pack and a real sample</span></label></li>
-        <li><label><input type="checkbox"><span>Print sizes and prices filled in for every painting that gets prints, and sent</span></label></li>
+        <li><label><input type="checkbox"><span>Print sizes and prices filled in for every painting that gets prints, and the saved file sent to Aaron</span></label></li>
         <li><label><input type="checkbox"><span>Print files ready: 300 DPI at each painting's largest print size</span></label></li>
       </ul>
             <p class="side__hint">Ticks are remembered in this browser.</p>
@@ -465,6 +505,198 @@
     });
     show();
   });
+
+  // ── Print sizes form ──
+  // State lives in localStorage (per browser). With the File System Access API (Chrome, Edge) the page also writes
+  // the JSON to a file Megan picked once, on every change; the file handle is kept in IndexedDB between visits.
+  (() => {
+    const KEY = 'ma-guide-print-sizes';
+    const PAINTINGS = [
+      ['feather-bedfellows-study', 'Feather Bedfellows Study'], ['flaunt', 'Flaunt'], ['little-king', 'Little King'],
+      ['mask-man', 'Mask Man'], ['peering', 'Peering'], ['starstuff', 'Starstuff'], ['the-bishop', 'The Bishop'],
+      ['three-brothers', 'Three Brothers'], ['tough-guy', 'Tough Guy'],
+    ];
+    const fresh = () => ({ version: 1, paper: '', updatedAt: null, paintings: PAINTINGS.map(([handle, title]) => ({ handle, title, width: null, height: null, prints: [] })) });
+    let state = fresh();
+    try { const saved = JSON.parse(localStorage.getItem(KEY) || 'null'); if (saved && Array.isArray(saved.paintings)) state = saved; } catch (e) { /* start fresh */ }
+
+    const body = document.getElementById('sizes-body');
+    const status = document.getElementById('sizes-status');
+    const paper = document.getElementById('sizes-paper');
+    const pick = document.getElementById('sizes-pick');
+    const reconnect = document.getElementById('sizes-reconnect');
+    const hint = document.getElementById('sizes-hint');
+    const canWrite = typeof window.showSaveFilePicker === 'function';
+    let fileHandle = null;
+
+    const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) && n > 0 ? n : null; };
+    const time = () => new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const json = () => JSON.stringify(state, null, 2) + '\n';
+    const crops = (pt, pr) => pt.width && pt.height && pr.width && pr.height && Math.abs(pr.width / pr.height - pt.width / pt.height) / (pt.width / pt.height) > 0.02;
+
+    // IndexedDB: one store holding the chosen file handle.
+    const idb = (mode, fn) => new Promise((resolve, reject) => {
+      const open = indexedDB.open('ma-guide', 1);
+      open.onupgradeneeded = () => open.result.createObjectStore('kv');
+      open.onerror = () => reject(open.error);
+      open.onsuccess = () => { try { const tx = open.result.transaction('kv', mode); const req = fn(tx.objectStore('kv')); tx.oncomplete = () => resolve(req && req.result); tx.onerror = () => reject(tx.error); } catch (e) { reject(e); } };
+    });
+
+    async function writeFile() {
+      if (!fileHandle) return false;
+      try {
+        if ((await fileHandle.queryPermission({ mode: 'readwrite' })) !== 'granted') { showReconnect(); return false; }
+        const w = await fileHandle.createWritable();
+        await w.write(json());
+        await w.close();
+        return true;
+      } catch (e) { showReconnect(); return false; }
+    }
+    function showReconnect() {
+      reconnect.hidden = false;
+      pick.hidden = true;
+      reconnect.textContent = 'Reconnect ' + (fileHandle ? fileHandle.name : 'the file');
+      status.textContent = 'Saved in this browser. Click Reconnect to keep writing to ' + (fileHandle ? fileHandle.name : 'your file') + '.';
+    }
+
+    async function save() {
+      state.updatedAt = new Date().toISOString();
+      try { localStorage.setItem(KEY, json()); } catch (e) { /* browser storage unavailable */ }
+      const wrote = await writeFile();
+      status.textContent = wrote ? 'Saved to ' + fileHandle.name + ' at ' + time() + '.' : (fileHandle ? status.textContent : 'Saved in this browser at ' + time() + '.');
+    }
+
+    function sizeInputs(prefix, label, obj, onChange) {
+      const wrap = document.createElement('span');
+      wrap.className = 'dims';
+      for (const [field, word] of [['width', 'width'], ['height', 'height']]) {
+        if (field === 'height') { const x = document.createElement('span'); x.className = 'x'; x.textContent = '×'; x.setAttribute('aria-hidden', 'true'); wrap.append(x); }
+        const input = document.createElement('input');
+        input.type = 'number'; input.min = '0'; input.step = '0.25'; input.inputMode = 'decimal'; input.className = 'num';
+        input.value = obj[field] ?? '';
+        input.setAttribute('aria-label', label + ' ' + word + ' in inches');
+        input.addEventListener('change', () => { obj[field] = num(input.value); onChange(); });
+        wrap.append(input);
+      }
+      return wrap;
+    }
+
+    function warnings(i) {
+      const pt = state.paintings[i];
+      body.rows[i].querySelectorAll('.prints li').forEach((li, j) => { li.querySelector('.warn').hidden = !crops(pt, pt.prints[j]); });
+    }
+
+    function render() {
+      paper.value = state.paper || '';
+      body.replaceChildren(...state.paintings.map((pt, i) => {
+        const tr = document.createElement('tr');
+        const name = pt.title || 'New painting';
+
+        const th = document.createElement('th');
+        th.scope = 'row';
+        if (pt.isNew) {
+          const t = document.createElement('input'); t.className = 'title-in'; t.value = pt.title || ''; t.placeholder = 'Title';
+          t.setAttribute('aria-label', 'New painting ' + (i + 1) + ' title');
+          t.addEventListener('change', () => { pt.title = t.value.trim(); save(); });
+          const h = document.createElement('input'); h.className = 'handle-in'; h.value = pt.handle || ''; h.placeholder = 'url-handle';
+          h.setAttribute('aria-label', 'New painting ' + (i + 1) + ' URL handle, as in Shopify');
+          h.addEventListener('change', () => { pt.handle = h.value.trim().toLowerCase(); save(); });
+          const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove'; rm.textContent = 'Remove painting';
+          rm.addEventListener('click', () => { state.paintings.splice(i, 1); save(); render(); });
+          th.append(t, document.createElement('br'), h, document.createElement('br'), rm);
+        } else {
+          th.textContent = pt.title;
+        }
+
+        const tdSize = document.createElement('td');
+        tdSize.append(sizeInputs('painting', name + ' painting', pt, () => { save(); warnings(i); }));
+
+        const tdPrints = document.createElement('td');
+        const ul = document.createElement('ul'); ul.className = 'prints';
+        pt.prints.forEach((pr, j) => {
+          const li = document.createElement('li');
+          const label = name + ' print ' + (j + 1);
+          li.append(sizeInputs('print', label, pr, () => { save(); warnings(i); }));
+          const at = document.createElement('span'); at.className = 'x'; at.textContent = '$'; at.setAttribute('aria-hidden', 'true');
+          const price = document.createElement('input');
+          price.type = 'number'; price.min = '0'; price.step = '0.01'; price.inputMode = 'decimal'; price.className = 'price';
+          price.value = pr.price ?? '';
+          price.setAttribute('aria-label', label + ' price in dollars');
+          price.addEventListener('change', () => { const v = num(price.value); pr.price = v === null ? null : Math.round(v * 100) / 100; save(); });
+          li.append(at, price);
+          const w = document.createElement('span'); w.className = 'warn'; w.textContent = 'crops the painting'; w.hidden = !crops(pt, pr); li.append(w);
+          const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'remove'; rm.textContent = 'Remove';
+          rm.setAttribute('aria-label', 'Remove ' + label);
+          rm.addEventListener('click', () => { pt.prints.splice(j, 1); save(); render(); });
+          li.append(rm);
+          ul.append(li);
+        });
+        const add = document.createElement('button'); add.type = 'button'; add.className = 'btn btn--quiet add'; add.textContent = 'Add a print size';
+        add.setAttribute('aria-label', 'Add a print size for ' + name);
+        add.addEventListener('click', () => {
+          pt.prints.push({ width: null, height: null, price: null });
+          save(); render();
+          body.rows[i].querySelectorAll('.prints li:last-child input')[0]?.focus();
+        });
+        tdPrints.append(ul, add);
+        tr.append(th, tdSize, tdPrints);
+        return tr;
+      }));
+    }
+
+    paper.addEventListener('change', () => { state.paper = paper.value.trim(); save(); });
+    document.getElementById('sizes-add-painting').addEventListener('click', () => {
+      state.paintings.push({ handle: '', title: '', width: null, height: null, prints: [], isNew: true });
+      save(); render();
+      body.rows[body.rows.length - 1].querySelector('input')?.focus();
+    });
+    document.getElementById('sizes-download').addEventListener('click', () => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([json()], { type: 'application/json' }));
+      a.download = 'maller-art-print-sizes.json';
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    });
+    document.getElementById('sizes-open').addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      try {
+        const loaded = JSON.parse(await file.text());
+        if (!loaded || !Array.isArray(loaded.paintings)) throw new Error('not a print sizes file');
+        state = loaded; await save(); render();
+        status.textContent = 'Opened ' + file.name + '.';
+      } catch (err) { status.textContent = file.name + " isn't a print sizes file from this page."; }
+      e.target.value = '';
+    });
+
+    if (canWrite) {
+      pick.hidden = false;
+      pick.addEventListener('click', async () => {
+        try {
+          fileHandle = await window.showSaveFilePicker({ suggestedName: 'maller-art-print-sizes.json', types: [{ description: 'Print sizes', accept: { 'application/json': ['.json'] } }] });
+          try { await idb('readwrite', (st) => st.put(fileHandle, 'sizes-file')); } catch (e) { /* remembered for this visit only */ }
+          pick.textContent = 'Save to a different file';
+          await save();
+        } catch (e) { /* picker cancelled */ }
+      });
+      reconnect.addEventListener('click', async () => {
+        if (fileHandle && (await fileHandle.requestPermission({ mode: 'readwrite' })) === 'granted') {
+          reconnect.hidden = true; pick.hidden = false; pick.textContent = 'Save to a different file';
+          await save();
+        }
+      });
+      idb('readonly', (st) => st.get('sizes-file')).then(async (h) => {
+        if (!h) return;
+        fileHandle = h;
+        pick.textContent = 'Save to a different file';
+        if ((await h.queryPermission({ mode: 'readwrite' })) === 'granted') status.textContent = 'Saving to ' + h.name + ' as you type.';
+        else showReconnect();
+      }).catch(() => {});
+    } else {
+      hint.textContent = "This browser can't write to a file as you type. Everything is kept here in the browser; use Download a copy and send Aaron that file. Chrome and Edge can save to the file automatically.";
+    }
+    render();
+  })();
 
   // Collapsible panels: always open, and not collapsible, from their width up; closed below it until tapped.
   document.querySelectorAll('details[data-open-from]').forEach((d) => {
