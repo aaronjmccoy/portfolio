@@ -24,11 +24,16 @@ export default defineConfig({
   reporter: process.env['CI'] ? [['list'], ['html', { open: 'never' }]] : 'list',
   use: { baseURL: `http://127.0.0.1:${port}`, trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
-    command: 'node --env-file-if-exists=.env server/index.ts',
-    url: `http://127.0.0.1:${port}/healthz`,
-    env: { NODE_ENV: 'production', PORT: String(port), METRICS_PORT: '9912', METRICS_BIND: '127.0.0.1' },
-    reuseExistingServer: !process.env['CI'],
-    timeout: 30_000,
-  },
+  // Without a store there is nothing to serve: the server refuses to start, and the spec skips every test anyway.
+  ...(process.env['SHOPIFY_STORE_DOMAIN']
+    ? {
+        webServer: {
+          command: 'node --env-file-if-exists=.env server/index.ts',
+          url: `http://127.0.0.1:${port}/healthz`,
+          env: { NODE_ENV: 'production', PORT: String(port), METRICS_PORT: '9912', METRICS_BIND: '127.0.0.1' },
+          reuseExistingServer: !process.env['CI'],
+          timeout: 30_000,
+        },
+      }
+    : {}),
 });
