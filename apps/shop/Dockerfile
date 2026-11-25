@@ -23,7 +23,7 @@ COPY tools/catalog/package.json tools/catalog/
 
 FROM manifests AS build
 RUN pnpm install --frozen-lockfile --filter @portfolio/shop...
-COPY tsconfig.base.json vitest.setup.ts ./
+COPY tsconfig.base.json tsconfig.strict.json vitest.setup.ts ./
 COPY packages/ssr packages/ssr
 COPY packages/ui packages/ui
 COPY apps/shop apps/shop
