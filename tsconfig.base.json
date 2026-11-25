@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.strict.json",
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
@@ -10,11 +11,7 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "resolveJsonModule": true,
-    "lib": [
-      "ES2022",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "allowImportingTsExtensions": true,
     "noEmit": true
   }

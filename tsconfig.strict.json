@@ -1,0 +1,14 @@
+{
+  "//": "CQ-5. Extend this from the project's tsconfig.json: \"extends\": \"./tsconfig.strict.json\". Framework settings stay in tsconfig.json.",
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "forceConsistentCasingInFileNames": true
+  }
+}

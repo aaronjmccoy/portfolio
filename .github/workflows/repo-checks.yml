@@ -1,0 +1,55 @@
+# Checks every repo gets, whatever its stack: secrets (SC-1), the pull request
+# title (VC-1) and the pull request size (LP-9).
+# Actions are pinned to commit SHAs, and Dependabot bumps them (SC-2, SC-3).
+name: repo-checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, reopened, edited, synchronize]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repo-checks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pr-title:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - uses: amannn/action-semantic-pull-request@66e72920af32222769c386d81f89656ebcb6d6d5 # v6.1.4
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  pr-size:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Warn when the pull request is large (LP-9)
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          changed=$(git diff --numstat "origin/$BASE_REF...HEAD" | awk '{ n += $1 + $2 } END { print n + 0 }')
+          echo "Changed lines: $changed"
+          if [ "$changed" -gt 400 ]; then
+            echo "::warning::This pull request changes $changed lines. LP-9 asks for fewer than 400: split it, or say in the description why it cannot be split."
+          fi

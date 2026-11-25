@@ -16,20 +16,25 @@ jobs:
     env:
       SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
       SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_TOKEN }}
-      SHOPIFY_STOREFRONT_API_VERSION: '2026-10'
+      SHOPIFY_STOREFRONT_API_VERSION: "2026-10"
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@73e46992e05b19abd31f2f3c20e0e7370d762115 # v6.1.1
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test
-      - run: pnpm build
+      # CQ-1: the same check the hooks and agents run (lint, typecheck, tests, build).
+      - run: bash scripts/check.sh
       - run: pnpm smoke
+      - name: Coverage on changed lines (TS-3)
+        if: github.event_name == 'pull_request'
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: pipx run diff-cover coverage/lcov.info --compare-branch="origin/$BASE_REF" --fail-under=80
 
   e2e:
     runs-on: ubuntu-latest
@@ -37,7 +42,7 @@ jobs:
     env:
       SHOPIFY_STORE_DOMAIN: ${{ secrets.SHOPIFY_STORE_DOMAIN }}
       SHOPIFY_STOREFRONT_TOKEN: ${{ secrets.SHOPIFY_STOREFRONT_TOKEN }}
-      SHOPIFY_STOREFRONT_API_VERSION: '2026-10'
+      SHOPIFY_STOREFRONT_API_VERSION: "2026-10"
     needs: check
     steps:
       - uses: actions/checkout@v4
@@ -54,7 +59,7 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: '**/playwright-report/'
+          path: "**/playwright-report/"
           retention-days: 14
 
   # Builds the letters image, boots it and checks a rendered page, then (on

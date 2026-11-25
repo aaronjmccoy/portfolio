@@ -1,0 +1,16 @@
+# CQ-6, SC-1, VC-1. Install once per clone: node_modules/.bin/lefthook install
+# CI repeats every check here, because hooks can be skipped.
+pre-commit:
+  parallel: true
+  commands:
+    format-lint:
+      # No glob: Biome skips file types it does not handle (--files-ignore-unknown).
+      run: node_modules/.bin/biome check --write --no-errors-on-unmatched --files-ignore-unknown=true {staged_files}
+      stage_fixed: true
+    secrets:
+      run: bash scripts/check-secrets.sh
+
+commit-msg:
+  commands:
+    conventional:
+      run: bash scripts/check-commit-msg.sh {1}

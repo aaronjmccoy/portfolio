@@ -1,0 +1,50 @@
+{
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "files": {
+    "includes": ["**", "!**/dist", "!**/build", "!**/coverage", "!**/lib", "!**/__generated__"]
+  },
+  "formatter": { "enabled": true, "useEditorconfig": true, "lineWidth": 100 },
+  "javascript": { "formatter": { "quoteStyle": "single", "trailingCommas": "all" } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "error",
+          "options": { "maxAllowedComplexity": 15 }
+        },
+        "noExcessiveLinesPerFunction": {
+          "level": "error",
+          "options": { "maxLines": 60, "skipBlankLines": true }
+        },
+        "useMaxParams": { "level": "error", "options": { "max": 4 } }
+      },
+      "style": {
+        "noExcessiveLinesPerFile": {
+          "level": "error",
+          "options": { "maxLines": 400, "skipBlankLines": true }
+        },
+        "noNonNullAssertion": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "error",
+        "useExpect": "error",
+        "noSkippedTests": "error",
+        "noFocusedTests": "error"
+      },
+      "nursery": {
+        "noUnsafeTypeAssertion": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx", "**/*.spec.ts", "**/*.spec.tsx"],
+      "linter": {
+        "rules": { "complexity": { "noExcessiveLinesPerFunction": "off" } }
+      }
+    }
+  ]
+}
